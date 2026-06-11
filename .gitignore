@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build outputs
+dist/
+build/
+client/dist/
+server/dist/
+.next/
+out/
+.vercel/
+.netlify/
+
+# Test and coverage artifacts
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# Environment files
+.env
+.env.*
+!.env.example
+client/.env
+client/.env.*
+!client/.env.example
+server/.env
+server/.env.*
+!server/.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local caches
+.cache/
+.vite/
+.eslintcache
+.turbo/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+
+# Runtime and local temporary files
+tmp/
+temp/
+uploads/
+
+# Secrets and local certificates
+*.pem
+*.key
+*.crt
