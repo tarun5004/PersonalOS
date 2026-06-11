@@ -2,6 +2,7 @@ import { jest } from '@jest/globals';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import request from 'supertest';
+import { AuthError } from '../errors/AppError.js';
 import { errorHandler } from './error.middleware.js';
 import { createRequireAuth } from './auth.middleware.js';
 
@@ -53,5 +54,18 @@ describe('requireAuth middleware', () => {
       email: 'test@example.com',
       createdAt: '2026-01-01T00:00:00.000Z',
     });
+  });
+
+  test('rejects requests with invalid auth cookie', async () => {
+    const app = createTestApp({
+      getUserFromToken: jest.fn().mockRejectedValue(new AuthError('Invalid or expired token')),
+    });
+
+    const response = await request(app)
+      .get('/private')
+      .set('Cookie', ['personal_os_token=invalid-token']);
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Invalid or expired token');
   });
 });

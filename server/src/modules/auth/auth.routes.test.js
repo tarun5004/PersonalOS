@@ -138,6 +138,8 @@ describe('auth routes', () => {
       success: true,
       message: 'Logged out successfully',
     });
+    expect(response.headers['set-cookie'][0]).toContain('personal_os_token=');
+    expect(response.headers['set-cookie'][0]).toContain('Expires=Thu, 01 Jan 1970');
   });
 
   test('me returns authenticated user from middleware', async () => {
@@ -158,4 +160,3 @@ describe('auth routes', () => {
     });
   });
 });
-
