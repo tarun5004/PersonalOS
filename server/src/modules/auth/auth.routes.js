@@ -1,0 +1,37 @@
+import { Router } from 'express';
+import { requireAuth } from '../../middleware/auth.middleware.js';
+import { authRateLimiter } from '../../middleware/rateLimit.middleware.js';
+import { validate } from '../../middleware/validate.middleware.js';
+import { asyncHandler } from '../../utils/asyncHandler.js';
+import { authController } from './auth.controller.js';
+import { loginSchema, registerSchema } from './auth.validation.js';
+
+export function createAuthRoutes({
+  controller = authController,
+  rateLimiter = authRateLimiter,
+  requireAuthMiddleware = requireAuth,
+} = {}) {
+  const router = Router();
+
+  router.post(
+    '/register',
+    rateLimiter,
+    validate(registerSchema),
+    asyncHandler(controller.register),
+  );
+
+  router.post(
+    '/login',
+    rateLimiter,
+    validate(loginSchema),
+    asyncHandler(controller.login),
+  );
+
+  router.post('/logout', asyncHandler(controller.logout));
+
+  router.get('/me', requireAuthMiddleware, asyncHandler(controller.me));
+
+  return router;
+}
+
+export const authRoutes = createAuthRoutes();
