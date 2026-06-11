@@ -116,12 +116,22 @@ State management must remain:
 
 API calls must remain centralized. Components must not contain raw backend endpoint strings.
 
-## 6. UI and Theme Guardrails
+## 6. Active Hardening Audit Guardrails
 
-The current active chunk is PersonalOS visual identity modernization before Phase 8.
+The current active chunk is a performance, scalability, architecture, and UX hardening audit before Phase 8.
 
-- Phase 8 is blocked until PersonalOS visual review is approved.
-- Do not move to Phase 8 Task Backend until this chunk is complete and reviewed.
+- Phase 8 is blocked until this audit is reviewed and the next optimization chunk is explicitly approved.
+- Do not start new features, backend feature routes, AI features, product redesign, or Phase 8 work.
+- Do not implement performance optimizations before the audit findings are reviewed.
+- Measure before changing implementation.
+- Preserve existing auth, routing, state management, user-facing behavior, and responsive behavior.
+- Report tooling gaps honestly instead of adding dependencies by default.
+- Add dependencies only when a reviewed optimization chunk justifies measurable value.
+
+## 7. UI and Theme Guardrails
+
+The approved PersonalOS visual direction remains in effect for future UI work.
+
 - PersonalOS should feel like a personal operating system, digital command center, and long-lived productivity cockpit.
 - Use the provided dashboard references for layout hierarchy, information density, and navigation organization only.
 - Do not copy the reference colors, branding, or startup-dashboard appearance.
@@ -139,7 +149,7 @@ The current active chunk is PersonalOS visual identity modernization before Phas
 - Sidebar, topbar, cards, forms, and page headers must feel stable, readable, and built for daily use.
 - Placeholder-safe UI is allowed before backend feature phases, but it must not imply unsupported backend behavior is implemented.
 
-## 7. Security Guardrails
+## 8. Security Guardrails
 
 - V1 auth uses short-lived access tokens in frontend memory and rotated refresh tokens in secure HttpOnly cookies.
 - Backend validates refresh cookies, access tokens, and env configuration.
@@ -152,7 +162,7 @@ The current active chunk is PersonalOS visual identity modernization before Phas
 - `COOKIE_SAME_SITE` controls cookie same-site behavior. Do not hardcode deployment-specific cookie assumptions.
 - `ACCESS_TOKEN_EXPIRES_IN` is short-lived. `REFRESH_TOKEN_MAX_AGE_MS` controls the refresh cookie lifetime.
 
-## 8. Approved Docs Change Control
+## 9. Approved Docs Change Control
 
 Once a documentation file is approved, do not modify it during implementation unless the developer explicitly requests a docs update.
 
@@ -165,7 +175,7 @@ If implementation reveals a docs issue, stop and report:
 
 Do not silently update approved docs.
 
-## 9. Stop Conditions
+## 10. Stop Conditions
 
 Stop and ask when:
 
@@ -178,7 +188,7 @@ Stop and ask when:
 
 Use the blocked report format from Master Prompt V4 when a phase cannot continue.
 
-## 10. Reporting Requirements
+## 11. Reporting Requirements
 
 When blocked, report:
 

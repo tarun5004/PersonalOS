@@ -6,21 +6,19 @@ Source of truth: Master Prompt V4
 
 ## 0. Current Control Chunk
 
-Active chunk: PersonalOS visual identity modernization before Phase 8.
+Active chunk: Performance, scalability, architecture, and UX hardening audit before Phase 8.
 
 Approved scope:
 
-- Update UI/theme source-of-truth docs.
-- Refine the existing frontend UI with Tailwind CSS v4.
-- Make PersonalOS feel like a mature personal operating system, not a generic SaaS dashboard.
-- Improve theme tokens, typography, navigation polish, card quality, hover states, focus states, and subtle motion.
-- Remove verified dead UI code and template-looking visual patterns.
-- Preserve working auth and routing behavior.
-- Run frontend tests, frontend build, and browser/manual QA.
+- Measure frontend bundle, route chunks, browser performance, and Lighthouse baseline.
+- Audit backend response timing, query patterns, indexes, caching gaps, observability gaps, and security posture.
+- Document findings before implementing optimizations.
+- Preserve existing user-facing behavior, auth, routing, data flow, and UI structure.
+- Run frontend tests, backend tests, frontend build, Lighthouse where available, and `git diff --check`.
 
-This chunk does not approve Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, or settings backend behavior in this chunk.
+This chunk does not approve optimization implementation or Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, settings backend behavior, new product features, or performance changes before engineering review.
 
-Phase 8 is blocked until PersonalOS visual review is approved.
+Phase 8 is blocked until the performance hardening audit is reviewed and the next optimization chunk is explicitly approved.
 
 ## 1. Operating Rules
 
