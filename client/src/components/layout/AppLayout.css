@@ -1,0 +1,230 @@
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 20;
+  transform: translateY(-140%);
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  padding: 10px 12px;
+  text-decoration: none;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 3px solid var(--color-focus);
+}
+
+.app-sidebar {
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 24px;
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  font-weight: 700;
+}
+
+.brand-label,
+.brand-subtitle {
+  margin: 0;
+}
+
+.brand-label {
+  font-weight: 700;
+}
+
+.brand-subtitle {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.nav-list {
+  display: grid;
+  gap: 8px;
+}
+
+.nav-link {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  outline: none;
+}
+
+.nav-link:focus-visible {
+  border-color: var(--color-focus);
+}
+
+.nav-link-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+}
+
+.app-content {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.app-topbar {
+  min-height: 88px;
+  border-bottom: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 32px;
+}
+
+.page-header {
+  min-width: 0;
+}
+
+.page-eyebrow,
+.page-title,
+.page-description,
+.user-context {
+  margin: 0;
+}
+
+.page-eyebrow {
+  color: var(--color-primary-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.page-title {
+  margin-top: 4px;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.page-description {
+  margin-top: 3px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.user-context {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.logout-button {
+  min-height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 7px 12px;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.logout-button:hover,
+.logout-button:focus-visible {
+  border-color: var(--color-focus);
+  background: var(--color-surface-muted);
+  outline: none;
+}
+
+.app-main {
+  min-width: 0;
+  padding: 32px;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+    padding: 20px;
+  }
+
+  .brand-block {
+    margin-bottom: 20px;
+  }
+
+  .nav-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .app-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px 20px;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .app-main {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .user-context {
+    white-space: normal;
+  }
+}

@@ -1,58 +1,46 @@
 import { Suspense } from 'react';
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
-import { appRoutes } from './app/routes/routeConfig.js';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from './app/routes/ProtectedRoute.jsx';
+import { PublicRoute } from './app/routes/PublicRoute.jsx';
+import { protectedRoutes, publicRoutes } from './app/routes/routeConfig.js';
 import { RouteLoading } from './app/routes/RouteLoading.jsx';
+import { AppLayout } from './components/layout/AppLayout.jsx';
 import { NotFoundPage } from './features/system/pages/NotFoundPage.jsx';
-import { ThemeToggle } from './features/theme/ThemeToggle.jsx';
 import './App.css';
 
 function App() {
-  const navRoutes = appRoutes.filter((route) => route.showInNav);
-
   return (
-    <div className="app-shell">
-      <aside className="app-sidebar" aria-label="Primary navigation">
-        <div className="brand-block">
-          <span className="brand-mark" aria-hidden="true">
-            OS
-          </span>
-          <div>
-            <p className="brand-label">Personal OS</p>
-            <p className="brand-subtitle">V1 foundation</p>
-          </div>
-        </div>
+    <Suspense fallback={<RouteLoading />}>
+      <Routes>
+        <Route element={<Navigate replace to="/dashboard" />} path="/" />
 
-        <nav className="nav-list">
-          {navRoutes.map((route) => (
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? 'nav-link nav-link-active' : 'nav-link'
-              }
-              key={route.path}
-              to={route.path}
-            >
-              {route.label}
-            </NavLink>
+        {publicRoutes.map((route) => (
+          <Route
+            element={
+              <PublicRoute>
+                <route.Component />
+              </PublicRoute>
+            }
+            key={route.path}
+            path={route.path}
+          />
+        ))}
+
+        <Route
+          element={
+            <ProtectedRoute>
+              <AppLayout routes={protectedRoutes} />
+            </ProtectedRoute>
+          }
+        >
+          {protectedRoutes.map((route) => (
+            <Route element={<route.Component />} key={route.path} path={route.path} />
           ))}
-        </nav>
+        </Route>
 
-        <div className="sidebar-footer">
-          <ThemeToggle compact />
-        </div>
-      </aside>
-
-      <main className="app-main">
-        <Suspense fallback={<RouteLoading />}>
-          <Routes>
-            <Route element={<Navigate replace to="/dashboard" />} path="/" />
-            {appRoutes.map((route) => (
-              <Route element={<route.Component />} key={route.path} path={route.path} />
-            ))}
-            <Route element={<NotFoundPage />} path="*" />
-          </Routes>
-        </Suspense>
-      </main>
-    </div>
+        <Route element={<NotFoundPage />} path="*" />
+      </Routes>
+    </Suspense>
   );
 }
 
