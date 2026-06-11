@@ -15,7 +15,7 @@ export function Topbar({ routes }) {
   const { logout, user } = useAuth();
   const location = useLocation();
   const activeRoute = findActiveRoute(routes, location.pathname);
-  const userLabel = user?.name ? `Signed in as ${user.name}` : 'Signed in';
+  const userLabel = user?.name ? user.name : 'Personal session';
 
   return (
     <header className="sticky top-0 z-10 grid min-h-16 gap-4 border-b border-border bg-surface/95 px-5 py-4 backdrop-blur sm:px-8 lg:px-9">
@@ -23,7 +23,7 @@ export function Topbar({ routes }) {
         <div className="flex items-center gap-6">
           <PageHeader
             description={activeRoute?.description}
-            eyebrow="Workspace"
+            eyebrow="Command center"
             title={activeRoute?.label || 'Personal OS'}
           />
           <nav className="hidden items-center gap-5 lg:flex" aria-label="Top navigation">
@@ -31,7 +31,7 @@ export function Topbar({ routes }) {
               <NavLink
                 className={({ isActive }) =>
                   mergeClassNames(
-                    'text-sm font-extrabold text-muted transition hover:text-body',
+                    'text-sm font-semibold text-muted transition hover:text-body',
                     isActive && 'text-body underline decoration-primary decoration-2 underline-offset-4',
                   )
                 }

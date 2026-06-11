@@ -25,7 +25,7 @@ export function CardHeader({ children, className, ...props }) {
 export function CardTitle({ as: Component = 'h2', children, className, ...props }) {
   return (
     <Component
-      className={mergeClassNames('m-0 text-xl font-extrabold text-body', className)}
+      className={mergeClassNames('m-0 text-xl font-bold text-body', className)}
       {...props}
     >
       {children}

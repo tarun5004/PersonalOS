@@ -14,7 +14,9 @@ Use semantic CSS variables for theme tokens and expose those variables through T
 
 Replace component-level CSS files with Tailwind utility classes and reusable React components wherever possible.
 
-The V1 interface must follow the approved premium SaaS dashboard references: a soft app background, white or dark canvas cards, a purple-to-teal icon sidebar, clean topbar hierarchy, rounded cards, restrained shadows, and monthly habit tracker visual direction.
+The V1 interface must follow the approved PersonalOS visual direction. PersonalOS should feel like a calm personal operating system, digital command center, and long-lived productivity cockpit rather than a generic SaaS dashboard or startup admin template.
+
+The provided dashboard references are composition references only. Use them for layout hierarchy, information density, and navigation organization. Do not copy their colors, branding, purple-first palette, or generic dashboard appearance.
 
 Approved token names:
 
@@ -23,6 +25,8 @@ Approved token names:
 --color-canvas
 --color-sidebar-from
 --color-sidebar-to
+--color-sidebar-text
+--color-sidebar-muted
 --color-primary
 --color-secondary
 --color-text-primary
@@ -37,37 +41,41 @@ Approved token names:
 Approved light theme:
 
 ```text
---color-app-bg: #F4F6FB
+--color-app-bg: #F3F4F1
 --color-canvas: #FFFFFF
---color-sidebar-from: #7C5CFF
---color-sidebar-to: #21B8A6
---color-primary: #6C63FF
---color-secondary: #20B8A6
---color-text-primary: #17142F
---color-text-secondary: #6B6F8A
---color-border: #E6E8F0
---color-card-soft: #F7F5FF
---color-success: #2EC77E
---color-error: #FF5C7A
---color-warning: #FFB84D
+--color-sidebar-from: #202824
+--color-sidebar-to: #143A36
+--color-sidebar-text: #F7FAF6
+--color-sidebar-muted: #B8C7C0
+--color-primary: #2D7D73
+--color-secondary: #57706A
+--color-text-primary: #171B19
+--color-text-secondary: #636D68
+--color-border: #DFE4E0
+--color-card-soft: #F7F8F5
+--color-success: #2F7D57
+--color-error: #B84F61
+--color-warning: #A36B2C
 ```
 
 Approved dark theme:
 
 ```text
---color-app-bg: #0F1220
---color-canvas: #171A2D
---color-sidebar-from: #7C5CFF
---color-sidebar-to: #21B8A6
---color-primary: #8B7CFF
---color-secondary: #25D0BC
---color-text-primary: #F7F7FF
---color-text-secondary: #A7ABC4
---color-border: #2C3048
---color-card-soft: #1F2338
---color-success: #37D990
---color-error: #FF6B88
---color-warning: #FFC766
+--color-app-bg: #0E1416
+--color-canvas: #171D20
+--color-sidebar-from: #0F1719
+--color-sidebar-to: #12312E
+--color-sidebar-text: #F1F6F3
+--color-sidebar-muted: #90A29B
+--color-primary: #55B5A9
+--color-secondary: #8BA7A0
+--color-text-primary: #F3F6F3
+--color-text-secondary: #A6B1AC
+--color-border: #293335
+--color-card-soft: #1F272A
+--color-success: #6BC58E
+--color-error: #E07083
+--color-warning: #D2A05A
 ```
 
 ## Alternatives considered
@@ -89,6 +97,8 @@ The project must preserve semantic theme variables so light, dark, and future co
 Component-level CSS files should be removed during the Tailwind migration unless a documented exception is approved.
 
 UI placeholders must be polished and honest about unsupported behavior. Generic placeholder pages should not remain once a page has an approved V1 visual direction.
+
+Phase 8 Task Backend must remain blocked until PersonalOS visual review is approved.
 
 ## Status
 

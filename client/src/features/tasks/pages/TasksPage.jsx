@@ -42,7 +42,7 @@ export default function TasksPage() {
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <div>
           <Badge>Tasks</Badge>
-          <h1 className="mt-4 text-[clamp(2rem,4vw,3.15rem)] font-extrabold leading-tight text-body">
+          <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
             Personal task list
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
@@ -60,8 +60,8 @@ export default function TasksPage() {
           {filters.map((filter, index) => (
             <button
               className={index === 0
-                ? 'min-h-10 rounded-ui bg-primary px-4 text-sm font-extrabold text-primary-text shadow-card'
-                : 'min-h-10 rounded-ui border border-border bg-surface px-4 text-sm font-bold text-muted transition hover:border-focus hover:text-body'}
+                ? 'min-h-10 rounded-ui bg-primary px-4 text-sm font-semibold text-primary-text shadow-card'
+                : 'min-h-10 rounded-ui border border-border bg-surface px-4 text-sm font-semibold text-muted transition hover:border-focus hover:bg-primary-soft hover:text-body'}
               key={filter}
               type="button"
             >
@@ -74,7 +74,7 @@ export default function TasksPage() {
       <div className="grid gap-5 xl:grid-cols-3">
         {columns.map((column) => (
           <DashboardCard
-            className="min-h-[460px] bg-[linear-gradient(180deg,var(--color-canvas),var(--color-card-soft))]"
+            className="min-h-[460px] bg-surface"
             key={column.title}
             title={column.title}
             action={<Badge variant="muted">{column.tasks.length}</Badge>}

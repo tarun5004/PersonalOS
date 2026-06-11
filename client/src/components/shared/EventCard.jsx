@@ -11,8 +11,8 @@ export function EventCard({ icon: Icon, label, meta, title }) {
             </span>
           ) : null}
           <div className="min-w-0">
-            <p className="text-xs font-bold text-muted">{meta}</p>
-            <h3 className="mt-1 text-sm font-extrabold text-body">{title}</h3>
+            <p className="text-xs font-semibold text-muted">{meta}</p>
+            <h3 className="mt-1 text-sm font-bold text-body">{title}</h3>
           </div>
         </div>
         <Badge variant="muted">{label}</Badge>

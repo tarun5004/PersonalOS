@@ -88,8 +88,12 @@ Every dashboard module will support:
 
 ## 8. Visual Direction
 
-The dashboard will feel close to the approved reference image: a soft white SaaS workspace, purple accent navigation, rounded cards, calm shadows, compact dashboard modules, and a clear topbar/navigation hierarchy.
+The dashboard should feel like a personal life control center rather than a company analytics dashboard.
 
-Dashboard cards should be scannable and calm. The page should avoid marketing-style hero sections, decorative clutter, and feature cards that are not connected to real V1 data.
+Use the provided dashboard references for layout hierarchy, information density, navigation organization, and compact dashboard modules. Do not copy their colors, branding, or startup-dashboard appearance.
+
+Dashboard cards should be scannable, calm, and useful. The page should avoid marketing-style hero sections, decorative clutter, AI-style gradients, glow effects, and feature cards that are not connected to real V1 data.
 
 Reference-inspired visual cards may be used as placeholders for the shell, dashboard composition, and reusable component structure. They do not add V1 requirements for boards, premium prompts, integrations, collaboration, or calendar-backed scheduling.
+
+Phase 8 is blocked until PersonalOS visual review is approved.

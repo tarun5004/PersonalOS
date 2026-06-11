@@ -12,17 +12,17 @@ export function AuthShell({ children, eyebrow, summary, title }) {
     <section className="grid min-h-screen place-items-center bg-app-bg p-0 text-body sm:p-6">
       <div className="grid min-h-screen w-full overflow-hidden border border-border bg-surface shadow-panel sm:min-h-[min(720px,calc(100vh-48px))] sm:max-w-[1160px] sm:rounded-[28px] lg:grid-cols-[minmax(320px,0.9fr)_minmax(360px,1fr)]">
         <aside
-          className="sidebar-gradient hidden min-h-0 flex-col justify-between p-8 text-primary-text lg:flex"
+          className="sidebar-gradient hidden min-h-0 flex-col justify-between p-8 text-sidebar-text lg:flex"
           aria-hidden="true"
         >
           <div>
-            <span className="grid size-12 place-items-center rounded-ui bg-primary-text text-sm font-extrabold text-primary shadow-card">
+            <span className="grid size-12 place-items-center rounded-ui bg-sidebar-text text-sm font-bold text-primary shadow-card">
               OS
             </span>
-            <h2 className="mt-8 max-w-xs text-4xl font-extrabold leading-tight">
-              Your daily workspace, calmly organized.
+            <h2 className="mt-8 max-w-xs text-4xl font-bold leading-tight">
+              Your personal command center, calmly organized.
             </h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-primary-text/75">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-sidebar-muted">
               Tasks, habits, and weekly signals stay in one focused place.
             </p>
           </div>
@@ -30,11 +30,11 @@ export function AuthShell({ children, eyebrow, summary, title }) {
           <div className="grid gap-3">
             {previewRows.map((row) => (
               <div
-                className="flex items-center justify-between rounded-ui border border-primary-text/20 bg-primary-text/10 px-4 py-3"
+                className="flex items-center justify-between rounded-ui border border-sidebar-text/15 bg-sidebar-text/10 px-4 py-3"
                 key={row.label}
               >
-                <span className="text-sm font-bold text-primary-text/75">{row.label}</span>
-                <strong className="text-sm text-primary-text">{row.value}</strong>
+                <span className="text-sm font-semibold text-sidebar-muted">{row.label}</span>
+                <strong className="text-sm text-sidebar-text">{row.value}</strong>
               </div>
             ))}
           </div>
@@ -44,14 +44,14 @@ export function AuthShell({ children, eyebrow, summary, title }) {
           <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
               <span
-                className="grid size-10 place-items-center rounded-ui bg-primary-soft text-sm font-extrabold text-primary-strong"
+                className="grid size-10 place-items-center rounded-ui bg-primary-soft text-sm font-bold text-primary-strong"
                 aria-hidden="true"
               >
                 OS
               </span>
               <div>
-                <p className="m-0 font-extrabold">Personal OS</p>
-                <p className="mt-0.5 text-sm text-muted">Daily productivity workspace</p>
+              <p className="m-0 font-bold">Personal OS</p>
+              <p className="mt-0.5 text-sm text-muted">Daily productivity workspace</p>
               </div>
             </div>
             <ThemeToggle />
@@ -60,7 +60,7 @@ export function AuthShell({ children, eyebrow, summary, title }) {
           <div className="grid min-h-0 place-items-center pt-8 lg:pt-10">
             <div className="w-full max-w-[520px]">
               <Badge>{eyebrow}</Badge>
-              <h1 className="mt-4 max-w-[520px] text-[clamp(2.1rem,4vw,3.35rem)] font-extrabold leading-[1.08] tracking-normal text-body">
+              <h1 className="mt-4 max-w-[520px] text-[clamp(2.05rem,4vw,3.1rem)] font-bold leading-[1.08] tracking-normal text-body">
                 {title}
               </h1>
               <p className="mt-4 max-w-[500px] text-base leading-7 text-muted">

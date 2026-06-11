@@ -6,18 +6,21 @@ Source of truth: Master Prompt V4
 
 ## 0. Current Control Chunk
 
-Active chunk: UI/theme/design-system stabilization before Phase 8.
+Active chunk: PersonalOS visual identity modernization before Phase 8.
 
 Approved scope:
 
 - Update UI/theme source-of-truth docs.
-- Install only the approved missing UI packages for the frontend.
-- Polish the existing frontend UI with Tailwind CSS v4.
-- Replace generic placeholder screens with polished placeholder-safe page layouts.
+- Refine the existing frontend UI with Tailwind CSS v4.
+- Make PersonalOS feel like a mature personal operating system, not a generic SaaS dashboard.
+- Improve theme tokens, typography, navigation polish, card quality, hover states, focus states, and subtle motion.
+- Remove verified dead UI code and template-looking visual patterns.
 - Preserve working auth and routing behavior.
 - Run frontend tests, frontend build, and browser/manual QA.
 
 This chunk does not approve Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, or settings backend behavior in this chunk.
+
+Phase 8 is blocked until PersonalOS visual review is approved.
 
 ## 1. Operating Rules
 
@@ -33,6 +36,8 @@ This chunk does not approve Phase 8 Task Backend. Do not implement task, habit, 
 - Use reusable shared components and approved theme variables for UI colors.
 - Do not create generic placeholder UI.
 - Do not duplicate sidebar, topbar, or layout code.
+- Do not make the app look like ChatGPT, Linear, Notion, Vercel, a startup admin template, or a shadcn demo.
+- Prefer calm, dense, durable productivity UI over flashy gradients, glass effects, and decorative styling.
 - Do not write implementation code during documentation phases.
 - If requirements are unclear, ask before assuming.
 

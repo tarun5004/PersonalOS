@@ -50,7 +50,7 @@ export function ScoreChart({ data = [], emptyTitle = 'No trend data yet' }) {
             contentStyle={{
               background: 'var(--color-canvas)',
               border: '1px solid var(--color-border)',
-              borderRadius: '1rem',
+              borderRadius: '0.8rem',
               color: 'var(--color-text-primary)',
             }}
           />

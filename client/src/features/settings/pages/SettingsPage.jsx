@@ -11,7 +11,7 @@ const themeCards = [
   {
     value: 'light',
     title: 'Light',
-    description: 'Bright canvas with soft cards and purple accents.',
+    description: 'Neutral canvas with clear cards and a restrained teal accent.',
     icon: Sun,
   },
   {
@@ -36,9 +36,9 @@ export default function SettingsPage() {
     <section className="grid gap-5">
       <div>
         <Badge>Settings</Badge>
-        <h1 className="mt-4 text-[clamp(2rem,4vw,3.15rem)] font-extrabold leading-tight text-body">
-          Theme and preferences
-        </h1>
+          <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
+            Theme and preferences
+          </h1>
         <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
           Tune the workspace appearance and review your signed-in profile context.
         </p>
@@ -52,7 +52,7 @@ export default function SettingsPage() {
                 className={mergeClassNames(
                   'rounded-ui border bg-surface p-5 text-left transition hover:border-focus focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus/25',
                   theme === themeCard.value
-                    ? 'border-primary shadow-card'
+                    ? 'border-primary bg-primary-soft shadow-card'
                     : 'border-border',
                 )}
                 key={themeCard.value}
@@ -62,7 +62,7 @@ export default function SettingsPage() {
                 <span className="grid size-11 place-items-center rounded-ui bg-primary-soft text-primary-strong">
                   <themeCard.icon aria-hidden="true" size={19} />
                 </span>
-                <span className="mt-4 block text-lg font-extrabold text-body">{themeCard.title}</span>
+                <span className="mt-4 block text-lg font-bold text-body">{themeCard.title}</span>
                 <span className="mt-2 block text-sm leading-6 text-muted">{themeCard.description}</span>
               </button>
             ))}
@@ -71,11 +71,11 @@ export default function SettingsPage() {
 
         <DashboardCard title="Profile">
           <div className="flex items-center gap-4 rounded-ui border border-border bg-surface-muted p-4">
-            <div className="grid size-14 place-items-center rounded-ui bg-gradient-to-r from-primary to-focus text-lg font-extrabold text-primary-text">
+            <div className="grid size-14 place-items-center rounded-ui bg-primary text-lg font-bold text-primary-text">
               {initials}
             </div>
             <div className="min-w-0">
-              <p className="m-0 truncate text-base font-extrabold text-body">{user?.name || 'Personal OS user'}</p>
+              <p className="m-0 truncate text-base font-bold text-body">{user?.name || 'Personal OS user'}</p>
               <p className="mt-1 truncate text-sm text-muted">{user?.email || 'Signed in user'}</p>
             </div>
           </div>

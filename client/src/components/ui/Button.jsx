@@ -2,10 +2,10 @@ import { mergeClassNames } from '../../lib/classNames.js';
 
 const VARIANTS = {
   primary:
-    'border-transparent bg-gradient-to-r from-primary to-focus text-primary-text shadow-card hover:brightness-105',
+    'border-primary bg-primary text-primary-text shadow-card hover:border-primary-strong hover:bg-primary-strong',
   secondary:
-    'border-border bg-surface text-body shadow-card hover:border-focus hover:bg-surface-muted',
-  dark: 'border-body bg-body text-primary-text shadow-card hover:border-body hover:bg-body/90',
+    'border-border bg-surface text-body shadow-card hover:border-focus hover:bg-primary-soft',
+  dark: 'border-border bg-surface-muted text-body shadow-card hover:border-focus hover:bg-surface',
   ghost:
     'border-transparent bg-transparent text-muted hover:bg-surface-muted hover:text-body',
   danger:
@@ -33,7 +33,7 @@ export function Button({
   return (
     <Component
       className={mergeClassNames(
-        'inline-flex items-center justify-center gap-2 rounded-ui border font-bold transition duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus/30 disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center justify-center gap-2 rounded-ui border font-semibold transition duration-200 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0',
         VARIANTS[variant],
         SIZES[size],
         className,

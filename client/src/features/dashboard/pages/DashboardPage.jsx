@@ -3,11 +3,10 @@ import {
   ArrowRight,
   BarChart3,
   CalendarDays,
-  CheckCircle2,
   CheckSquare,
   ClipboardList,
+  Gauge,
   RefreshCcwDot,
-  Sparkles,
   Target,
 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
@@ -54,21 +53,21 @@ export default function DashboardPage() {
   return (
     <section className="grid gap-5">
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1.08fr)_minmax(420px,0.92fr)]">
-        <div className="grid content-between gap-6 rounded-ui bg-[linear-gradient(135deg,var(--color-card-soft),var(--color-canvas))] p-6 shadow-card sm:p-7">
+        <div className="grid content-between gap-6 rounded-ui border border-border bg-surface p-6 shadow-card sm:p-7">
           <div>
-            <Badge>Dashboard</Badge>
-            <h1 className="mt-4 max-w-2xl text-[clamp(2.35rem,4vw,3.8rem)] font-extrabold leading-[1.04] tracking-normal text-body">
-              Hi, {getFirstName(user?.name)}! What are your plans for today?
+            <Badge>Life command center</Badge>
+            <h1 className="mt-4 max-w-2xl text-[clamp(2.15rem,4vw,3.35rem)] font-bold leading-[1.06] tracking-normal text-body">
+              Hi, {getFirstName(user?.name)}. Here is your day at a glance.
             </h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-              A calm workspace for tasks, habits, weekly rhythm, and quick review.
+              Tasks, habits, weekly rhythm, and review signals stay close without turning your life into a company dashboard.
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
             {quickActions.map((action) => (
               <Link
-                className="group flex min-h-20 items-center justify-between gap-3 rounded-ui border border-border bg-surface p-4 text-sm font-extrabold text-body shadow-card transition hover:-translate-y-0.5 hover:border-focus"
+                className="group flex min-h-20 items-center justify-between gap-3 rounded-ui border border-border bg-surface p-4 text-sm font-semibold text-body shadow-card transition hover:-translate-y-0.5 hover:border-focus hover:bg-primary-soft"
                 key={action.to}
                 to={action.to}
               >
@@ -92,14 +91,14 @@ export default function DashboardPage() {
           <StatCard helper="Nothing due yet" icon={CheckSquare} label="Tasks today" value="0" />
           <StatCard helper="No weekly tasks yet" icon={CalendarDays} label="This week" value="0" />
           <StatCard helper="Start from Habits" icon={RefreshCcwDot} label="Habit streak" tone="success" value="0d" />
-          <StatCard helper="Build activity first" icon={Sparkles} label="Score" tone="warning" value="--" />
+          <StatCard helper="Build activity first" icon={Gauge} label="Score" tone="warning" value="--" />
         </div>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[0.95fr_0.95fr_1.1fr]">
         <DashboardCard
           action={<Badge variant="muted">Calm</Badge>}
-          className="bg-[linear-gradient(180deg,var(--color-canvas),var(--color-card-soft))]"
+          className="bg-surface"
           title="Notifications"
         >
           <div className="grid gap-3">
@@ -149,7 +148,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-7 gap-2">
               {Array.from({ length: 7 }, (_, index) => (
                 <span
-                  className="grid aspect-square place-items-center rounded-ui border border-border bg-surface-muted text-xs font-extrabold text-muted"
+                  className="grid aspect-square place-items-center rounded-ui border border-border bg-surface-muted text-xs font-semibold text-muted"
                   key={index}
                 >
                   {index + 1}

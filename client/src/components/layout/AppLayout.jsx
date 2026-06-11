@@ -13,7 +13,7 @@ export function AppLayout({ routes }) {
       >
         Skip to content
       </a>
-      <div className="mx-auto grid min-h-screen w-full max-w-[1240px] overflow-hidden border border-border bg-surface shadow-panel sm:min-h-[calc(100vh-40px)] sm:rounded-[28px] lg:min-h-[calc(100vh-64px)] lg:grid-cols-[84px_minmax(0,1fr)]">
+      <div className="mx-auto grid min-h-screen w-full max-w-[1240px] overflow-visible border border-border bg-surface shadow-panel sm:min-h-[calc(100vh-40px)] sm:overflow-hidden sm:rounded-[24px] lg:min-h-[calc(100vh-64px)] lg:grid-cols-[196px_minmax(0,1fr)]">
         <Sidebar routes={navRoutes} />
         <div className="grid min-w-0 grid-rows-[auto_minmax(0,1fr)] bg-surface">
           <Topbar routes={navRoutes} />

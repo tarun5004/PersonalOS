@@ -73,18 +73,23 @@ Planned components:
 - `ProgressRing`
 - `DatePicker`
 
-The protected app shell should follow the approved dashboard reference direction:
+The protected app shell should follow the approved PersonalOS visual direction:
 
-- soft white dashboard workspace
-- purple-to-teal gradient icon navigation rail
-- clean topbar with clear page context
-- rounded cards with restrained shadows
-- dense but readable dashboard sections
+- calm personal command center rather than a generic company dashboard
+- mature neutral workspace surfaces with a restrained teal accent
+- stable icon navigation with clear labels, active states, and keyboard focus
+- clean topbar with clear page context and low visual noise
+- rounded cards with subtle borders, restrained shadows, and consistent spacing
+- dense but readable dashboard sections for daily life planning
 - desktop and mobile layouts that preserve the same hierarchy
 
-Reference-style cards may be used for visual structure before data APIs are complete, but they must not imply undocumented backend features are implemented.
+Reference-style cards may be used for layout structure before data APIs are complete, but they must not imply undocumented backend features are implemented.
 
-The UI stabilization chunk before Phase 8 may polish Dashboard, Tasks, Habits, Analytics, Settings, Login, and Register screens using placeholder-safe structures only. It must not implement backend feature behavior or duplicate app layout code.
+Avoid visual patterns that make the app feel AI-generated or template-like: bright gradients, glow effects, glassmorphism, arbitrary accent colors, excessive border radius, and duplicated decorative card patterns.
+
+The visual identity modernization chunk before Phase 8 may polish Dashboard, Tasks, Habits, Analytics, Settings, Login, and Register screens using placeholder-safe structures only. It must not implement backend feature behavior or duplicate app layout code.
+
+Phase 8 is blocked until PersonalOS visual review is approved.
 
 ## 3. Feature Components
 

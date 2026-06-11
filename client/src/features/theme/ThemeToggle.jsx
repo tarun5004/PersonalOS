@@ -19,7 +19,7 @@ export function ThemeToggle({ compact = false }) {
     <div
       aria-label="Theme"
       className={mergeClassNames(
-        'inline-flex items-center gap-1 rounded-ui border border-border bg-surface-muted p-1',
+        'inline-flex items-center gap-1 rounded-ui border border-border bg-surface-muted p-1 shadow-card',
         compact ? 'w-auto' : 'min-w-40',
       )}
       role="group"
@@ -35,7 +35,7 @@ export function ThemeToggle({ compact = false }) {
         <span className="sr-only">Toggle dark theme</span>
         <span
           className={mergeClassNames(
-            'inline-block size-6 rounded-full bg-gradient-to-r from-primary to-focus transition',
+            'inline-block size-6 rounded-full bg-primary shadow-card transition',
             isDark ? 'translate-x-7' : 'translate-x-1',
           )}
         />

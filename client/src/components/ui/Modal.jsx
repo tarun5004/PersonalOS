@@ -15,7 +15,7 @@ export function Modal({ children, className, isOpen, onClose, title }) {
         role="dialog"
       >
         <div className="flex items-start justify-between gap-4">
-          <h2 className="m-0 text-xl font-extrabold text-body">{title}</h2>
+          <h2 className="m-0 text-xl font-bold text-body">{title}</h2>
           {onClose ? (
             <Button aria-label="Close dialog" onClick={onClose} size="sm" variant="ghost">
               X

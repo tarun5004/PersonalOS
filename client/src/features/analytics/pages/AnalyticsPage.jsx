@@ -10,7 +10,7 @@ export default function AnalyticsPage() {
     <section className="grid gap-5">
       <div>
         <Badge>Analytics</Badge>
-        <h1 className="mt-4 text-[clamp(2rem,4vw,3.15rem)] font-extrabold leading-tight text-body">
+        <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
           Weekly productivity trends
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-7 text-muted">

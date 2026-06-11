@@ -118,10 +118,15 @@ API calls must remain centralized. Components must not contain raw backend endpo
 
 ## 6. UI and Theme Guardrails
 
-The current active chunk is UI/theme/design-system stabilization before Phase 8.
+The current active chunk is PersonalOS visual identity modernization before Phase 8.
 
+- Phase 8 is blocked until PersonalOS visual review is approved.
 - Do not move to Phase 8 Task Backend until this chunk is complete and reviewed.
-- Follow the provided premium SaaS dashboard and monthly habit tracker references.
+- PersonalOS should feel like a personal operating system, digital command center, and long-lived productivity cockpit.
+- Use the provided dashboard references for layout hierarchy, information density, and navigation organization only.
+- Do not copy the reference colors, branding, or startup-dashboard appearance.
+- Do not make the app look like ChatGPT, Linear, Notion, Vercel, a generic SaaS dashboard, a startup admin template, an AI-generated UI, or a shadcn demo project.
+- Use a mature productivity palette: soft neutral app backgrounds, clean canvas cards, refined teal accents, graphite/navy dark surfaces, subtle borders, and muted professional status colors.
 - Use Tailwind CSS v4 utilities backed by approved semantic CSS variables.
 - The frontend must keep exactly one global CSS entry file for Tailwind import, theme variables, resets, and global tokens.
 - Use reusable shared components before adding page-specific repeated markup.
@@ -130,6 +135,8 @@ The current active chunk is UI/theme/design-system stabilization before Phase 8.
 - Use `framer-motion` only for subtle transitions; do not over-animate the app.
 - Use `clsx` and `tailwind-merge` through the local class-name helper after they are installed.
 - Do not use random hardcoded colors in JSX or JS files; add semantic CSS variables when a new color role is required.
+- Avoid purple-first startup themes, bright AI-style gradients, glow effects, glassmorphism, excessive border radius, inconsistent shadows, and arbitrary color accents.
+- Sidebar, topbar, cards, forms, and page headers must feel stable, readable, and built for daily use.
 - Placeholder-safe UI is allowed before backend feature phases, but it must not imply unsupported backend behavior is implemented.
 
 ## 7. Security Guardrails

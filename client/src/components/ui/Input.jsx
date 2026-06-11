@@ -21,7 +21,7 @@ export function Input({
   return (
     <div className={mergeClassNames('grid gap-2', className)}>
       {label ? (
-        <label className="text-sm font-bold text-body" htmlFor={inputId}>
+        <label className="text-sm font-semibold text-body" htmlFor={inputId}>
           {label}
         </label>
       ) : null}
@@ -29,7 +29,7 @@ export function Input({
         aria-describedby={describedBy || undefined}
         aria-invalid={Boolean(error) || props['aria-invalid'] || undefined}
         className={mergeClassNames(
-          'min-h-12 w-full rounded-ui border border-border bg-surface-muted px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-focus focus:bg-surface focus:ring-[3px] focus:ring-focus/25 aria-[invalid=true]:border-danger disabled:cursor-not-allowed disabled:opacity-65',
+          'min-h-12 w-full rounded-ui border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-focus focus:bg-surface focus:ring-[3px] focus:ring-focus/20 aria-[invalid=true]:border-danger disabled:cursor-not-allowed disabled:opacity-65',
           inputClassName,
         )}
         id={inputId}

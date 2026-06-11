@@ -65,7 +65,7 @@ export default function HabitsPage() {
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <div>
           <Badge>Habits</Badge>
-          <h1 className="mt-4 text-[clamp(2rem,4vw,3.15rem)] font-extrabold leading-tight text-body">
+          <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
             Monthly tracker
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
@@ -84,7 +84,7 @@ export default function HabitsPage() {
             <Button disabled size="icon" variant="secondary">
               <ChevronLeft aria-hidden="true" size={18} />
             </Button>
-            <div className="min-h-10 rounded-ui border border-border bg-surface px-4 py-2 text-sm font-extrabold text-body">
+            <div className="min-h-10 rounded-ui border border-border bg-surface px-4 py-2 text-sm font-bold text-body">
               {monthLabel}
             </div>
             <Button disabled size="icon" variant="secondary">
@@ -96,13 +96,13 @@ export default function HabitsPage() {
       </DashboardCard>
 
       <DashboardCard
-        className="overflow-hidden bg-[linear-gradient(180deg,var(--color-canvas),var(--color-card-soft))]"
+        className="overflow-hidden bg-surface"
         title="Monthly habit tracker"
         action={<Badge variant="success">Today highlighted</Badge>}
       >
         <div className="overflow-x-auto pb-2">
           <div className="min-w-[1040px]">
-            <div className="grid grid-cols-[180px_repeat(31,28px)_72px_72px] gap-2 border-b border-border pb-3 text-center text-xs font-extrabold text-muted">
+            <div className="grid grid-cols-[180px_repeat(31,28px)_72px_72px] gap-2 border-b border-border pb-3 text-center text-xs font-semibold text-muted">
               <span className="text-left">Habit</span>
               {days.map((day) => (
                 <span className={day === todayDate ? 'text-primary-strong' : ''} key={day}>
@@ -124,12 +124,12 @@ export default function HabitsPage() {
                     className="grid grid-cols-[180px_repeat(31,28px)_72px_72px] items-center gap-2 rounded-ui bg-surface/80 px-2 py-2"
                     key={habit.name}
                   >
-                    <span className="truncate text-sm font-extrabold text-body">{habit.name}</span>
+                    <span className="truncate text-sm font-bold text-body">{habit.name}</span>
                     {days.map((day) => (
                       <HabitCell day={day} key={day} state={getCellState(habit, day)} />
                     ))}
-                    <span className="text-center text-sm font-extrabold text-body">{doneCount}d</span>
-                    <span className="text-center text-sm font-extrabold text-primary-strong">{rate}%</span>
+                    <span className="text-center text-sm font-bold text-body">{doneCount}d</span>
+                    <span className="text-center text-sm font-bold text-primary-strong">{rate}%</span>
                   </div>
                 );
               })}

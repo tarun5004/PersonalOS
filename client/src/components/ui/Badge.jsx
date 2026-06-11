@@ -12,7 +12,7 @@ export function Badge({ children, className, variant = 'primary', ...props }) {
   return (
     <span
       className={mergeClassNames(
-        'inline-flex min-h-6 items-center rounded-full px-2.5 text-xs font-extrabold uppercase tracking-normal',
+        'inline-flex min-h-6 items-center rounded-full px-2.5 text-xs font-semibold tracking-normal',
         VARIANTS[variant],
         className,
       )}

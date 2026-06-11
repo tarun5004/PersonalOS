@@ -56,6 +56,8 @@ The V1 approved CSS variable names are:
 - `--color-canvas`
 - `--color-sidebar-from`
 - `--color-sidebar-to`
+- `--color-sidebar-text`
+- `--color-sidebar-muted`
 - `--color-primary`
 - `--color-secondary`
 - `--color-text-primary`
@@ -69,38 +71,44 @@ The V1 approved CSS variable names are:
 Approved light theme values:
 
 ```text
---color-app-bg: #F4F6FB
+--color-app-bg: #F3F4F1
 --color-canvas: #FFFFFF
---color-sidebar-from: #7C5CFF
---color-sidebar-to: #21B8A6
---color-primary: #6C63FF
---color-secondary: #20B8A6
---color-text-primary: #17142F
---color-text-secondary: #6B6F8A
---color-border: #E6E8F0
---color-card-soft: #F7F5FF
---color-success: #2EC77E
---color-error: #FF5C7A
---color-warning: #FFB84D
+--color-sidebar-from: #202824
+--color-sidebar-to: #143A36
+--color-sidebar-text: #F7FAF6
+--color-sidebar-muted: #B8C7C0
+--color-primary: #2D7D73
+--color-secondary: #57706A
+--color-text-primary: #171B19
+--color-text-secondary: #636D68
+--color-border: #DFE4E0
+--color-card-soft: #F7F8F5
+--color-success: #2F7D57
+--color-error: #B84F61
+--color-warning: #A36B2C
 ```
 
 Approved dark theme values:
 
 ```text
---color-app-bg: #0F1220
---color-canvas: #171A2D
---color-sidebar-from: #7C5CFF
---color-sidebar-to: #21B8A6
---color-primary: #8B7CFF
---color-secondary: #25D0BC
---color-text-primary: #F7F7FF
---color-text-secondary: #A7ABC4
---color-border: #2C3048
---color-card-soft: #1F2338
---color-success: #37D990
---color-error: #FF6B88
---color-warning: #FFC766
+--color-app-bg: #0E1416
+--color-canvas: #171D20
+--color-sidebar-from: #0F1719
+--color-sidebar-to: #12312E
+--color-sidebar-text: #F1F6F3
+--color-sidebar-muted: #90A29B
+--color-primary: #55B5A9
+--color-secondary: #8BA7A0
+--color-text-primary: #F3F6F3
+--color-text-secondary: #A6B1AC
+--color-border: #293335
+--color-card-soft: #1F272A
+--color-success: #6BC58E
+--color-error: #E07083
+--color-warning: #D2A05A
 ```
+
+These values intentionally avoid a purple-first startup palette. PersonalOS should look like a calm personal command center: neutral, readable, dense, and durable.
 
 ## 5. Tailwind Usage Rules
 
@@ -110,7 +118,10 @@ Approved dark theme values:
 - Avoid long, duplicated utility strings when a shared component should exist.
 - Use Tailwind responsive utilities for mobile, tablet, and desktop behavior.
 - Keep accessibility states visible with focus and disabled styles.
-- Use the provided premium SaaS dashboard and monthly habit tracker references as the V1 visual direction.
+- Use the provided dashboard references for hierarchy, density, and navigation organization only.
+- Do not copy the reference colors, branding, or startup-dashboard styling.
+- Avoid random gradients, glow effects, glassmorphism, excessive rounded corners, and template-looking visual patterns.
+- Keep the app closer to a premium desktop productivity application than a marketing website.
 - Do not create generic placeholder UI when a polished placeholder-safe page can communicate future structure without fake backend behavior.
 
 ## 6. Theme Application
