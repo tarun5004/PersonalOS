@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, describe, expect, test, vi } from 'vitest';
@@ -24,8 +25,8 @@ function AuthProbe() {
   );
 }
 
-function renderAuthProvider(initialPath = '/dashboard') {
-  render(
+function renderAuthProvider(initialPath = '/dashboard', { strict = false } = {}) {
+  const authTree = (
     <MemoryRouter initialEntries={[initialPath]}>
       <AuthProvider>
         <Routes>
@@ -41,8 +42,10 @@ function renderAuthProvider(initialPath = '/dashboard') {
           />
         </Routes>
       </AuthProvider>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
+
+  render(strict ? <StrictMode>{authTree}</StrictMode> : authTree);
 }
 
 describe('AuthProvider', () => {
@@ -79,5 +82,20 @@ describe('AuthProvider', () => {
       expect(screen.getByText('Login route')).toBeInTheDocument();
     });
     expect(screen.getByTestId('auth-status')).toHaveTextContent('unauthenticated');
+  });
+
+  test('leaves restoring state when session restore fails in StrictMode', async () => {
+    getCurrentUser.mockRejectedValue(
+      new ApiError({
+        status: 502,
+        message: 'Request failed',
+      }),
+    );
+
+    renderAuthProvider('/dashboard', { strict: true });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-status')).toHaveTextContent('unauthenticated');
+    });
   });
 });

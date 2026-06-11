@@ -60,11 +60,14 @@ export function AuthProvider({ children }) {
         }
 
         setError(requestError.message || 'Could not restore session');
+      } finally {
+        if (isMounted) {
+          hasRestoredSession.current = true;
+        }
       }
     }
 
     if (!hasRestoredSession.current) {
-      hasRestoredSession.current = true;
       restoreSession();
     }
 
