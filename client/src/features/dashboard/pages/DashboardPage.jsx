@@ -4,21 +4,22 @@ import {
   BarChart3,
   CalendarDays,
   CheckSquare,
-  ClipboardList,
   Gauge,
   RefreshCcwDot,
-  Target,
 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { EmptyState } from '../../../components/ui/EmptyState.jsx';
-import { CalendarSummaryCard } from '../../../components/shared/CalendarSummaryCard.jsx';
+import { ErrorState } from '../../../components/ui/ErrorState.jsx';
+import { LoadingState } from '../../../components/ui/LoadingState.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
 import { DeferredScoreChart } from '../../../components/shared/DeferredScoreChart.jsx';
 import { NotificationCard } from '../../../components/shared/NotificationCard.jsx';
 import { StatCard } from '../../../components/shared/StatCard.jsx';
 import { TaskCard } from '../../../components/shared/TaskCard.jsx';
 import { useAuth } from '../../auth/useAuth.js';
+import { getDashboardErrorMessage } from '../dashboardApi.js';
+import { useDashboardSummary } from '../useDashboardSummary.js';
 
 const quickActions = [
   { label: 'Review tasks', to: '/tasks', icon: CheckSquare },
@@ -26,53 +27,66 @@ const quickActions = [
   { label: 'View analytics', to: '/analytics', icon: BarChart3 },
 ];
 
-const previewTasks = [
-  {
-    title: 'Plan the first focused task',
-    due: 'Ready for task setup',
-    progress: 0,
-    tag: 'Todo',
-    status: 'todo',
-  },
-  {
-    title: 'Choose habits to track',
-    due: 'Ready for habit setup',
-    progress: 0,
-    tag: 'Habit',
-    status: 'todo',
-  },
-];
-
-const focusItems = [
-  {
-    title: 'Create your first task',
-    detail: 'Turn today into one visible next action.',
-    action: 'Review tasks',
-    to: '/tasks',
-    icon: CheckSquare,
-  },
-  {
-    title: 'Add a habit to begin tracking',
-    detail: 'Choose a daily rhythm before the week fills up.',
-    action: 'Open habits',
-    to: '/habits',
-    icon: RefreshCcwDot,
-  },
-  {
-    title: 'Check weekly progress',
-    detail: 'Keep the signal visible without over-planning.',
-    action: 'View analytics',
-    to: '/analytics',
-    icon: BarChart3,
-  },
-];
-
 function getFirstName(name) {
   return name?.split(' ')[0] || 'there';
 }
 
+function formatScore(score) {
+  return score === null || score === undefined ? '--' : `${Math.round(score)}%`;
+}
+
+function pluralize(count, singular, plural = `${singular}s`) {
+  return `${count} ${count === 1 ? singular : plural}`;
+}
+
+function getFocusItems(summary) {
+  if (!summary) {
+    return [];
+  }
+
+  const taskDetail =
+    summary.tasks.total === 0
+      ? 'Turn today into one visible next action.'
+      : `${pluralize(summary.tasks.incomplete, 'task')} still open today.`;
+  const habitDetail =
+    summary.habits.total === 0
+      ? 'Choose a daily rhythm before the day fills up.'
+      : `${summary.habits.completedToday}/${summary.habits.total} habits checked in.`;
+  const scoreDetail =
+    summary.productivityScore === null
+      ? 'Create activity before weekly analytics unlocks.'
+      : `Today's signal is ${Math.round(summary.productivityScore)}%.`;
+
+  return [
+    {
+      title: summary.tasks.total === 0 ? 'Create your first task' : 'Review today tasks',
+      detail: taskDetail,
+      action: 'Review tasks',
+      to: '/tasks',
+      icon: CheckSquare,
+    },
+    {
+      title: summary.habits.total === 0 ? 'Add a habit to begin tracking' : 'Check habit rhythm',
+      detail: habitDetail,
+      action: 'Open habits',
+      to: '/habits',
+      icon: RefreshCcwDot,
+    },
+    {
+      title: 'Check weekly progress',
+      detail: scoreDetail,
+      action: 'View analytics',
+      to: '/analytics',
+      icon: BarChart3,
+    },
+  ];
+}
+
 export default function DashboardPage() {
   const { user } = useAuth();
+  const summaryQuery = useDashboardSummary();
+  const summary = summaryQuery.data;
+  const focusItems = getFocusItems(summary);
 
   return (
     <section className="grid gap-4">
@@ -92,125 +106,174 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
-        <DashboardCard title="Next actions" action={<Badge variant="muted">Start here</Badge>}>
-          <div className="grid gap-3">
-            {focusItems.map((item) => (
-              <Link
-                className="group grid gap-3 rounded-ui border border-border bg-surface px-4 py-3 transition hover:-translate-y-px hover:border-focus hover:bg-primary-soft sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
-                key={item.title}
-                to={item.to}
-              >
-                <span className="grid size-10 place-items-center rounded-ui bg-primary-soft text-primary-strong">
-                  <item.icon aria-hidden="true" size={18} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-sm font-bold text-body">{item.title}</span>
-                  <span className="mt-0.5 block text-xs leading-5 text-muted">{item.detail}</span>
-                </span>
-                <span className="inline-flex items-center gap-2 text-xs font-semibold text-primary-strong">
-                  {item.action}
-                  <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-0.5" size={15} />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </DashboardCard>
+      {summaryQuery.isLoading ? (
+        <LoadingState label="Loading dashboard..." />
+      ) : summaryQuery.isError ? (
+        <ErrorState
+          message={getDashboardErrorMessage(summaryQuery.error)}
+          onRetry={summaryQuery.refetch}
+          title="Could not load dashboard"
+        />
+      ) : null}
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
-          <StatCard helper="Nothing due yet" icon={CheckSquare} label="Tasks today" value="0" />
-          <StatCard helper="No weekly tasks yet" icon={CalendarDays} label="This week" value="0" />
-          <StatCard helper="Start from Habits" icon={RefreshCcwDot} label="Habit streak" tone="success" value="0d" />
-          <StatCard helper="Build activity first" icon={Gauge} label="Score" tone="warning" value="--" />
-        </div>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-[0.95fr_0.95fr_1.1fr]">
-        <DashboardCard
-          action={<Badge variant="muted">Calm</Badge>}
-          className="bg-surface"
-          title="Notifications"
-        >
-          <div className="grid gap-3">
-            <NotificationCard
-              badge="Ready"
-              detail="Your dashboard shell is ready for connected task and habit data."
-              title="Workspace prepared"
-            />
-            <NotificationCard
-              badge="Next"
-              detail="Task and habit activity will appear as your workspace fills in."
-              title="Activity area ready"
-            />
-          </div>
-        </DashboardCard>
-
-        <DashboardCard title="Quick actions">
-          <div className="grid gap-3">
-            {quickActions.map((action) => (
-              <Button as={Link} className="justify-between" key={action.to} to={action.to} variant="secondary">
-                <span className="inline-flex items-center gap-2">
-                  <action.icon aria-hidden="true" size={17} />
-                  {action.label}
-                </span>
-                <ArrowRight aria-hidden="true" size={16} />
-              </Button>
-            ))}
-          </div>
-        </DashboardCard>
-
-        <DashboardCard title="This week">
-          <CalendarSummaryCard />
-        </DashboardCard>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <DashboardCard title="Upcoming tasks">
-          <div className="grid gap-3">
-            {previewTasks.map((task) => (
-              <TaskCard key={task.title} {...task} />
-            ))}
-          </div>
-        </DashboardCard>
-
-        <DashboardCard title="Habit summary">
-          <div className="grid gap-4">
-            <div className="grid grid-cols-7 gap-2">
-              {Array.from({ length: 7 }, (_, index) => (
-                <span
-                  className="grid aspect-square place-items-center rounded-ui border border-border bg-surface-muted text-xs font-semibold text-muted"
-                  key={index}
-                >
-                  {index + 1}
-                </span>
-              ))}
+      {summary ? (
+        <>
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
+              <StatCard
+                helper={`${summary.tasks.completed} complete · ${summary.tasks.incomplete} open`}
+                icon={CheckSquare}
+                label="Tasks today"
+                value={summary.tasks.total}
+              />
+              <StatCard
+                helper={`${summary.habits.completedToday} checked in today`}
+                icon={CalendarDays}
+                label="Habits today"
+                value={`${summary.habits.completedToday}/${summary.habits.total}`}
+              />
+              <StatCard
+                helper={
+                  summary.productivityScore === null
+                    ? 'No activity tracked today'
+                    : 'Today productivity'
+                }
+                icon={Gauge}
+                label="Score"
+                tone="warning"
+                value={formatScore(summary.productivityScore)}
+              />
+              <StatCard
+                helper="Best active habit run"
+                icon={RefreshCcwDot}
+                label="Habit streak"
+                tone="success"
+                value={`${summary.currentStreak}d`}
+              />
             </div>
-            <EmptyState
-              className="min-h-32 border border-dashed border-border bg-surface-muted/70 p-5"
-              description="Add a habit to begin tracking daily check-ins."
-              framed={false}
-              icon={Target}
-              title="No habit activity yet"
-            />
+
+            <DashboardCard title="Weekly score">
+              <DeferredScoreChart emptyTitle="Weekly score is not available yet" />
+            </DashboardCard>
           </div>
-        </DashboardCard>
-      </div>
 
-      <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <DashboardCard title="Recent tasks">
-          <EmptyState
-            className="min-h-48 border border-dashed border-border bg-surface-muted/70"
-            description="Create your first task to make recent movement visible."
-            framed={false}
-            icon={ClipboardList}
-            title="No recent task movement"
-          />
-        </DashboardCard>
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+            <DashboardCard title="Next actions" action={<Badge variant="muted">Start here</Badge>}>
+              <div className="grid gap-3">
+                {focusItems.map((item) => (
+                  <Link
+                    className="group grid gap-3 rounded-ui border border-border bg-surface px-4 py-3 transition hover:-translate-y-px hover:border-focus hover:bg-primary-soft sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
+                    key={item.title}
+                    to={item.to}
+                  >
+                    <span className="grid size-10 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+                      <item.icon aria-hidden="true" size={18} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-bold text-body">{item.title}</span>
+                      <span className="mt-0.5 block text-xs leading-5 text-muted">
+                        {item.detail}
+                      </span>
+                    </span>
+                    <span className="inline-flex items-center gap-2 text-xs font-semibold text-primary-strong">
+                      {item.action}
+                      <ArrowRight
+                        aria-hidden="true"
+                        className="transition group-hover:translate-x-0.5"
+                        size={15}
+                      />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </DashboardCard>
+          </div>
 
-        <DashboardCard title="Weekly score">
-          <DeferredScoreChart emptyTitle="No weekly score yet" />
-        </DashboardCard>
-      </div>
+          <div className="grid gap-4 xl:grid-cols-[0.95fr_0.95fr]">
+            <DashboardCard
+              action={<Badge variant="muted">Today</Badge>}
+              className="bg-surface"
+              title="Daily signals"
+            >
+              <div className="grid gap-3">
+                <NotificationCard
+                  badge={`${summary.tasks.completionRate}%`}
+                  detail={`${summary.tasks.completed} of ${summary.tasks.total} due-today tasks are complete.`}
+                  title="Today task signal"
+                />
+                <NotificationCard
+                  badge={`${summary.habits.completionRate}%`}
+                  detail={`${summary.habits.completedToday} of ${summary.habits.total} habits checked in for the UTC day.`}
+                  title="Habit rhythm"
+                />
+              </div>
+            </DashboardCard>
+
+            <DashboardCard title="Quick actions">
+              <div className="grid gap-3">
+                {quickActions.map((action) => (
+                  <Button
+                    as={Link}
+                    className="justify-between"
+                    key={action.to}
+                    to={action.to}
+                    variant="secondary"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <action.icon aria-hidden="true" size={17} />
+                      {action.label}
+                    </span>
+                    <ArrowRight aria-hidden="true" size={16} />
+                  </Button>
+                ))}
+              </div>
+            </DashboardCard>
+          </div>
+
+          <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+            <DashboardCard title="Today's task status">
+              {summary.tasks.total === 0 ? (
+                <EmptyState
+                  className="min-h-48 border border-dashed border-border bg-surface-muted/70"
+                  description="Create a due-today task to make the dashboard actionable."
+                  framed={false}
+                  icon={CheckSquare}
+                  title="No due-today tasks"
+                />
+              ) : (
+                <TaskCard
+                  due={`${summary.tasks.incomplete} still open`}
+                  progress={summary.tasks.completionRate}
+                  status={summary.tasks.incomplete === 0 ? 'done' : 'todo'}
+                  tag={summary.tasks.incomplete === 0 ? 'Clear' : 'Today'}
+                  title={`${summary.tasks.completed} of ${summary.tasks.total} tasks complete`}
+                />
+              )}
+            </DashboardCard>
+
+            <DashboardCard title="Habit summary">
+              {summary.habits.total === 0 ? (
+                <EmptyState
+                  className="min-h-32 border border-dashed border-border bg-surface-muted/70 p-5"
+                  description="Add a habit to begin tracking daily check-ins."
+                  framed={false}
+                  icon={RefreshCcwDot}
+                  title="No habit activity yet"
+                />
+              ) : (
+                <div className="rounded-ui border border-border bg-surface-muted/70 p-5">
+                  <p className="m-0 text-sm font-bold text-body">
+                    {summary.habits.completedToday}/{summary.habits.total} habits complete today
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-muted">
+                    Current active streak signal: {summary.currentStreak} days.
+                  </p>
+                </div>
+              )}
+            </DashboardCard>
+          </div>
+        </>
+      ) : null}
     </section>
   );
 }
