@@ -6,29 +6,40 @@ Source of truth: Master Prompt V4
 
 ## 0. Current Control Chunk
 
-Active chunk: Desktop-app UX and evidence-backed performance hardening before Phase 8.
+Active chunk: Overnight multi-agent execution through Phase 15.
 
-Approved scope:
+Completed:
 
-- Implement true application-shell behavior where sidebar, topbar, navigation, and profile context remain visible.
-- Make only the main content area scroll.
-- Improve dashboard hierarchy so next actions and status are visible before decorative greetings.
-- Increase useful information density without adding new features.
-- Apply only performance optimizations supported by the completed baseline audit.
-- Preserve existing user-facing behavior, auth, routing, data flow, and page set.
-- Run frontend tests, frontend build, browser/manual QA, and `git diff --check`.
+- Phase 8 Task Backend
+- Phase 9 Task Frontend
 
-This chunk does not approve Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, settings backend behavior, new product features, AI features, backend business logic changes, or auth redesigns.
+Active execution order:
 
-Phase 8 remains blocked pending UX and performance approval.
+1. Phase 10: Habit Backend
+2. Phase 11: Habit Frontend
+3. Phase 12: Dashboard Summary Backend
+4. Phase 13: Dashboard Frontend
+5. Phase 14: Analytics Backend
+6. Phase 15: Analytics Frontend
+
+Execution requirements:
+
+- Work one phase at a time.
+- Implement, review, test, browser/manual QA, fix, retest, and internally approve each phase before advancing.
+- Use the mandatory multi-agent phase gate from `AGENTS.md`.
+- Use realistic seeded data for browser/manual QA as soon as the required backend feature data exists.
+- Runtime crashes, white screens, console errors, broken navigation, failing tests, failing builds, or blocking API errors must be fixed before moving forward.
+- Do not start Phase 16, release action, post-V1 work, AI features, auth redesigns, or unrelated backend/frontend features during this execution.
+- Run required automated checks, browser/manual QA, performance review, security review, red-team review, and `git diff --check`.
 
 ## 1. Operating Rules
 
 - Work one phase at a time.
 - Split large phases into small chunks when useful.
-- Stop after every chunk when review is requested.
-- Stop after every phase and wait for approval.
-- Do not start the next phase unless the developer explicitly says `Proceed to Phase X` or `Proceed to next phase`.
+- Stop after every chunk when review is requested unless the active execution explicitly authorizes continuous gated execution.
+- Outside the active overnight execution, stop after every phase and wait for approval.
+- During the active overnight execution, do not start the next phase until the current phase passes the mandatory multi-agent phase gate.
+- Do not start the next phase unless the developer explicitly says `Proceed to Phase X`, `Proceed to next phase`, or gives an approved continuous execution plan naming the phase range.
 - Do not touch unrelated files.
 - Do not install packages unless the active phase allows it.
 - Tailwind CSS v4 is the approved V1 styling system.
@@ -45,6 +56,7 @@ Phase 8 remains blocked pending UX and performance approval.
 
 - `Proceed to Phase X`: start the named phase if prior dependencies are approved.
 - `Proceed to next phase`: start the next phase if the previous phase is approved.
+- `Run phase gate review`: run the mandatory multi-agent phase gate for the active phase without starting a later phase.
 - `Review current phase`: inspect current phase output and report findings.
 - `Fix current phase`: modify only files allowed in the active phase.
 
@@ -62,6 +74,8 @@ State/cache behavior:
 Tests added:
 Manual QA steps:
 Docs updated:
+Phase gate result:
+Red team result:
 Known limitations:
 What was intentionally not included:
 Stop condition: STOP - awaiting developer approval for Phase [X+1]

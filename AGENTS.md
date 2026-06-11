@@ -68,11 +68,28 @@ After editing:
 
 Use sub-agents only when the user has explicitly allowed multi-agent work for the session or task and the tool is available.
 
+The current overnight execution request explicitly requires a coordinated multi-agent engineering workflow. For Phases 10 through 15, every phase must use a phase gate before advancing.
+
+Required phase-gate reviewers:
+
+- Lead Architect: verifies scope, architecture, maintainability, and phase boundaries.
+- Backend Engineer: verifies API, model, service, controller, validation, indexes, and backend tests when backend files are touched.
+- Frontend Engineer: verifies UI, forms, state management, loading, empty, error, and accessibility behavior when frontend files are touched.
+- Performance Engineer: verifies lazy loading, query efficiency, render behavior, bundle impact, pagination, and database query patterns.
+- Security Auditor: verifies authentication, authorization, ownership checks, input validation, API exposure, and sensitive data handling.
+- QA Engineer: verifies routes, buttons, forms, modals, workflows, navigation paths, and realistic seeded data.
+- Production Reviewer: reviews the result as a daily-use product for clarity, trust, speed, and unfinished-feeling UX.
+- Red Team Reviewer: actively tries invalid inputs, edge cases, unauthorized access, pagination abuse, race-prone flows, empty states, and large-data scenarios.
+
+A phase gate is required before moving from one approved overnight phase to the next. A gate pass does not authorize work outside the current overnight execution plan, does not authorize Phase 16 or release action, and does not override source-of-truth documentation.
+
+If sub-agent tooling is unavailable, report the tooling gap and perform a clearly labeled local simulated review for each required role. Do not claim a real sub-agent approval when a local simulated review was used.
+
 Good delegated work:
 
 - Reviewing a draft against approved docs.
 - Checking a specific layer for consistency.
-- Implementing a clearly owned, disjoint file group in a later implementation phase.
+- Implementing a clearly owned, disjoint file group only after that phase is explicitly approved and listed as the active phase.
 - Running independent verification while the main agent continues non-overlapping work.
 
 Rules for delegated work:
@@ -116,23 +133,22 @@ State management must remain:
 
 API calls must remain centralized. Components must not contain raw backend endpoint strings.
 
-## 6. Active Desktop-App UX Hardening Guardrails
+## 6. Active Execution Guardrails
 
-The current active chunk is desktop-app UX and evidence-backed performance hardening before Phase 8.
+The current active execution is the approved overnight run from Phase 10 through Phase 15.
 
-- Phase 8 remains blocked pending UX and performance approval.
-- Do not start new features, backend feature routes, AI features, product redesign, or Phase 8 work.
-- Do not change backend business logic, auth behavior, API contracts, routing contracts, or state-management ownership.
-- The protected app shell must behave like a desktop application: viewport-height shell, persistent sidebar, persistent topbar, persistent user/profile context, and independently scrollable main content.
-- Avoid document-level page scrolling for protected routes; only the content workspace should scroll.
-- Avoid double scrollbars and layout shift.
-- Dashboard hierarchy must prioritize next actions, due/attention items, habit status, streaks, and weekly progress over oversized greetings or marketing copy.
-- Empty states should guide the user toward the next useful action without pretending unsupported backend features exist.
-- Implement performance changes only when supported by measurement or the completed baseline audit.
-- Prefer deleting unused dependency weight over keeping decorative runtime code.
-- Preserve existing auth, routing, state management, user-facing behavior, and responsive behavior.
+- Phase 9 Task Frontend is complete and committed.
+- Phase 10 Habit Backend is the next implementation phase.
+- Continue one phase at a time through Phase 15 only.
+- Do not start Phase 16, release action, or post-V1 work during this run.
+- Do not skip required implementation, review, test, browser QA, performance review, security review, red-team review, or internal approval gates.
+- Do not change auth behavior, routing contracts, API contracts outside the active phase, or state-management ownership unless a verified integration bug requires it.
+- Preserve existing user-facing behavior unless the active phase explicitly adds or wires the documented feature.
+- Use realistic seeded data for browser/manual QA once the relevant backend data exists.
+- Runtime crashes, white screens, console errors, broken navigation, failed tests, failed builds, and blocking API errors must be fixed before advancing.
+- Keep commits logical and readable at phase or major-chunk boundaries.
 - Report tooling gaps honestly instead of adding dependencies by default.
-- Add dependencies only when a reviewed optimization chunk justifies measurable value.
+- Add dependencies only when the active phase or a measured optimization justifies the value.
 
 ## 7. UI and Theme Guardrails
 
