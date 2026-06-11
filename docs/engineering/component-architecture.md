@@ -62,10 +62,25 @@ client/src/components/shared/
 Planned components:
 
 - `StatCard`
+- `DashboardCard`
+- `TaskCard`
+- `NotificationCard`
+- `EventCard`
+- `CalendarSummaryCard`
 - `SectionCard`
 - `ConfirmDialog`
 - `ProgressRing`
 - `DatePicker`
+
+The protected app shell should follow the approved dashboard reference direction:
+
+- soft white dashboard workspace
+- purple accent navigation rail
+- rounded cards with restrained shadows
+- dense but readable dashboard sections
+- desktop and mobile layouts that preserve the same hierarchy
+
+Reference-style cards may be used for visual structure before data APIs are complete, but they must not imply undocumented backend features are implemented.
 
 ## 3. Feature Components
 

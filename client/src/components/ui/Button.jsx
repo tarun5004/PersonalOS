@@ -5,6 +5,7 @@ const VARIANTS = {
     'border-transparent bg-gradient-to-r from-primary to-focus text-primary-text shadow-card hover:from-primary-strong hover:to-focus',
   secondary:
     'border-border bg-surface text-body hover:border-focus hover:bg-surface-muted',
+  dark: 'border-body bg-body text-primary-text hover:border-body hover:bg-body/90',
   ghost:
     'border-transparent bg-transparent text-muted hover:bg-surface-muted hover:text-body',
   danger:

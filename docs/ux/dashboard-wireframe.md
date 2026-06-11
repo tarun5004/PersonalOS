@@ -88,6 +88,8 @@ Every dashboard module will support:
 
 ## 8. Visual Direction
 
-The dashboard will feel clean, modern, minimal, professional, and responsive. Components will use theme variables rather than hardcoded colors.
+The dashboard will feel close to the approved reference image: a soft white SaaS workspace, purple accent navigation, rounded cards, calm shadows, compact dashboard modules, and a clear topbar/navigation hierarchy.
 
 Dashboard cards should be scannable and calm. The page should avoid marketing-style hero sections, decorative clutter, and feature cards that are not connected to real V1 data.
+
+Reference-inspired visual cards may be used as placeholders for the shell, dashboard composition, and reusable component structure. They do not add V1 requirements for boards, premium prompts, integrations, collaboration, or calendar-backed scheduling.

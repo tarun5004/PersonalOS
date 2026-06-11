@@ -22,6 +22,18 @@ The backend will run through Node.js and Express.
 
 During development, Vite will proxy `/api` requests to the backend. This avoids cross-origin issues during local development and keeps the frontend API client from hardcoding localhost.
 
+Local development may use either MongoDB Atlas or a local MongoDB instance.
+
+Recommended local fallback:
+
+```text
+MONGODB_URI=mongodb://127.0.0.1:27017/personal-os
+```
+
+When using MongoDB Atlas, the URI must include an application database path, such as `/personal-os`, and the developer's current IP/network must be allowed by Atlas. If Atlas closes the connection during startup, switch the ignored local `server/.env` to the local MongoDB URI above until the Atlas network allowlist is fixed.
+
+Real Atlas credentials must remain only in ignored local `.env` files.
+
 ## 3. Production API Base URL
 
 In production, the frontend will read:

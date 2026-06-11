@@ -6,7 +6,7 @@ export function PageHeader({ description, eyebrow, title }) {
           {eyebrow}
         </p>
       ) : null}
-      <p className="mt-1 text-xl font-extrabold text-body">{title}</p>
+      <p className="mt-1 text-lg font-extrabold text-body">{title}</p>
       {description ? <p className="mt-1 text-sm text-muted">{description}</p> : null}
     </div>
   );
