@@ -2,7 +2,7 @@ import { Check, ChevronLeft, ChevronRight, Minus, Plus, X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
-import { ScoreChart } from '../../../components/shared/ScoreChart.jsx';
+import { DeferredScoreChart } from '../../../components/shared/DeferredScoreChart.jsx';
 import { mergeClassNames } from '../../../lib/classNames.js';
 
 const habits = [
@@ -61,14 +61,14 @@ function HabitCell({ day, state }) {
 
 export default function HabitsPage() {
   return (
-    <section className="grid gap-5">
-      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+    <section className="grid gap-4">
+      <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-end">
         <div>
           <Badge>Habits</Badge>
-          <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
+          <h1 className="mt-3 text-[clamp(1.65rem,3vw,2.35rem)] font-bold leading-tight text-body">
             Monthly tracker
           </h1>
-          <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
             A monthly check-in grid shaped for streaks, completion rate, and daily rhythm.
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function HabitsPage() {
       </DashboardCard>
 
       <DashboardCard title="Daily habits score graph">
-        <ScoreChart data={scorePreview} />
+        <DeferredScoreChart data={scorePreview} />
       </DashboardCard>
     </section>
   );

@@ -29,23 +29,23 @@ export function Sidebar({ routes }) {
 
   return (
     <aside
-      className="sidebar-gradient flex items-center gap-4 p-5 text-sidebar-text shadow-[var(--shadow-sidebar)] lg:flex-col lg:items-stretch lg:gap-6 lg:px-4 lg:py-6"
+      className="sidebar-gradient flex shrink-0 items-center gap-3 p-3 text-sidebar-text shadow-[var(--shadow-sidebar)] sm:p-4 lg:h-full lg:min-h-0 lg:flex-col lg:items-stretch lg:gap-5 lg:px-4 lg:py-5"
       aria-label="Primary navigation"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         <span
           className="grid size-10 place-items-center rounded-ui bg-sidebar-text text-sm font-bold text-primary shadow-card"
           aria-hidden="true"
         >
           OS
         </span>
-        <div>
+        <div className="min-w-0">
           <p className="m-0 font-bold">Personal OS</p>
           <p className="mt-0.5 text-sm text-sidebar-muted">Command center</p>
         </div>
       </div>
 
-      <nav className="ml-auto flex flex-wrap items-center gap-2 lg:ml-0 lg:grid lg:gap-2">
+      <nav className="ml-auto flex min-w-0 items-center gap-1 overflow-x-auto lg:ml-0 lg:grid lg:gap-2 lg:overflow-visible">
         {routes.map((route) => {
           const Icon = routeIcons[route.label] || Home;
 
@@ -54,7 +54,7 @@ export function Sidebar({ routes }) {
               aria-label={route.label}
               className={({ isActive }) =>
                 mergeClassNames(
-                  'group relative flex min-h-11 items-center justify-center gap-3 rounded-ui border px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-sidebar-text/25 lg:justify-start',
+                  'group relative flex min-h-10 shrink-0 items-center justify-center gap-3 rounded-ui border px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-sidebar-text/25 lg:min-h-11 lg:justify-start',
                   isActive
                     ? 'border-sidebar-text/20 bg-sidebar-text/15 text-sidebar-text shadow-card'
                     : 'border-transparent text-sidebar-muted hover:bg-sidebar-text/10 hover:text-sidebar-text',

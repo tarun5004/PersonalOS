@@ -38,14 +38,14 @@ const columns = [
 
 export default function TasksPage() {
   return (
-    <section className="grid gap-5">
-      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+    <section className="grid gap-4">
+      <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-end">
         <div>
           <Badge>Tasks</Badge>
-          <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
+          <h1 className="mt-3 text-[clamp(1.65rem,3vw,2.35rem)] font-bold leading-tight text-body">
             Personal task list
           </h1>
-          <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
             A quiet task board with clear status lanes and room for priority, due dates, and progress.
           </p>
         </div>
@@ -71,10 +71,10 @@ export default function TasksPage() {
         </div>
       </DashboardCard>
 
-      <div className="grid gap-5 xl:grid-cols-3">
+      <div className="grid gap-4 xl:grid-cols-3">
         {columns.map((column) => (
           <DashboardCard
-            className="min-h-[460px] bg-surface"
+            className="min-h-[380px] bg-surface"
             key={column.title}
             title={column.title}
             action={<Badge variant="muted">{column.tasks.length}</Badge>}
@@ -94,8 +94,9 @@ export default function TasksPage() {
               </div>
             ) : (
               <EmptyState
-                className="min-h-60 border-dashed bg-surface/75 shadow-none"
-                description="No tasks in this lane yet."
+                className="min-h-52 border border-dashed border-border bg-surface-muted/65"
+                description="Tasks will settle here as their status changes."
+                framed={false}
                 icon={CalendarClock}
                 title={`No ${column.title.toLowerCase()} tasks`}
               />

@@ -6,19 +6,21 @@ Source of truth: Master Prompt V4
 
 ## 0. Current Control Chunk
 
-Active chunk: Performance, scalability, architecture, and UX hardening audit before Phase 8.
+Active chunk: Desktop-app UX and evidence-backed performance hardening before Phase 8.
 
 Approved scope:
 
-- Measure frontend bundle, route chunks, browser performance, and Lighthouse baseline.
-- Audit backend response timing, query patterns, indexes, caching gaps, observability gaps, and security posture.
-- Document findings before implementing optimizations.
-- Preserve existing user-facing behavior, auth, routing, data flow, and UI structure.
-- Run frontend tests, backend tests, frontend build, Lighthouse where available, and `git diff --check`.
+- Implement true application-shell behavior where sidebar, topbar, navigation, and profile context remain visible.
+- Make only the main content area scroll.
+- Improve dashboard hierarchy so next actions and status are visible before decorative greetings.
+- Increase useful information density without adding new features.
+- Apply only performance optimizations supported by the completed baseline audit.
+- Preserve existing user-facing behavior, auth, routing, data flow, and page set.
+- Run frontend tests, frontend build, browser/manual QA, and `git diff --check`.
 
-This chunk does not approve optimization implementation or Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, settings backend behavior, new product features, or performance changes before engineering review.
+This chunk does not approve Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, settings backend behavior, new product features, AI features, backend business logic changes, or auth redesigns.
 
-Phase 8 is blocked until the performance hardening audit is reviewed and the next optimization chunk is explicitly approved.
+Phase 8 remains blocked pending UX and performance approval.
 
 ## 1. Operating Rules
 

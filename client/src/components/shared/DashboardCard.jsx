@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Card } from '../ui/Card.jsx';
 import { mergeClassNames } from '../../lib/classNames.js';
 
@@ -12,15 +11,11 @@ export function DashboardCard({
 }) {
   return (
     <Card
-      as={motion.section}
+      as="section"
       className={mergeClassNames(
-        'p-5',
+        'min-w-0 p-4 transition duration-200 hover:border-focus/70 sm:p-5',
         className,
       )}
-      initial={{ opacity: 0, y: 4 }}
-      transition={{ duration: 0.16, ease: 'easeOut' }}
-      viewport={{ once: true }}
-      whileInView={{ opacity: 1, y: 0 }}
       {...props}
     >
       {(eyebrow || title || action) && (

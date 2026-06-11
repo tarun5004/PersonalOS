@@ -18,8 +18,8 @@ export function Topbar({ routes }) {
   const userLabel = user?.name ? user.name : 'Personal session';
 
   return (
-    <header className="sticky top-0 z-10 grid min-h-16 gap-4 border-b border-border bg-surface/95 px-5 py-4 backdrop-blur sm:px-8 lg:px-9">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <header className="z-10 grid shrink-0 gap-3 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-6">
           <PageHeader
             description={activeRoute?.description}
@@ -44,7 +44,7 @@ export function Topbar({ routes }) {
           </nav>
         </div>
 
-        <div className="flex w-full flex-wrap items-center justify-start gap-3 lg:w-auto lg:justify-end">
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:w-auto lg:justify-end">
           <Badge className="normal-case" variant="muted">
             {userLabel}
           </Badge>

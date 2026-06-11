@@ -49,9 +49,11 @@ On smaller screens, dashboard sections will stack in this order:
 
 ## 6. Required Dashboard Modules
 
-### Welcome Message
+### Command Brief
 
-The welcome area will greet the user and orient them to today's work.
+The command brief will answer "What should I do next?" before any decorative greeting.
+
+It may include a small personal greeting, but the largest content area should prioritize next actions, attention items, habit status, and task visibility.
 
 ### Today's Tasks Summary
 
@@ -96,4 +98,13 @@ Dashboard cards should be scannable, calm, and useful. The page should avoid mar
 
 Reference-inspired visual cards may be used as placeholders for the shell, dashboard composition, and reusable component structure. They do not add V1 requirements for boards, premium prompts, integrations, collaboration, or calendar-backed scheduling.
 
-Phase 8 is blocked until PersonalOS visual review is approved.
+## 9. Desktop-App Behavior
+
+The dashboard is rendered inside the protected application shell.
+
+- Sidebar, navigation, topbar, and user context remain visible.
+- Only the dashboard content workspace scrolls.
+- The first screen should show useful action/status information without requiring the user to scroll past an oversized greeting.
+- Empty states should guide the user toward the next useful action, such as creating a first task or adding a first habit.
+
+Phase 8 remains blocked pending UX and performance approval.

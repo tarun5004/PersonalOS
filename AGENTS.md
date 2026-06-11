@@ -116,14 +116,20 @@ State management must remain:
 
 API calls must remain centralized. Components must not contain raw backend endpoint strings.
 
-## 6. Active Hardening Audit Guardrails
+## 6. Active Desktop-App UX Hardening Guardrails
 
-The current active chunk is a performance, scalability, architecture, and UX hardening audit before Phase 8.
+The current active chunk is desktop-app UX and evidence-backed performance hardening before Phase 8.
 
-- Phase 8 is blocked until this audit is reviewed and the next optimization chunk is explicitly approved.
+- Phase 8 remains blocked pending UX and performance approval.
 - Do not start new features, backend feature routes, AI features, product redesign, or Phase 8 work.
-- Do not implement performance optimizations before the audit findings are reviewed.
-- Measure before changing implementation.
+- Do not change backend business logic, auth behavior, API contracts, routing contracts, or state-management ownership.
+- The protected app shell must behave like a desktop application: viewport-height shell, persistent sidebar, persistent topbar, persistent user/profile context, and independently scrollable main content.
+- Avoid document-level page scrolling for protected routes; only the content workspace should scroll.
+- Avoid double scrollbars and layout shift.
+- Dashboard hierarchy must prioritize next actions, due/attention items, habit status, streaks, and weekly progress over oversized greetings or marketing copy.
+- Empty states should guide the user toward the next useful action without pretending unsupported backend features exist.
+- Implement performance changes only when supported by measurement or the completed baseline audit.
+- Prefer deleting unused dependency weight over keeping decorative runtime code.
 - Preserve existing auth, routing, state management, user-facing behavior, and responsive behavior.
 - Report tooling gaps honestly instead of adding dependencies by default.
 - Add dependencies only when a reviewed optimization chunk justifies measurable value.

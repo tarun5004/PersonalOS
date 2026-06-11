@@ -82,6 +82,9 @@ The protected app shell should follow the approved PersonalOS visual direction:
 - rounded cards with subtle borders, restrained shadows, and consistent spacing
 - dense but readable dashboard sections for daily life planning
 - desktop and mobile layouts that preserve the same hierarchy
+- viewport-height application shell rather than document-level webpage scrolling
+- persistent sidebar, topbar, navigation, and user/profile context
+- independently scrollable main content workspace with no double scrollbars
 
 Reference-style cards may be used for layout structure before data APIs are complete, but they must not imply undocumented backend features are implemented.
 
@@ -89,7 +92,21 @@ Avoid visual patterns that make the app feel AI-generated or template-like: brig
 
 The visual identity modernization chunk before Phase 8 may polish Dashboard, Tasks, Habits, Analytics, Settings, Login, and Register screens using placeholder-safe structures only. It must not implement backend feature behavior or duplicate app layout code.
 
-Phase 8 is blocked until PersonalOS visual review is approved.
+Phase 8 remains blocked pending UX and performance approval.
+
+## 2.1 App Shell Scrolling Architecture
+
+Protected routes must use a true application shell:
+
+- Outer shell height equals the viewport height.
+- Sidebar remains visible and full-height on desktop.
+- Mobile navigation remains visible above the content workspace.
+- Topbar remains visible because it lives outside the scrollable content region.
+- `main` owns vertical scrolling for page content.
+- The document/body should not become the primary scroll container for protected routes.
+- Do not introduce nested scroll areas inside cards unless a specific component, such as a large grid or table, requires it.
+
+This is required so PersonalOS feels like a daily-use desktop application rather than a long marketing or dashboard page.
 
 ## 3. Feature Components
 
