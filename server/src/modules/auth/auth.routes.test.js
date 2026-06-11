@@ -37,7 +37,11 @@ describe('auth routes', () => {
   test('register returns user and sets HttpOnly cookie', async () => {
     const app = createApp({
       service: {
-        registerUser: jest.fn().mockResolvedValue({ user, token: 'signed-token' }),
+        registerUser: jest.fn().mockResolvedValue({
+          user,
+          accessToken: 'access-token',
+          refreshToken: 'refresh-token',
+        }),
       },
     });
 
@@ -50,11 +54,12 @@ describe('auth routes', () => {
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
       success: true,
-      data: { user },
+      data: { user, accessToken: 'access-token' },
     });
     expect(response.body.data.user.passwordHash).toBeUndefined();
     expect(response.body.data.user.role).toBeUndefined();
     expect(response.headers['set-cookie'][0]).toContain('HttpOnly');
+    expect(response.headers['set-cookie'][0]).toContain('personal_os_refresh=');
   });
 
   test('register validation failure returns 400', async () => {
@@ -93,7 +98,11 @@ describe('auth routes', () => {
   test('login returns user and sets HttpOnly cookie', async () => {
     const app = createApp({
       service: {
-        loginUser: jest.fn().mockResolvedValue({ user, token: 'signed-token' }),
+        loginUser: jest.fn().mockResolvedValue({
+          user,
+          accessToken: 'access-token',
+          refreshToken: 'refresh-token',
+        }),
       },
     });
 
@@ -105,8 +114,37 @@ describe('auth routes', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       success: true,
-      data: { user },
+      data: { user, accessToken: 'access-token' },
     });
+    expect(response.headers['set-cookie'][0]).toContain('HttpOnly');
+  });
+
+  test('refresh rotates refresh cookie and returns user with access token', async () => {
+    const refreshSession = jest.fn().mockResolvedValue({
+      user,
+      accessToken: 'new-access-token',
+      refreshToken: 'new-refresh-token',
+    });
+    const app = createApp({
+      service: {
+        refreshSession,
+      },
+    });
+
+    const response = await request(app)
+      .post('/api/auth/refresh')
+      .set('Cookie', ['personal_os_refresh=old-refresh-token']);
+
+    expect(response.status).toBe(200);
+    expect(refreshSession).toHaveBeenCalledWith(
+      'old-refresh-token',
+      expect.objectContaining({ userAgent: expect.any(String) }),
+    );
+    expect(response.body).toEqual({
+      success: true,
+      data: { user, accessToken: 'new-access-token' },
+    });
+    expect(response.headers['set-cookie'][0]).toContain('personal_os_refresh=');
     expect(response.headers['set-cookie'][0]).toContain('HttpOnly');
   });
 
@@ -127,8 +165,9 @@ describe('auth routes', () => {
   });
 
   test('logout returns 200 without requiring a cookie', async () => {
+    const logout = jest.fn();
     const app = createApp({
-      service: {},
+      service: { logout },
     });
 
     const response = await request(app).post('/api/auth/logout');
@@ -138,7 +177,8 @@ describe('auth routes', () => {
       success: true,
       message: 'Logged out successfully',
     });
-    expect(response.headers['set-cookie'][0]).toContain('personal_os_token=');
+    expect(logout).toHaveBeenCalledWith(undefined);
+    expect(response.headers['set-cookie'][0]).toContain('personal_os_refresh=');
     expect(response.headers['set-cookie'][0]).toContain('Expires=Thu, 01 Jan 1970');
   });
 

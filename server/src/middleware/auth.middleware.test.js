@@ -22,9 +22,9 @@ function createTestApp(service) {
 }
 
 describe('requireAuth middleware', () => {
-  test('rejects requests without auth cookie', async () => {
+  test('rejects requests without bearer access token', async () => {
     const app = createTestApp({
-      getUserFromToken: jest.fn(),
+      getUserFromAccessToken: jest.fn(),
     });
 
     const response = await request(app).get('/private');
@@ -33,9 +33,9 @@ describe('requireAuth middleware', () => {
     expect(response.body.success).toBe(false);
   });
 
-  test('accepts requests with valid auth cookie', async () => {
+  test('accepts requests with valid bearer access token', async () => {
     const app = createTestApp({
-      getUserFromToken: jest.fn().mockResolvedValue({
+      getUserFromAccessToken: jest.fn().mockResolvedValue({
         _id: 'user-1',
         name: 'Test User',
         email: 'test@example.com',
@@ -45,7 +45,7 @@ describe('requireAuth middleware', () => {
 
     const response = await request(app)
       .get('/private')
-      .set('Cookie', ['personal_os_token=valid-token']);
+      .set('Authorization', 'Bearer valid-token');
 
     expect(response.status).toBe(200);
     expect(response.body.data.user).toEqual({
@@ -56,14 +56,14 @@ describe('requireAuth middleware', () => {
     });
   });
 
-  test('rejects requests with invalid auth cookie', async () => {
+  test('rejects requests with invalid bearer access token', async () => {
     const app = createTestApp({
-      getUserFromToken: jest.fn().mockRejectedValue(new AuthError('Invalid or expired token')),
+      getUserFromAccessToken: jest.fn().mockRejectedValue(new AuthError('Invalid or expired token')),
     });
 
     const response = await request(app)
       .get('/private')
-      .set('Cookie', ['personal_os_token=invalid-token']);
+      .set('Authorization', 'Bearer invalid-token');
 
     expect(response.status).toBe(401);
     expect(response.body.message).toBe('Invalid or expired token');

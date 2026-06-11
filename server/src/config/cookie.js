@@ -1,21 +1,20 @@
 import { env } from './env.js';
 
-export function getAuthCookieOptions() {
+export function getRefreshCookieOptions() {
   return {
     httpOnly: true,
     secure: env.COOKIE_SECURE,
     sameSite: env.COOKIE_SAME_SITE,
-    maxAge: env.COOKIE_MAX_AGE_MS,
+    maxAge: env.REFRESH_TOKEN_MAX_AGE_MS,
     path: '/',
   };
 }
 
-export function setAuthCookie(response, token) {
-  response.cookie(env.COOKIE_NAME, token, getAuthCookieOptions());
+export function setRefreshCookie(response, token) {
+  response.cookie(env.REFRESH_TOKEN_COOKIE_NAME, token, getRefreshCookieOptions());
 }
 
-export function clearAuthCookie(response) {
-  const { maxAge, ...options } = getAuthCookieOptions();
-  response.clearCookie(env.COOKIE_NAME, options);
+export function clearRefreshCookie(response) {
+  const { maxAge, ...options } = getRefreshCookieOptions();
+  response.clearCookie(env.REFRESH_TOKEN_COOKIE_NAME, options);
 }
-

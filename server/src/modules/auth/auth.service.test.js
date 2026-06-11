@@ -13,6 +13,24 @@ function createUser(overrides = {}) {
   };
 }
 
+function createRefreshTokenModel() {
+  return {
+    create: jest.fn().mockResolvedValue({ _id: 'refresh-token-1' }),
+    findOne: jest.fn(),
+    updateMany: jest.fn().mockResolvedValue({ modifiedCount: 1 }),
+    updateOne: jest.fn().mockResolvedValue({ modifiedCount: 1 }),
+  };
+}
+
+function createCryptoAdapter(token = 'refresh-token') {
+  return {
+    randomUUID: jest.fn().mockReturnValue('family-1'),
+    randomBytes: jest.fn().mockReturnValue({
+      toString: jest.fn().mockReturnValue(token),
+    }),
+  };
+}
+
 describe('AuthService', () => {
   test('registerUser creates a user with a hashed password and safe response', async () => {
     const createdUser = createUser();
@@ -24,9 +42,17 @@ describe('AuthService', () => {
       hash: jest.fn().mockResolvedValue('hashed-password'),
     };
     const jwtAdapter = {
-      sign: jest.fn().mockReturnValue('signed-token'),
+      sign: jest.fn().mockReturnValue('access-token'),
     };
-    const service = new AuthService({ UserModel, bcryptAdapter, jwtAdapter });
+    const RefreshTokenModel = createRefreshTokenModel();
+    const cryptoAdapter = createCryptoAdapter();
+    const service = new AuthService({
+      UserModel,
+      RefreshTokenModel,
+      bcryptAdapter,
+      jwtAdapter,
+      cryptoAdapter,
+    });
 
     const result = await service.registerUser({
       name: 'Test User',
@@ -49,7 +75,20 @@ describe('AuthService', () => {
     });
     expect(result.user.passwordHash).toBeUndefined();
     expect(result.user.role).toBeUndefined();
-    expect(result.token).toBe('signed-token');
+    expect(jwtAdapter.sign).toHaveBeenCalledWith(
+      { sub: 'user-1' },
+      'test-access-secret-that-is-long-enough',
+      { expiresIn: '15m' },
+    );
+    expect(RefreshTokenModel.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: 'user-1',
+        familyId: 'family-1',
+        userAgent: '',
+      }),
+    );
+    expect(result.accessToken).toBe('access-token');
+    expect(result.refreshToken).toBe('refresh-token');
   });
 
   test('registerUser throws ConflictError for duplicate email', async () => {
@@ -76,6 +115,7 @@ describe('AuthService', () => {
         findOne: jest.fn().mockResolvedValue(null),
         create: jest.fn().mockRejectedValue(duplicateError),
       },
+      RefreshTokenModel: createRefreshTokenModel(),
       bcryptAdapter: {
         hash: jest.fn().mockResolvedValue('hashed-password'),
       },
@@ -101,8 +141,10 @@ describe('AuthService', () => {
         compare: jest.fn().mockResolvedValue(true),
       },
       jwtAdapter: {
-        sign: jest.fn().mockReturnValue('signed-token'),
+        sign: jest.fn().mockReturnValue('access-token'),
       },
+      RefreshTokenModel: createRefreshTokenModel(),
+      cryptoAdapter: createCryptoAdapter(),
     });
 
     const result = await service.loginUser({
@@ -112,7 +154,8 @@ describe('AuthService', () => {
 
     expect(select).toHaveBeenCalledWith('+passwordHash');
     expect(result.user.passwordHash).toBeUndefined();
-    expect(result.token).toBe('signed-token');
+    expect(result.accessToken).toBe('access-token');
+    expect(result.refreshToken).toBe('refresh-token');
   });
 
   test('loginUser throws AuthError for invalid credentials', async () => {
@@ -134,7 +177,7 @@ describe('AuthService', () => {
     ).rejects.toBeInstanceOf(AuthError);
   });
 
-  test('getUserFromToken returns safe user for valid token', async () => {
+  test('getUserFromAccessToken returns safe user for valid token', async () => {
     const user = createUser();
     const service = new AuthService({
       UserModel: {
@@ -145,7 +188,7 @@ describe('AuthService', () => {
       },
     });
 
-    const safeUser = await service.getUserFromToken('valid-token');
+    const safeUser = await service.getUserFromAccessToken('valid-token');
 
     expect(safeUser).toEqual({
       _id: 'user-1',
@@ -155,7 +198,7 @@ describe('AuthService', () => {
     });
   });
 
-  test('getUserFromToken rejects tokens without subject', async () => {
+  test('getUserFromAccessToken rejects tokens without subject', async () => {
     const service = new AuthService({
       UserModel: {
         findById: jest.fn(),
@@ -165,6 +208,81 @@ describe('AuthService', () => {
       },
     });
 
-    await expect(service.getUserFromToken('invalid-token')).rejects.toBeInstanceOf(AuthError);
+    await expect(service.getUserFromAccessToken('invalid-token')).rejects.toBeInstanceOf(AuthError);
+  });
+
+  test('refreshSession rotates refresh token and returns a new access token', async () => {
+    const user = createUser();
+    const storedToken = {
+      _id: 'old-refresh-id',
+      userId: 'user-1',
+      familyId: 'family-1',
+      expiresAt: new Date(Date.now() + 60_000),
+      revokedAt: null,
+      replacedByTokenId: null,
+      save: jest.fn().mockResolvedValue(undefined),
+    };
+    const RefreshTokenModel = {
+      create: jest.fn().mockResolvedValue({ _id: 'new-refresh-id' }),
+      findOne: jest.fn().mockResolvedValue(storedToken),
+      updateMany: jest.fn(),
+    };
+    const service = new AuthService({
+      UserModel: {
+        findById: jest.fn().mockResolvedValue(user),
+      },
+      RefreshTokenModel,
+      jwtAdapter: {
+        verify: jest.fn(),
+        sign: jest.fn().mockReturnValue('new-access-token'),
+      },
+      cryptoAdapter: createCryptoAdapter('new-refresh-token'),
+    });
+
+    const result = await service.refreshSession('old-refresh-token');
+
+    expect(result.user.email).toBe('test@example.com');
+    expect(result.accessToken).toBe('new-access-token');
+    expect(result.refreshToken).toBe('new-refresh-token');
+    expect(storedToken.revokedAt).toBeInstanceOf(Date);
+    expect(storedToken.replacedByTokenId).toBe('new-refresh-id');
+    expect(storedToken.save).toHaveBeenCalled();
+  });
+
+  test('refreshSession revokes a reused token family', async () => {
+    const RefreshTokenModel = {
+      create: jest.fn(),
+      findOne: jest.fn().mockResolvedValue({
+        userId: 'user-1',
+        familyId: 'family-1',
+        expiresAt: new Date(Date.now() + 60_000),
+        revokedAt: new Date(),
+        replacedByTokenId: 'new-refresh-id',
+      }),
+      updateMany: jest.fn().mockResolvedValue({ modifiedCount: 2 }),
+    };
+    const service = new AuthService({ RefreshTokenModel });
+
+    await expect(service.refreshSession('reused-token')).rejects.toBeInstanceOf(AuthError);
+    expect(RefreshTokenModel.updateMany).toHaveBeenCalledWith(
+      { userId: 'user-1', familyId: 'family-1', revokedAt: null },
+      { $set: { revokedAt: expect.any(Date) } },
+    );
+  });
+
+  test('logout revokes an existing refresh token', async () => {
+    const storedToken = {
+      revokedAt: null,
+      save: jest.fn().mockResolvedValue(undefined),
+    };
+    const RefreshTokenModel = {
+      findOne: jest.fn().mockResolvedValue(storedToken),
+    };
+    const service = new AuthService({ RefreshTokenModel });
+
+    await service.logout('refresh-token');
+
+    expect(storedToken.revokedAt).toBeInstanceOf(Date);
+    expect(storedToken.save).toHaveBeenCalled();
   });
 });

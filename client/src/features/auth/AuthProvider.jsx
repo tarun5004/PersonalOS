@@ -7,11 +7,17 @@ import {
   useState,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ApiError } from '../../lib/apiClient.js';
 import {
-  getCurrentUser,
+  ApiError,
+  clearApiAccessToken,
+  setApiAccessToken,
+  setAuthRefreshHandler,
+  setAuthUnauthorizedHandler,
+} from '../../lib/apiClient.js';
+import {
   loginUser,
   logoutUser,
+  refreshAuthSession,
   registerUser,
 } from './authApi.js';
 
@@ -24,30 +30,68 @@ export function AuthProvider({ children }) {
   const [status, setStatus] = useState('checking');
   const [error, setError] = useState('');
   const hasRestoredSession = useRef(false);
+  const refreshPromiseRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const clearSession = useCallback(() => {
+    clearApiAccessToken();
+    setUser(null);
+    setStatus('unauthenticated');
+  }, []);
+
+  const applySession = useCallback((session) => {
+    setApiAccessToken(session.accessToken);
+    setUser(session.user);
+    setStatus('authenticated');
+    setError('');
+  }, []);
+
+  const requestFreshSession = useCallback(() => {
+    if (!refreshPromiseRef.current) {
+      refreshPromiseRef.current = refreshAuthSession().finally(() => {
+        refreshPromiseRef.current = null;
+      });
+    }
+
+    return refreshPromiseRef.current;
+  }, []);
+
+  const refreshSession = useCallback(async () => {
+    const session = await requestFreshSession();
+    applySession(session);
+
+    return session.accessToken;
+  }, [applySession, requestFreshSession]);
+
+  useEffect(() => {
+    setAuthRefreshHandler(refreshSession);
+    setAuthUnauthorizedHandler(clearSession);
+
+    return () => {
+      setAuthRefreshHandler(null);
+      setAuthUnauthorizedHandler(null);
+    };
+  }, [clearSession, refreshSession]);
 
   useEffect(() => {
     let isMounted = true;
 
     async function restoreSession() {
       try {
-        const restoredUser = await getCurrentUser();
+        const restoredSession = await requestFreshSession();
 
         if (!isMounted) {
           return;
         }
 
-        setUser(restoredUser);
-        setStatus('authenticated');
-        setError('');
+        applySession(restoredSession);
       } catch (requestError) {
         if (!isMounted) {
           return;
         }
 
-        setUser(null);
-        setStatus('unauthenticated');
+        clearSession();
 
         if (requestError instanceof ApiError && requestError.status === 401) {
           setError('');
@@ -74,43 +118,40 @@ export function AuthProvider({ children }) {
     return () => {
       isMounted = false;
     };
-  }, [location.pathname, navigate]);
+  }, [applySession, clearSession, location.pathname, navigate, requestFreshSession]);
 
   const login = useCallback(
     async (values) => {
       setError('');
-      const authenticatedUser = await loginUser(values);
-      setUser(authenticatedUser);
-      setStatus('authenticated');
+      const session = await loginUser(values);
+      applySession(session);
       navigate('/dashboard', { replace: true });
 
-      return authenticatedUser;
+      return session.user;
     },
-    [navigate],
+    [applySession, navigate],
   );
 
   const register = useCallback(
     async (values) => {
       setError('');
-      const authenticatedUser = await registerUser(values);
-      setUser(authenticatedUser);
-      setStatus('authenticated');
+      const session = await registerUser(values);
+      applySession(session);
       navigate('/dashboard', { replace: true });
 
-      return authenticatedUser;
+      return session.user;
     },
-    [navigate],
+    [applySession, navigate],
   );
 
   const logout = useCallback(async () => {
     try {
       await logoutUser();
     } finally {
-      setUser(null);
-      setStatus('unauthenticated');
+      clearSession();
       navigate('/login', { replace: true });
     }
-  }, [navigate]);
+  }, [clearSession, navigate]);
 
   const value = useMemo(
     () => ({

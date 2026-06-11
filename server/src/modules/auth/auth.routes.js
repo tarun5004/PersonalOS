@@ -27,6 +27,8 @@ export function createAuthRoutes({
     asyncHandler(controller.login),
   );
 
+  router.post('/refresh', rateLimiter, asyncHandler(controller.refresh));
+
   router.post('/logout', asyncHandler(controller.logout));
 
   router.get('/me', requireAuthMiddleware, asyncHandler(controller.me));

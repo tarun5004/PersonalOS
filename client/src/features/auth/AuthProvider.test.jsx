@@ -3,14 +3,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { ApiError } from '../../lib/apiClient.js';
-import { getCurrentUser } from './authApi.js';
+import { refreshAuthSession } from './authApi.js';
 import { AuthProvider } from './AuthProvider.jsx';
 import { useAuth } from './useAuth.js';
 
 vi.mock('./authApi.js', () => ({
-  getCurrentUser: vi.fn(),
   loginUser: vi.fn(),
   logoutUser: vi.fn(),
+  refreshAuthSession: vi.fn(),
   registerUser: vi.fn(),
 }));
 
@@ -54,10 +54,13 @@ describe('AuthProvider', () => {
   });
 
   test('restores an authenticated session from the backend', async () => {
-    getCurrentUser.mockResolvedValue({
-      _id: 'user-1',
-      email: 'varun@example.com',
-      name: 'Varun',
+    refreshAuthSession.mockResolvedValue({
+      user: {
+        _id: 'user-1',
+        email: 'varun@example.com',
+        name: 'Varun',
+      },
+      accessToken: 'access-token',
     });
 
     renderAuthProvider();
@@ -69,7 +72,7 @@ describe('AuthProvider', () => {
   });
 
   test('silently redirects expired sessions to login', async () => {
-    getCurrentUser.mockRejectedValue(
+    refreshAuthSession.mockRejectedValue(
       new ApiError({
         status: 401,
         message: 'Authentication required',
@@ -84,8 +87,8 @@ describe('AuthProvider', () => {
     expect(screen.getByTestId('auth-status')).toHaveTextContent('unauthenticated');
   });
 
-  test('leaves restoring state when session restore fails in StrictMode', async () => {
-    getCurrentUser.mockRejectedValue(
+  test('does not duplicate session restore in StrictMode', async () => {
+    refreshAuthSession.mockRejectedValue(
       new ApiError({
         status: 502,
         message: 'Request failed',
@@ -97,5 +100,6 @@ describe('AuthProvider', () => {
     await waitFor(() => {
       expect(screen.getByTestId('auth-status')).toHaveTextContent('unauthenticated');
     });
+    expect(refreshAuthSession).toHaveBeenCalledTimes(1);
   });
 });
