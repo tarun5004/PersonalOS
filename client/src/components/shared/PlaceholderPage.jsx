@@ -1,11 +1,12 @@
 import './PlaceholderPage.css';
 
-export function PlaceholderPage({ eyebrow, title, summary, sections = [] }) {
+export function PlaceholderPage({ children, eyebrow, title, summary, sections = [] }) {
   return (
     <section className="placeholder-page">
       <p className="placeholder-eyebrow">{eyebrow}</p>
       <h1>{title}</h1>
       <p className="placeholder-summary">{summary}</p>
+      {children ? <div className="placeholder-actions">{children}</div> : null}
 
       {sections.length > 0 ? (
         <div className="placeholder-grid">
@@ -20,4 +21,3 @@ export function PlaceholderPage({ eyebrow, title, summary, sections = [] }) {
     </section>
   );
 }
-

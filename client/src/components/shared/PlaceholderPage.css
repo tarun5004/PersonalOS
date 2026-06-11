@@ -26,6 +26,10 @@
   line-height: 1.7;
 }
 
+.placeholder-actions {
+  margin-top: 24px;
+}
+
 .placeholder-grid {
   margin-top: 32px;
   display: grid;
@@ -61,4 +65,3 @@
     grid-template-columns: 1fr;
   }
 }
-

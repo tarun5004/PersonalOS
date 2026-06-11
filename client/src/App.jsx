@@ -3,6 +3,7 @@ import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { appRoutes } from './app/routes/routeConfig.js';
 import { RouteLoading } from './app/routes/RouteLoading.jsx';
 import { NotFoundPage } from './features/system/pages/NotFoundPage.jsx';
+import { ThemeToggle } from './features/theme/ThemeToggle.jsx';
 import './App.css';
 
 function App() {
@@ -34,6 +35,10 @@ function App() {
             </NavLink>
           ))}
         </nav>
+
+        <div className="sidebar-footer">
+          <ThemeToggle compact />
+        </div>
       </aside>
 
       <main className="app-main">
@@ -52,4 +57,3 @@ function App() {
 }
 
 export default App;
-

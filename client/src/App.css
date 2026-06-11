@@ -10,6 +10,8 @@
   border-right: 1px solid var(--color-border);
   background: var(--color-surface);
   padding: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .brand-block {
@@ -48,6 +50,11 @@
 .nav-list {
   display: grid;
   gap: 8px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 .nav-link {
@@ -102,4 +109,3 @@
     padding: 20px;
   }
 }
-

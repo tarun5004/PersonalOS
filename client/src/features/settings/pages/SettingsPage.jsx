@@ -1,4 +1,5 @@
 import { PlaceholderPage } from '../../../components/shared/PlaceholderPage.jsx';
+import { ThemeToggle } from '../../theme/ThemeToggle.jsx';
 
 export default function SettingsPage() {
   return (
@@ -10,7 +11,8 @@ export default function SettingsPage() {
       ]}
       summary="A focused settings area for theme selection and basic authenticated user context."
       title="Settings"
-    />
+    >
+      <ThemeToggle />
+    </PlaceholderPage>
   );
 }
-
