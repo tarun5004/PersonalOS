@@ -20,52 +20,84 @@
   --color-danger: var(--theme-error);
   --color-info: var(--theme-info);
 
-  --radius-ui: 0.5rem;
-  --shadow-card: 0 16px 38px var(--theme-shadow);
-  --shadow-panel: 0 28px 80px var(--theme-shadow);
+  --radius-ui: 1rem;
+  --shadow-card: 0 12px 32px var(--theme-shadow);
+  --shadow-panel: 0 30px 90px var(--theme-shadow-strong);
 }
 
 :root,
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --theme-app-bg: #eef2fb;
-  --theme-surface: #ffffff;
-  --theme-surface-muted: #f5f6fc;
-  --theme-border: #dde1ef;
-  --theme-text: #201f39;
-  --theme-text-muted: #6f7086;
-  --theme-primary: #6c63ff;
+  --color-app-bg: #F4F6FB;
+  --color-canvas: #FFFFFF;
+  --color-sidebar-from: #7C5CFF;
+  --color-sidebar-to: #21B8A6;
+  --color-primary: #6C63FF;
+  --color-secondary: #20B8A6;
+  --color-text-primary: #17142F;
+  --color-text-secondary: #6B6F8A;
+  --color-border: #E6E8F0;
+  --color-card-soft: #F7F5FF;
+  --color-success: #2EC77E;
+  --color-error: #FF5C7A;
+  --color-warning: #FFB84D;
+
+  --theme-app-bg: var(--color-app-bg);
+  --theme-surface: var(--color-canvas);
+  --theme-surface-muted: var(--color-card-soft);
+  --theme-border: var(--color-border);
+  --theme-text: var(--color-text-primary);
+  --theme-text-muted: var(--color-text-secondary);
+  --theme-primary: var(--color-primary);
   --theme-primary-text: #ffffff;
-  --theme-primary-soft: #efedff;
-  --theme-primary-strong: #5148d8;
-  --theme-focus: #16a89e;
-  --theme-success: #1f9d64;
-  --theme-warning: #b7791f;
-  --theme-error: #d1435b;
-  --theme-info: #4776e6;
-  --theme-shadow: rgb(50 45 100 / 13%);
+  --theme-primary-soft: color-mix(in srgb, var(--color-primary) 11%, var(--color-canvas));
+  --theme-primary-strong: #5148D8;
+  --theme-focus: var(--color-secondary);
+  --theme-success: var(--color-success);
+  --theme-warning: #B97316;
+  --theme-error: var(--color-error);
+  --theme-info: #4776E6;
+  --theme-shadow: rgb(23 20 47 / 8%);
+  --theme-shadow-strong: rgb(23 20 47 / 12%);
+  --shadow-sidebar: 2px 0 24px rgb(108 99 255 / 10%);
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --theme-app-bg: #11131c;
-  --theme-surface: #1d2030;
-  --theme-surface-muted: #262b3e;
-  --theme-border: #343a54;
-  --theme-text: #f5f4fb;
-  --theme-text-muted: #b9bbcf;
-  --theme-primary: #8b85ff;
-  --theme-primary-text: #11131c;
-  --theme-primary-soft: #302d59;
-  --theme-primary-strong: #d2ceff;
-  --theme-focus: #39c9bb;
-  --theme-success: #65d18f;
-  --theme-warning: #efc06d;
-  --theme-error: #ff8798;
-  --theme-info: #88a8ff;
-  --theme-shadow: rgb(0 0 0 / 36%);
+  --color-app-bg: #0F1220;
+  --color-canvas: #171A2D;
+  --color-sidebar-from: #7C5CFF;
+  --color-sidebar-to: #21B8A6;
+  --color-primary: #8B7CFF;
+  --color-secondary: #25D0BC;
+  --color-text-primary: #F7F7FF;
+  --color-text-secondary: #A7ABC4;
+  --color-border: #2C3048;
+  --color-card-soft: #1F2338;
+  --color-success: #37D990;
+  --color-error: #FF6B88;
+  --color-warning: #FFC766;
+
+  --theme-app-bg: var(--color-app-bg);
+  --theme-surface: var(--color-canvas);
+  --theme-surface-muted: var(--color-card-soft);
+  --theme-border: var(--color-border);
+  --theme-text: var(--color-text-primary);
+  --theme-text-muted: var(--color-text-secondary);
+  --theme-primary: var(--color-primary);
+  --theme-primary-text: #0F1220;
+  --theme-primary-soft: color-mix(in srgb, var(--color-primary) 14%, var(--color-canvas));
+  --theme-primary-strong: #DAD5FF;
+  --theme-focus: var(--color-secondary);
+  --theme-success: var(--color-success);
+  --theme-warning: var(--color-warning);
+  --theme-error: var(--color-error);
+  --theme-info: #9EB5FF;
+  --theme-shadow: rgb(0 0 0 / 28%);
+  --theme-shadow-strong: rgb(0 0 0 / 42%);
+  --shadow-sidebar: 2px 0 24px rgb(0 0 0 / 34%);
 }
 
 @layer base {
@@ -84,6 +116,10 @@
     min-height: 100vh;
     margin: 0;
     background: var(--theme-app-bg);
+    color: var(--theme-text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   button,
@@ -95,5 +131,31 @@
 
   a {
     color: inherit;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-primary) 24%, transparent);
+    color: var(--color-text-primary);
+  }
+}
+
+@layer utilities {
+  .sidebar-gradient {
+    background: linear-gradient(
+      180deg,
+      var(--color-sidebar-from) 0%,
+      var(--color-sidebar-to) 100%
+    );
+  }
+
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
   }
 }

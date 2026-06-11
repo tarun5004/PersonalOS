@@ -82,7 +82,7 @@ export default function LoginPage() {
       summary="Continue to your workspace and keep today's tasks, habits, and weekly rhythm in one place."
       title="Pick up your day where you left it."
     >
-      <Card className="bg-[linear-gradient(135deg,var(--theme-surface),var(--theme-primary-soft))] p-6 sm:p-7">
+      <Card className="bg-surface p-6 sm:p-7">
         <CardHeader>
           <CardDescription>Account</CardDescription>
           <CardTitle>Log in</CardTitle>

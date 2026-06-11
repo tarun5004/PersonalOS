@@ -30,6 +30,10 @@ The current user request defines the active task only when it does not conflict 
 - Do not introduce Redux, shadcn/ui as a dependency, microservices, AI features, OAuth, Redis, Kubernetes, or real-time collaboration in V1.
 - Do not store JWTs in localStorage or sessionStorage.
 - Use npm for V1.
+- Tailwind CSS v4 is the approved V1 styling system.
+- Keep one global frontend CSS entry file only.
+- Do not create generic placeholder UI when a polished placeholder-safe state is possible.
+- Do not duplicate the app shell, sidebar, topbar, or shared card/form patterns.
 
 ## 3. Chunk Protocol
 
@@ -112,10 +116,26 @@ State management must remain:
 
 API calls must remain centralized. Components must not contain raw backend endpoint strings.
 
-## 6. Security Guardrails
+## 6. UI and Theme Guardrails
 
-- JWT auth uses an HttpOnly cookie with 7-day expiry.
-- Backend validates cookie and env configuration.
+The current active chunk is UI/theme/design-system stabilization before Phase 8.
+
+- Do not move to Phase 8 Task Backend until this chunk is complete and reviewed.
+- Follow the provided premium SaaS dashboard and monthly habit tracker references.
+- Use Tailwind CSS v4 utilities backed by approved semantic CSS variables.
+- The frontend must keep exactly one global CSS entry file for Tailwind import, theme variables, resets, and global tokens.
+- Use reusable shared components before adding page-specific repeated markup.
+- Use `lucide-react` icons for navigation and action affordances when the package is available.
+- Use `@headlessui/react` only for accessible dialogs, menus, toggles, or similar UI primitives where needed.
+- Use `framer-motion` only for subtle transitions; do not over-animate the app.
+- Use `clsx` and `tailwind-merge` through the local class-name helper after they are installed.
+- Do not use random hardcoded colors in JSX or JS files; add semantic CSS variables when a new color role is required.
+- Placeholder-safe UI is allowed before backend feature phases, but it must not imply unsupported backend behavior is implemented.
+
+## 7. Security Guardrails
+
+- V1 auth uses short-lived access tokens in frontend memory and rotated refresh tokens in secure HttpOnly cookies.
+- Backend validates refresh cookies, access tokens, and env configuration.
 - CORS must use `credentials: true` and exact `CORS_ORIGIN`.
 - Frontend requests must include credentials.
 - Auth login and register routes require rate limiting.
@@ -123,9 +143,9 @@ API calls must remain centralized. Components must not contain raw backend endpo
 - Production 500 responses must be sanitized.
 - V1 uses `sameSite: "lax"` as primary CSRF mitigation for same-domain deployments.
 - `COOKIE_SAME_SITE` controls cookie same-site behavior. Do not hardcode deployment-specific cookie assumptions.
-- `COOKIE_MAX_AGE_MS` must match `JWT_EXPIRES_IN` converted to milliseconds.
+- `ACCESS_TOKEN_EXPIRES_IN` is short-lived. `REFRESH_TOKEN_MAX_AGE_MS` controls the refresh cookie lifetime.
 
-## 7. Approved Docs Change Control
+## 8. Approved Docs Change Control
 
 Once a documentation file is approved, do not modify it during implementation unless the developer explicitly requests a docs update.
 
@@ -138,7 +158,7 @@ If implementation reveals a docs issue, stop and report:
 
 Do not silently update approved docs.
 
-## 8. Stop Conditions
+## 9. Stop Conditions
 
 Stop and ask when:
 
@@ -151,7 +171,7 @@ Stop and ask when:
 
 Use the blocked report format from Master Prompt V4 when a phase cannot continue.
 
-## 9. Reporting Requirements
+## 10. Reporting Requirements
 
 When blocked, report:
 

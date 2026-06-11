@@ -6,13 +6,18 @@ Source of truth: Master Prompt V4
 
 ## 0. Current Control Chunk
 
-The developer explicitly requested a small control/setup chunk before continuing Phase 0-B:
+Active chunk: UI/theme/design-system stabilization before Phase 8.
 
-- Add `.gitignore`
-- Add `STEPS.md`
-- Add an agent instruction file to reduce hallucination and coordination bugs
+Approved scope:
 
-This chunk does not approve or start Phase 0-B. Phase 0-A product and UX docs still need developer review.
+- Update UI/theme source-of-truth docs.
+- Install only the approved missing UI packages for the frontend.
+- Polish the existing frontend UI with Tailwind CSS v4.
+- Replace generic placeholder screens with polished placeholder-safe page layouts.
+- Preserve working auth and routing behavior.
+- Run frontend tests, frontend build, and browser/manual QA.
+
+This chunk does not approve Phase 8 Task Backend. Do not implement task, habit, dashboard, analytics, or settings backend behavior in this chunk.
 
 ## 1. Operating Rules
 
@@ -23,6 +28,11 @@ This chunk does not approve or start Phase 0-B. Phase 0-A product and UX docs st
 - Do not start the next phase unless the developer explicitly says `Proceed to Phase X` or `Proceed to next phase`.
 - Do not touch unrelated files.
 - Do not install packages unless the active phase allows it.
+- Tailwind CSS v4 is the approved V1 styling system.
+- Keep one global frontend CSS entry file only.
+- Use reusable shared components and approved theme variables for UI colors.
+- Do not create generic placeholder UI.
+- Do not duplicate sidebar, topbar, or layout code.
 - Do not write implementation code during documentation phases.
 - If requirements are unclear, ask before assuming.
 
@@ -79,6 +89,8 @@ A chunk is not complete until it:
 - Includes centralized error handling where required.
 - Handles loading, empty, error, and success states where relevant.
 - Uses theme variables for UI colors.
+- Avoids random hardcoded colors in JSX or JS files.
+- Preserves light and dark theme quality.
 - Avoids hardcoded secrets.
 - Adds tests where the phase requires tests.
 - Includes manual QA notes.
@@ -224,14 +236,14 @@ Files allowed:
 - `docs/open-source/pull-request-workflow.md`
 - `docs/architecture/adr/0001-use-mern-stack.md`
 - `docs/architecture/adr/0002-use-javascript-for-v1.md`
-- `docs/architecture/adr/0003-use-css-variables-for-theming.md`
+- `docs/architecture/adr/0003-use-tailwind-v4-for-styling-and-css-variables-for-theming.md`
 - `docs/architecture/adr/0004-use-tanstack-query-for-server-state.md`
 - `docs/architecture/adr/0005-avoid-redux-in-v1.md`
 - `docs/architecture/adr/0006-use-layered-backend-architecture.md`
 - `docs/architecture/adr/0007-use-utc-day-boundary-for-streaks.md`
-- `docs/architecture/adr/0008-use-7-day-jwt-no-refresh-in-v1.md`
+- `docs/architecture/adr/0008-use-access-and-refresh-tokens-in-v1.md`
 - `docs/architecture/adr/0009-use-mit-license.md`
-- `docs/architecture/adr/0010-use-http-only-cookie-auth.md`
+- `docs/architecture/adr/0010-use-http-only-refresh-cookie-auth.md`
 - `docs/architecture/adr/0011-use-npm-as-package-manager.md`
 - `docs/architecture/adr/0012-use-conventional-commits.md`
 - `docs/review/technical-risks.md`

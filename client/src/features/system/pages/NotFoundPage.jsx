@@ -4,9 +4,8 @@ export function NotFoundPage() {
   return (
     <PlaceholderPage
       eyebrow="404"
-      summary="The route you requested does not exist in the V1 navigation."
+      summary="The route you requested is not part of the current navigation."
       title="Page not found"
     />
   );
 }
-

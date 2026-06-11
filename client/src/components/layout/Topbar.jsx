@@ -1,4 +1,5 @@
 import { NavLink, matchPath, useLocation } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
 import { Button } from '../ui/Button.jsx';
 import { Badge } from '../ui/Badge.jsx';
 import { useAuth } from '../../features/auth/useAuth.js';
@@ -17,7 +18,7 @@ export function Topbar({ routes }) {
   const userLabel = user?.name ? `Signed in as ${user.name}` : 'Signed in';
 
   return (
-    <header className="grid gap-4 bg-surface px-5 py-5 sm:px-8 lg:px-9">
+    <header className="sticky top-0 z-10 grid min-h-16 gap-4 border-b border-border bg-surface/95 px-5 py-4 backdrop-blur sm:px-8 lg:px-9">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-6">
           <PageHeader
@@ -49,6 +50,7 @@ export function Topbar({ routes }) {
           </Badge>
           <ThemeToggle compact />
           <Button onClick={logout} size="sm" variant="dark">
+            <LogOut aria-hidden="true" size={16} />
             Log out
           </Button>
         </div>

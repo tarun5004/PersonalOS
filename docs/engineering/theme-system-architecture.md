@@ -50,6 +50,58 @@ The token set will cover:
 
 Tokens must be semantic rather than component-specific.
 
+The V1 approved CSS variable names are:
+
+- `--color-app-bg`
+- `--color-canvas`
+- `--color-sidebar-from`
+- `--color-sidebar-to`
+- `--color-primary`
+- `--color-secondary`
+- `--color-text-primary`
+- `--color-text-secondary`
+- `--color-border`
+- `--color-card-soft`
+- `--color-success`
+- `--color-error`
+- `--color-warning`
+
+Approved light theme values:
+
+```text
+--color-app-bg: #F4F6FB
+--color-canvas: #FFFFFF
+--color-sidebar-from: #7C5CFF
+--color-sidebar-to: #21B8A6
+--color-primary: #6C63FF
+--color-secondary: #20B8A6
+--color-text-primary: #17142F
+--color-text-secondary: #6B6F8A
+--color-border: #E6E8F0
+--color-card-soft: #F7F5FF
+--color-success: #2EC77E
+--color-error: #FF5C7A
+--color-warning: #FFB84D
+```
+
+Approved dark theme values:
+
+```text
+--color-app-bg: #0F1220
+--color-canvas: #171A2D
+--color-sidebar-from: #7C5CFF
+--color-sidebar-to: #21B8A6
+--color-primary: #8B7CFF
+--color-secondary: #25D0BC
+--color-text-primary: #F7F7FF
+--color-text-secondary: #A7ABC4
+--color-border: #2C3048
+--color-card-soft: #1F2338
+--color-success: #37D990
+--color-error: #FF6B88
+--color-warning: #FFC766
+```
+
 ## 5. Tailwind Usage Rules
 
 - Prefer reusable React components for repeated UI patterns.
@@ -58,6 +110,8 @@ Tokens must be semantic rather than component-specific.
 - Avoid long, duplicated utility strings when a shared component should exist.
 - Use Tailwind responsive utilities for mobile, tablet, and desktop behavior.
 - Keep accessibility states visible with focus and disabled styles.
+- Use the provided premium SaaS dashboard and monthly habit tracker references as the V1 visual direction.
+- Do not create generic placeholder UI when a polished placeholder-safe page can communicate future structure without fake backend behavior.
 
 ## 6. Theme Application
 

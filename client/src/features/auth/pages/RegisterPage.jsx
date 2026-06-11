@@ -83,7 +83,7 @@ export default function RegisterPage() {
       summary="Create your workspace for tasks, habits, and weekly progress without adding noise to your day."
       title="Make a personal dashboard that feels easy to return to."
     >
-      <Card className="bg-[linear-gradient(135deg,var(--theme-surface),var(--theme-primary-soft))] p-6 sm:p-7">
+      <Card className="bg-surface p-6 sm:p-7">
         <CardHeader>
           <CardDescription>New workspace</CardDescription>
           <CardTitle>Create account</CardTitle>

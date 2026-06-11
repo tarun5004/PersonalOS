@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+import { Card } from '../ui/Card.jsx';
 import { mergeClassNames } from '../../lib/classNames.js';
 
 export function DashboardCard({
@@ -9,11 +11,16 @@ export function DashboardCard({
   ...props
 }) {
   return (
-    <section
+    <Card
+      as={motion.section}
       className={mergeClassNames(
-        'rounded-ui border border-border bg-surface p-5 shadow-card',
+        'p-5',
         className,
       )}
+      initial={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.18, ease: 'easeOut' }}
+      viewport={{ once: true }}
+      whileInView={{ opacity: 1, y: 0 }}
       {...props}
     >
       {(eyebrow || title || action) && (
@@ -30,6 +37,6 @@ export function DashboardCard({
         </div>
       )}
       {children}
-    </section>
+    </Card>
   );
 }

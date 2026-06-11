@@ -2,10 +2,10 @@ import { mergeClassNames } from '../../lib/classNames.js';
 
 const VARIANTS = {
   primary:
-    'border-transparent bg-gradient-to-r from-primary to-focus text-primary-text shadow-card hover:from-primary-strong hover:to-focus',
+    'border-transparent bg-gradient-to-r from-primary to-focus text-primary-text shadow-card hover:brightness-105',
   secondary:
-    'border-border bg-surface text-body hover:border-focus hover:bg-surface-muted',
-  dark: 'border-body bg-body text-primary-text hover:border-body hover:bg-body/90',
+    'border-border bg-surface text-body shadow-card hover:border-focus hover:bg-surface-muted',
+  dark: 'border-body bg-body text-primary-text shadow-card hover:border-body hover:bg-body/90',
   ghost:
     'border-transparent bg-transparent text-muted hover:bg-surface-muted hover:text-body',
   danger:
@@ -20,6 +20,7 @@ const SIZES = {
 };
 
 export function Button({
+  as: Component = 'button',
   children,
   className,
   size = 'md',
@@ -27,18 +28,20 @@ export function Button({
   variant = 'primary',
   ...props
 }) {
+  const componentProps = Component === 'button' ? { type } : {};
+
   return (
-    <button
+    <Component
       className={mergeClassNames(
         'inline-flex items-center justify-center gap-2 rounded-ui border font-bold transition duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus/30 disabled:cursor-not-allowed disabled:opacity-60',
         VARIANTS[variant],
         SIZES[size],
         className,
       )}
-      type={type}
+      {...componentProps}
       {...props}
     >
       {children}
-    </button>
+    </Component>
   );
 }

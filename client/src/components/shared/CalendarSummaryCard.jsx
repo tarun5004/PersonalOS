@@ -1,3 +1,4 @@
+import { CalendarCheck, RefreshCcwDot } from 'lucide-react';
 import { EventCard } from './EventCard.jsx';
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -22,8 +23,8 @@ export function CalendarSummaryCard() {
         ))}
       </div>
       <div className="grid gap-3">
-        <EventCard label="Plan" meta="09:00-09:30" title="Daily planning" />
-        <EventCard label="Habit" meta="18:00-18:15" title="Habit check-in" />
+        <EventCard icon={CalendarCheck} label="Plan" meta="09:00-09:30" title="Daily planning" />
+        <EventCard icon={RefreshCcwDot} label="Habit" meta="18:00-18:15" title="Habit check-in" />
       </div>
     </div>
   );

@@ -1,3 +1,6 @@
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 export function mergeClassNames(...classNames) {
-  return classNames.filter(Boolean).join(' ');
+  return twMerge(clsx(classNames));
 }

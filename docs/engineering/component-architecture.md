@@ -32,6 +32,7 @@ Planned components:
 - `Table`
 - `Skeleton`
 - `Loader`
+- `LoadingState`
 - `EmptyState`
 - `ErrorState`
 - `SuccessState`
@@ -75,12 +76,15 @@ Planned components:
 The protected app shell should follow the approved dashboard reference direction:
 
 - soft white dashboard workspace
-- purple accent navigation rail
+- purple-to-teal gradient icon navigation rail
+- clean topbar with clear page context
 - rounded cards with restrained shadows
 - dense but readable dashboard sections
 - desktop and mobile layouts that preserve the same hierarchy
 
 Reference-style cards may be used for visual structure before data APIs are complete, but they must not imply undocumented backend features are implemented.
+
+The UI stabilization chunk before Phase 8 may polish Dashboard, Tasks, Habits, Analytics, Settings, Login, and Register screens using placeholder-safe structures only. It must not implement backend feature behavior or duplicate app layout code.
 
 ## 3. Feature Components
 
