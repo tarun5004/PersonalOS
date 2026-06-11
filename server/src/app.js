@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 import { authRoutes } from './modules/auth/auth.routes.js';
+import { habitRoutes } from './modules/habits/habit.routes.js';
 import { taskRoutes } from './modules/tasks/task.routes.js';
 
 export function createApp() {
@@ -33,6 +34,7 @@ export function createApp() {
 
   app.use('/api/auth', authRoutes);
   app.use('/api/tasks', taskRoutes);
+  app.use('/api/habits', habitRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
