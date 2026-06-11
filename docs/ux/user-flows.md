@@ -1,7 +1,7 @@
 # User Flows
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4
+Source of truth: Master Prompt V4 and approved architecture update for Tailwind/auth migration
 
 ## 1. Register
 
@@ -9,8 +9,8 @@ Source of truth: Master Prompt V4
 2. User enters name, email, and password.
 3. App validates form input.
 4. App submits registration.
-5. Backend creates the account and sets the HttpOnly auth cookie.
-6. App stores the returned user in auth state.
+5. Backend creates the account, returns a short-lived access token, and sets a secure HttpOnly refresh-token cookie.
+6. App stores the returned user and access token in in-memory auth state.
 7. User lands on Dashboard.
 
 Error path: If email already exists or validation fails, the form will show a clear inline error.
@@ -21,8 +21,8 @@ Error path: If email already exists or validation fails, the form will show a cl
 2. User enters email and password.
 3. App validates form input.
 4. App submits login.
-5. Backend sets the HttpOnly auth cookie.
-6. App stores the returned user in auth state.
+5. Backend returns a short-lived access token and sets a secure HttpOnly refresh-token cookie.
+6. App stores the returned user and access token in in-memory auth state.
 7. User lands on Dashboard.
 
 Error path: Invalid credentials will show a clear form-level error.
@@ -30,16 +30,17 @@ Error path: Invalid credentials will show a clear form-level error.
 ## 3. Restore Session
 
 1. User opens the app after a previous login.
-2. App calls `GET /api/auth/me`.
-3. If valid, app stores the returned user and shows the protected route.
-4. If invalid or expired, app clears auth state and redirects to Login silently.
+2. App calls `POST /api/auth/refresh` with credentials included.
+3. If valid, backend rotates the refresh token and returns a new access token plus user.
+4. App stores the returned user and access token in memory and shows the protected route.
+5. If invalid or expired, app clears auth state and redirects to Login silently.
 
 ## 4. Logout
 
 1. User selects Logout.
-2. App sends logout request.
-3. Backend clears the auth cookie.
-4. App clears auth state.
+2. App sends logout request with credentials included.
+3. Backend revokes the current refresh token when present and clears the refresh cookie.
+4. App clears in-memory auth state.
 5. User lands on Login.
 
 Logout will be idempotent and should feel successful even if the cookie was already missing or expired.
@@ -50,7 +51,7 @@ Logout will be idempotent and should feel successful even if the cookie was alre
 2. User selects create task.
 3. User enters title and optional fields.
 4. App validates the form.
-5. App submits the task.
+5. App submits the task with a valid access token.
 6. Task list updates.
 7. Dashboard and analytics-relevant cached data will refresh during implementation according to state-management docs.
 
@@ -60,7 +61,7 @@ Note: The exact definition of "today's tasks" will be finalized in Phase 0-B API
 
 1. User opens Tasks.
 2. User marks a task as Completed.
-3. App submits the status change.
+3. App submits the status change with a valid access token.
 4. Task list updates.
 5. Dashboard and analytics views reflect the new completion state.
 
@@ -70,14 +71,14 @@ Note: The exact definition of "today's tasks" will be finalized in Phase 0-B API
 2. User selects create habit.
 3. User enters habit details.
 4. App validates the form.
-5. App submits the habit.
+5. App submits the habit with a valid access token.
 6. Habit list and grid update.
 
 ## 8. Habit Check-In
 
 1. User opens Habits or Dashboard.
 2. User marks a habit complete for the current UTC day.
-3. App submits the check-in.
+3. App submits the check-in with a valid access token.
 4. Habit UI updates completion state.
 5. Current streak, longest streak, completion percentage, dashboard, and analytics update.
 
@@ -99,7 +100,7 @@ Note: The dashboard weekly overview chart will reuse the approved weekly analyti
 
 1. User opens Settings.
 2. User selects light or dark theme.
-3. App applies the theme tokens.
+3. App applies the theme tokens through the Tailwind/theme architecture.
 4. The selected theme persists according to the theme architecture defined in engineering docs.
 
 Settings in V1 is limited to theme selection and basic authenticated user context where required. Full account management is out of scope.

@@ -22,17 +22,18 @@ Maintainers should acknowledge valid reports as soon as practical, investigate p
 
 V1 security decisions include:
 
-- JWT stored in an HttpOnly cookie
-- No JWT storage in localStorage or sessionStorage
+- Short-lived access tokens kept in frontend memory only
+- Rotated refresh tokens stored in secure HttpOnly cookies
+- Refresh tokens stored only as hashes in MongoDB
+- No token storage in localStorage or sessionStorage
 - Exact CORS origin with credentials
-- Rate limiting on register and login
+- Rate limiting on register, login, and refresh
 - Zod validation for requests and environment variables
 - Sanitized production errors
 - No secrets committed to the repository
 
 ## Known V1 Tradeoffs
 
-V1 does not implement CSRF tokens. Same-domain deployments rely on `sameSite: "lax"` as the primary CSRF mitigation.
+V1 same-domain refresh-cookie deployments rely on `sameSite: "lax"` as the primary CSRF mitigation for refresh and logout endpoints.
 
-Cross-domain cookie deployment without CSRF tokens is a deliberate V1 tradeoff and should be avoided unless required.
-
+Cross-domain refresh-cookie deployment should use exact CORS, `secure: true`, `sameSite: "none"`, and CSRF protection before production use.

@@ -1,7 +1,7 @@
 # Non-Functional Requirements
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Maintainability
 
@@ -10,6 +10,7 @@ Source of truth: Master Prompt V4 and approved Phase 0-A docs
 - Reusable UI components, hooks, services, and domain helpers will be preferred over duplicated logic.
 - Business rules will be centralized in the domain layer where possible.
 - Pages will compose components and call hooks or services; pages will not contain complex business logic.
+- Tailwind utility classes should be composed through reusable components when patterns repeat.
 
 ## 2. Simplicity
 
@@ -17,14 +18,17 @@ Source of truth: Master Prompt V4 and approved Phase 0-A docs
 - V1 will not use Redux, microservices, Kubernetes, OAuth, real-time collaboration, plugin marketplace, AI features, mobile app, or advanced RBAC.
 - V1 will not install shadcn/ui as a dependency.
 - V1 will use npm.
+- V1 will use Tailwind CSS v4 for styling.
 
 ## 3. Security
 
-- Authentication will use JWT stored in an HttpOnly cookie.
+- Authentication will use short-lived access tokens and rotated refresh tokens.
+- Access tokens will be kept in frontend memory only.
+- Refresh tokens will be stored in secure HttpOnly cookies and hashed in MongoDB.
 - Tokens will never be stored in localStorage or sessionStorage.
-- Backend APIs will validate protected routes using the auth cookie.
-- CORS will allow credentials and use an exact origin from environment variables.
-- Login and register endpoints will be rate-limited.
+- Backend APIs will validate protected routes using the access token.
+- CORS will allow credentials and use an exact origin from environment variables for refresh-cookie endpoints.
+- Login, register, and refresh endpoints will be rate-limited.
 - Server errors will not leak sensitive details in production.
 - Secrets will be read from environment variables and never committed.
 
@@ -35,6 +39,7 @@ Source of truth: Master Prompt V4 and approved Phase 0-A docs
 - Backend async errors will be routed through centralized error middleware.
 - API responses will follow a consistent success and error shape.
 - Logout will be idempotent.
+- Refresh token rotation will revoke or replace the previous token.
 
 ## 5. Performance
 
@@ -43,6 +48,7 @@ Source of truth: Master Prompt V4 and approved Phase 0-A docs
 - Server-state data will be cached with TanStack Query.
 - Mutations will invalidate only relevant query groups.
 - Analytics charts may be lazy loaded if bundle size becomes a concern.
+- Tailwind CSS output should remain constrained through normal Vite/Tailwind production builds.
 
 ## 6. Accessibility
 
@@ -56,7 +62,7 @@ Source of truth: Master Prompt V4 and approved Phase 0-A docs
 
 ## 7. Compatibility
 
-- The frontend will be built with React and Vite.
+- The frontend will be built with React, Vite, and Tailwind CSS v4.
 - The backend will be built with Node.js and Express.
 - Data will be stored in MongoDB through Mongoose.
 - The app will be self-hostable in principle, with Docker Compose stubbed in Phase 1.
@@ -74,4 +80,5 @@ Source of truth: Master Prompt V4 and approved Phase 0-A docs
 - Domain rules will be written so pure calculations can be tested without database or UI dependencies.
 - Backend services will be testable independently of Express route binding where practical.
 - Frontend feature behavior will be testable through React Testing Library.
+- Auth tests must cover access-token expiry, refresh success, refresh failure, refresh token rotation, logout revocation, and protected route behavior.
 - V1 backend services and domain logic will target 70% coverage.

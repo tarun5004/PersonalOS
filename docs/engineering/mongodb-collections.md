@@ -1,13 +1,19 @@
 # MongoDB Collections
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Overview
 
 This document defines V1 MongoDB collections and indexes before implementation.
 
-No collections other than `users`, `tasks`, `habits`, and `habit_check_ins` are approved for V1.
+Approved V1 collections:
+
+- `users`
+- `refresh_tokens`
+- `tasks`
+- `habits`
+- `habit_check_ins`
 
 ## 2. `users`
 
@@ -33,7 +39,43 @@ Response rule:
 - API responses may include `{ _id, name, email, createdAt }`
 - API responses must never include `passwordHash`
 
-## 3. `tasks`
+## 3. `refresh_tokens`
+
+Purpose: Stores hashed refresh tokens for access-token renewal.
+
+Fields:
+
+- `_id`: MongoDB ObjectId
+- `userId`: owner user id
+- `tokenHash`: hash of the opaque refresh token
+- `familyId`: token family id for rotation/reuse handling
+- `expiresAt`: UTC expiry date
+- `revokedAt`: optional UTC revocation date
+- `replacedByTokenId`: optional id of the rotated replacement token
+- `createdAt`: token creation date
+- `updatedAt`: token update date
+
+Optional implementation fields:
+
+- `userAgent`: request user-agent snapshot for review/debugging
+- `ipHash`: hashed IP value if maintainers decide it is useful
+- `lastUsedAt`: UTC date of last successful refresh
+
+Mongoose timestamps may be used to manage `createdAt` and `updatedAt`.
+
+Indexes:
+
+- Unique index on `tokenHash`
+- Compound index on `userId + familyId`
+- TTL index on `expiresAt`
+
+Rules:
+
+- Raw refresh tokens must never be stored.
+- Refresh token rotation must revoke or replace the previous token.
+- Reuse detection should revoke the related token family where practical.
+
+## 4. `tasks`
 
 Purpose: Stores user-owned tasks.
 
@@ -63,7 +105,7 @@ Query behavior:
 - `limit` and `offset` will be supported.
 - Dashboard "today's tasks" uses `userId + dueDate`.
 
-## 4. `habits`
+## 5. `habits`
 
 Purpose: Stores user-owned habits.
 
@@ -86,7 +128,7 @@ Query behavior:
 - Habit list queries must be scoped by `userId`.
 - Habit mutations must verify ownership.
 
-## 5. `habit_check_ins`
+## 6. `habit_check_ins`
 
 Purpose: Stores daily habit completions.
 
@@ -113,8 +155,11 @@ Rules:
 - `month` will be derived from `date` so monthly grid queries can use the required `userId + month` index.
 - Deleting a habit must delete related check-ins.
 
-## 6. Index Review Checklist
+## 7. Index Review Checklist
 
+- Refresh token lookup uses `tokenHash`.
+- Refresh token cleanup uses TTL on `expiresAt`.
+- Refresh token reuse handling uses `userId + familyId`.
 - Task dashboard queries use `userId + dueDate`.
 - Task status filters use `userId + status`.
 - Habit list queries use `userId`.

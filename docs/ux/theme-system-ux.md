@@ -1,11 +1,11 @@
 # Theme System UX
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4
+Source of truth: Master Prompt V4 and approved architecture update for Tailwind/auth migration
 
 ## 1. Theme UX Goal
 
-The theme system will let users choose a comfortable visual mode while giving contributors a predictable way to add future themes.
+The theme system will let users choose a comfortable visual mode while giving contributors a predictable way to maintain future themes.
 
 ## 2. V1 Themes
 
@@ -14,7 +14,7 @@ V1 will support:
 - Light theme
 - Dark theme
 
-Future community themes will be possible through a documented CSS variable set.
+Future community themes will be possible through the documented semantic variable set used by Tailwind utilities.
 
 ## 3. User Controls
 
@@ -22,9 +22,9 @@ Theme selection will live in Settings and may also be exposed through an app-lev
 
 ## 4. Visual Requirements
 
-The UI will use semantic theme variables for colors, surfaces, borders, text, focus states, and status indicators. Components will not hardcode colors.
+The UI will use Tailwind CSS v4 utility classes backed by semantic theme variables for colors, surfaces, borders, text, focus states, and status indicators. Components will not hardcode colors.
 
-The experience should feel clean, modern, professional, and dashboard-first in both light and dark modes.
+The experience should feel clean, modern, professional, dashboard-first, and close to the approved reference direction in both light and dark modes.
 
 ## 5. Accessibility Requirements
 
@@ -38,13 +38,13 @@ Themes should preserve:
 
 ## 6. Community Theme Contribution Experience
 
-Contributors will eventually be able to add a theme by:
+Contributors will eventually be able to update a theme by:
 
-1. Creating a `.css` file in `/client/src/themes/`
-2. Overriding the full CSS variable set
+1. Editing the approved semantic variable set
+2. Verifying Tailwind-backed components in light and dark modes
 3. Submitting a pull request with a before/after screenshot
 
-The exact token list will be defined in engineering theme architecture docs before implementation.
+Component-level CSS files should not be introduced for theme changes by default.
 
 ## 7. Persistence
 

@@ -28,7 +28,7 @@ V1 will be a modular MERN productivity dashboard with authentication, tasks, hab
 
 ### Authentication
 
-Users will be able to register, log in, log out, and restore their session after page refresh. V1 will use cookie-based JWT authentication with an HttpOnly cookie.
+Users will be able to register, log in, log out, and restore their session after page refresh. V1 will use short-lived access tokens and secure HttpOnly refresh-token cookies.
 
 ### Task Management
 
@@ -48,7 +48,7 @@ Users will see V1 analytics for task completion rate, habit consistency, daily p
 
 ### Theme Support
 
-Users will be able to use light and dark themes. The architecture will support future community themes through CSS variables.
+Users will be able to use light and dark themes. The architecture will use Tailwind CSS v4 with semantic CSS variables for future community themes.
 
 ## 5. User Value
 

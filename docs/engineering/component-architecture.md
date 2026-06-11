@@ -1,13 +1,13 @@
 # Component Architecture
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Component Goals
 
-The frontend component system will be reusable, theme-aware, accessible, and simple enough for contributors to understand.
+The frontend component system will be reusable, theme-aware, accessible, responsive, and simple enough for contributors to understand.
 
-V1 will build custom components inspired by shadcn/ui patterns. It will not install shadcn/ui as a dependency.
+V1 will use Tailwind CSS v4 with custom reusable components. It will not install shadcn/ui as a dependency.
 
 ## 2. Component Groups
 
@@ -29,9 +29,12 @@ Planned components:
 - `Select`
 - `Checkbox`
 - `Tabs`
+- `Table`
 - `Skeleton`
+- `Loader`
 - `EmptyState`
 - `ErrorState`
+- `SuccessState`
 
 ### Layout Components
 
@@ -86,13 +89,24 @@ client/src/features/habits/components/
   HabitCheckCell.jsx
 ```
 
+Auth components:
+
+```text
+client/src/features/auth/components/
+  AuthShell.jsx
+```
+
+Feature components may be added only when the active phase needs them.
+
 ## 4. Reuse Rules
 
 - Same UI pattern must not be rebuilt in multiple feature folders.
 - Shared controls belong in `components/ui/` or `components/shared/`.
 - Feature components may compose shared components but should not redefine them.
-- Components must use theme variables for colors.
+- Components must use Tailwind utility classes backed by semantic theme variables.
 - Components must support light and dark themes.
+- Avoid duplicated utility-class strings when a shared component would be clearer.
+- Component-level CSS files should be removed during the Tailwind migration unless a specific exception is documented.
 
 ## 5. Async State Components
 
@@ -106,8 +120,10 @@ Every async UI will support:
 Reusable components:
 
 - `Skeleton`
+- `Loader`
 - `EmptyState`
 - `ErrorState`
+- `SuccessState`
 
 Required areas:
 

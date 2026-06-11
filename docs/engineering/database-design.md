@@ -1,32 +1,39 @@
 # Database Design
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Database Choice
 
 Personal OS V1 will use MongoDB with Mongoose.
 
-The database will store users, tasks, habits, and habit check-ins. No additional V1 collections are approved.
+The database will store users, refresh tokens, tasks, habits, and habit check-ins.
 
 ## 2. Collection Names
 
 V1 will use plural lowercase collection names with underscores where required:
 
 - `users`
+- `refresh_tokens`
 - `tasks`
 - `habits`
 - `habit_check_ins`
 
-`habit_check_ins` is the authoritative collection name.
+`habit_check_ins` and `refresh_tokens` are the authoritative collection names.
 
 ## 3. Ownership Model
 
-Tasks, habits, and habit check-ins will belong to a user.
+Tasks, habits, habit check-ins, and refresh tokens will belong to a user.
 
 Every protected query must be scoped by authenticated `userId`. Services must prevent users from reading, updating, deleting, or checking in another user's data.
 
 ## 4. Relationships
+
+### User to Refresh Tokens
+
+One user can have many refresh tokens across devices or browser sessions.
+
+Refresh token records store only token hashes, not raw token values.
 
 ### User to Tasks
 
@@ -44,7 +51,15 @@ The check-in stores `userId` as well as `habitId` so user-scoped monthly queries
 
 ## 5. Delete Behavior
 
-V1 will use hard delete.
+V1 will use hard delete for tasks and habits.
+
+### Users
+
+Full account deletion is out of scope for V1.
+
+### Refresh Tokens
+
+Logout revokes the current refresh token when available. Expired refresh tokens may be removed by TTL index or cleanup process.
 
 ### Tasks
 
@@ -66,6 +81,8 @@ Habit check-in dates will be normalized to UTC midnight for the checked day.
 
 Task `dueDate` will be interpreted using UTC day boundaries for dashboard and analytics calculations.
 
+Refresh token expiry dates will be stored as UTC dates and indexed for cleanup.
+
 ## 7. Today's Task Query
 
 The dashboard and daily score will query tasks where `dueDate` is within the current UTC day:
@@ -86,8 +103,10 @@ For V1, a habit created mid-month still uses the total days in the month. Days b
 ## 9. Data Integrity Rules
 
 - User email must be unique.
+- Refresh token hashes must be stored instead of raw refresh tokens.
+- Refresh tokens must be revocable and expire.
 - A habit can have at most one check-in per user, habit, and UTC date.
 - Services must enforce ownership before mutation.
 - Services must handle habit check-in cascade deletion.
-- API responses must not expose password hashes.
+- API responses must not expose password hashes or raw refresh tokens.
 - MongoDB models may use Mongoose timestamps for `createdAt` and `updatedAt`.

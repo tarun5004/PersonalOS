@@ -45,7 +45,7 @@ Approved docs should not be changed silently during implementation.
 
 Contributors must not commit secrets, real `.env` files, tokens, passwords, private keys, or production credentials.
 
-Authentication must use HttpOnly cookie-based JWT in V1. JWTs must not be stored in localStorage or sessionStorage.
+V1 authentication uses short-lived access tokens in memory and rotated refresh tokens in secure HttpOnly cookies. Tokens must not be stored in localStorage or sessionStorage.
 
 Security-sensitive behavior should be validated, documented, and reviewed.
 
@@ -57,8 +57,8 @@ Contributors should not open public issues for suspected vulnerabilities until m
 
 Future community themes should:
 
-1. Add a `.css` file in `/client/src/themes/`
-2. Override the full CSS variable set
+1. Use the approved Tailwind CSS v4 styling architecture
+2. Override or extend the semantic theme variable set
 3. Include a before/after screenshot in the pull request
 
 Theme files must preserve contrast, focus states, readable form states, and non-color-only status indicators.

@@ -1,14 +1,15 @@
 # API Design
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. API Principles
 
 - All backend routes will be mounted under `/api`, except `GET /health`.
 - API responses will use one consistent success shape and one consistent error shape.
-- Protected routes will use the HttpOnly auth cookie.
-- Frontend API calls will include credentials.
+- Protected routes will use short-lived access tokens.
+- Refresh and logout routes will use the secure HttpOnly refresh-token cookie.
+- Frontend API calls will include credentials when a refresh cookie is involved.
 - Controllers will stay thin and delegate business logic to services.
 
 ## 2. HTTP Status Codes
@@ -52,6 +53,13 @@ Error:
 
 ## 4. Auth Routes
 
+### Auth Token Rules
+
+- `accessToken` is returned in register, login, and refresh responses.
+- The frontend stores `accessToken` in memory only.
+- The refresh token is stored in an HttpOnly cookie and is never returned in JSON.
+- Protected API requests use `Authorization: Bearer <accessToken>`.
+
 ### `POST /api/auth/register`
 
 Request:
@@ -64,7 +72,7 @@ Request:
 }
 ```
 
-Success: 201
+Success: 201. Sets rotated HttpOnly refresh cookie and returns user plus access token.
 
 ```json
 {
@@ -75,7 +83,8 @@ Success: 201
       "name": "User Name",
       "email": "user@example.com",
       "createdAt": "ISO date"
-    }
+    },
+    "accessToken": "short-lived-jwt"
   }
 }
 ```
@@ -97,7 +106,22 @@ Request:
 }
 ```
 
-Success: 200. Sets HttpOnly auth cookie and returns `{ user }`.
+Success: 200. Sets rotated HttpOnly refresh cookie and returns user plus access token.
+
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "_id": "string",
+      "name": "User Name",
+      "email": "user@example.com",
+      "createdAt": "ISO date"
+    },
+    "accessToken": "short-lived-jwt"
+  }
+}
+```
 
 Errors:
 
@@ -105,9 +129,35 @@ Errors:
 - 401 for invalid credentials
 - 429 for rate limit exceeded
 
+### `POST /api/auth/refresh`
+
+Request body: none. Uses the HttpOnly refresh-token cookie.
+
+Success: 200. Rotates refresh token cookie and returns a new access token plus user.
+
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "_id": "string",
+      "name": "User Name",
+      "email": "user@example.com",
+      "createdAt": "ISO date"
+    },
+    "accessToken": "short-lived-jwt"
+  }
+}
+```
+
+Errors:
+
+- 401 for missing, expired, revoked, reused, or invalid refresh token
+- 429 for rate limit exceeded
+
 ### `POST /api/auth/logout`
 
-Request body: none
+Request body: none. Uses the HttpOnly refresh-token cookie when present.
 
 Success: 200
 
@@ -118,19 +168,21 @@ Success: 200
 }
 ```
 
-Logout is idempotent.
+Logout is idempotent. If a refresh token is present, the backend revokes it and clears the cookie.
 
 ### `GET /api/auth/me`
+
+Requires `Authorization: Bearer <accessToken>`.
 
 Success: 200 with `{ user }`
 
 Errors:
 
-- 401 for missing, expired, or invalid cookie
+- 401 for missing, expired, or invalid access token
 
 ## 5. Task Routes
 
-All task routes require authentication.
+All task routes require authentication through a valid access token.
 
 ### `GET /api/tasks`
 
@@ -186,7 +238,7 @@ Behavior: hard delete.
 
 ## 6. Habit Routes
 
-All habit routes require authentication.
+All habit routes require authentication through a valid access token.
 
 ### `GET /api/habits`
 
@@ -258,7 +310,7 @@ Errors:
 
 ### `GET /api/dashboard/summary`
 
-Requires authentication.
+Requires authentication through a valid access token.
 
 Success: 200
 
@@ -275,7 +327,7 @@ This endpoint will not return weekly chart data.
 
 ### `GET /api/analytics/weekly`
 
-Requires authentication.
+Requires authentication through a valid access token.
 
 Success: 200
 

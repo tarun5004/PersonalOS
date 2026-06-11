@@ -31,6 +31,7 @@ Potential future scaling options:
 MongoDB indexes are planned for common V1 queries:
 
 - `tasks`: `userId`, `userId + dueDate`, `userId + status`
+- `refresh_tokens`: `tokenHash`, `userId + familyId`, `expiresAt`
 - `habits`: `userId`
 - `habit_check_ins`: `userId + habitId + date`, `userId + month`
 
@@ -57,14 +58,14 @@ This supports modular growth without introducing Redux or a large design-system 
 
 ## 5. Auth Scalability
 
-V1 uses HttpOnly cookie JWT auth with no refresh tokens.
+V1 uses short-lived access tokens and rotated HttpOnly refresh-token cookies.
 
-This keeps authentication simple. It is not optimized for session clustering, enterprise auth, or advanced token revocation.
+This supports better token revocation than a single long-lived token, while remaining smaller than enterprise auth.
 
 Future scale may require:
 
-- Refresh token rotation
-- Server-side session invalidation
+- Global logout from all devices
+- More detailed session management UI
 - OAuth providers
 - More granular authorization
 

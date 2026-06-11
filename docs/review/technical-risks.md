@@ -40,32 +40,32 @@ Mitigation:
 - Avoid presenting V1 analytics as immutable history.
 - Consider historical snapshots or soft delete after V1 if needed.
 
-## 4. Cookie Auth and CSRF Risk
+## 4. Refresh Cookie and CSRF Risk
 
-Same-domain deployments rely on `sameSite: "lax"` as the V1 CSRF mitigation.
+Same-domain refresh-cookie deployments rely on `sameSite: "lax"` as the V1 CSRF mitigation for refresh and logout endpoints.
 
-Cross-domain cookie deployment without CSRF tokens is a deliberate V1 tradeoff.
+Most protected API mutations use access tokens in the `Authorization` header rather than cookie-only authentication.
 
-Risk: Cross-domain deployments require careful CORS and cookie configuration.
+Risk: Cross-domain refresh-cookie deployments require careful CORS, cookie, and CSRF configuration.
 
 Mitigation:
 
 - Prefer same-domain deployment when possible.
 - Use exact `CORS_ORIGIN`.
 - Require `secure: true` with `sameSite: "none"`.
-- Avoid cross-domain cookie deployment unless required.
+- Add CSRF protection before production use if cross-domain refresh cookies are required.
 
-## 5. No Refresh Token Risk
+## 5. Refresh Token Rotation Risk
 
-V1 uses a 7-day JWT with no refresh tokens.
+V1 uses short-lived access tokens and rotated refresh tokens.
 
-Risk: Users must log in again after expiry, and token invalidation options are limited.
+Risk: Token rotation, reuse detection, and revocation add backend complexity.
 
 Mitigation:
 
-- Keep expiry short and documented.
-- Restore session through `/api/auth/me`.
-- Revisit refresh tokens after V1 if user needs justify it.
+- Store only refresh token hashes.
+- Add tests for refresh success, refresh expiry, reuse detection, logout revocation, and access-token expiry.
+- Keep token service logic explicit and well documented.
 
 ## 6. MongoDB Schema Discipline Risk
 

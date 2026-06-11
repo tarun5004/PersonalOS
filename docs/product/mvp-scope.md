@@ -17,9 +17,10 @@ The MVP will be useful as a personal dashboard and maintainable as an open-sourc
 - Login
 - Logout
 - Protected frontend and backend routes
-- Session restore through `GET /api/auth/me`
+- Session restore through refresh-token rotation
 - Basic auth error handling
-- JWT stored in an HttpOnly cookie
+- Short-lived access token kept in frontend memory
+- Refresh token stored in a secure HttpOnly cookie
 
 ### Task Management
 
@@ -61,7 +62,7 @@ The MVP will be useful as a personal dashboard and maintainable as an open-sourc
 
 - Light theme
 - Dark theme
-- CSS-variable token system for future community themes
+- Tailwind CSS v4 styling with semantic theme variables for future community themes
 
 ## 3. Out of Scope
 

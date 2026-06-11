@@ -1,7 +1,7 @@
 # Deployment
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Deployment Targets
 
@@ -40,18 +40,20 @@ Required server variables:
 NODE_ENV
 PORT
 MONGODB_URI
-JWT_SECRET
-JWT_EXPIRES_IN=7d
+ACCESS_TOKEN_SECRET
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_COOKIE_NAME
+REFRESH_TOKEN_MAX_AGE_MS=604800000
 CLIENT_URL
 CORS_ORIGIN
 BCRYPT_SALT_ROUNDS
 RATE_LIMIT_WINDOW_MS
 RATE_LIMIT_MAX_REQUESTS
-COOKIE_NAME
-COOKIE_MAX_AGE_MS=604800000
 COOKIE_SECURE
 COOKIE_SAME_SITE
 ```
+
+`JWT_SECRET`, `JWT_EXPIRES_IN`, `COOKIE_NAME`, and `COOKIE_MAX_AGE_MS` are replaced by access-token and refresh-token-specific variables during the auth migration.
 
 ## 5. Client Environment Variables
 
@@ -60,6 +62,8 @@ Required client variable:
 ```text
 VITE_API_BASE_URL
 ```
+
+No auth token values belong in client environment variables.
 
 ## 6. Cookie and CORS Deployment Modes
 
@@ -70,21 +74,29 @@ Recommended V1 mode:
 - `COOKIE_SAME_SITE=lax`
 - `COOKIE_SECURE=true` in production
 - `CORS_ORIGIN` set to exact frontend origin
+- Refresh requests include credentials
 
 ### Cross-Domain Deployment
 
-Allowed with documented tradeoffs:
+Allowed only with documented tradeoffs:
 
 - `COOKIE_SAME_SITE=none`
 - `COOKIE_SECURE=true`
 - `CORS_ORIGIN` set to exact frontend origin
-- Frontend requests include credentials
+- Frontend refresh/logout requests include credentials
+- CSRF protection should be added before production use
 
-## 7. Docker Compose Stub
+## 7. Tailwind Build
+
+V1 will use Tailwind CSS v4 through the frontend build.
+
+The frontend will keep a single required global Tailwind CSS entry file. Component-level CSS files should be removed during the Tailwind migration unless an exception is documented.
+
+## 8. Docker Compose Stub
 
 Phase 1 will include a Docker Compose stub for self-hosting direction. It will not need to be a complete production orchestration system in V1.
 
-## 8. Release Readiness
+## 9. Release Readiness
 
 Before first open-source release:
 

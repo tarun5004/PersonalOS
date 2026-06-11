@@ -47,24 +47,26 @@ This is appropriate for V1 and gives contributors clear boundaries.
 
 Security decisions are documented:
 
-- HttpOnly cookie JWT auth
+- Short-lived access tokens
+- Rotated HttpOnly refresh-token cookies
+- Hashed refresh token storage
 - No localStorage or sessionStorage tokens
-- 7-day JWT with no refresh tokens
 - Exact CORS origin with credentials
-- Cookie settings from environment
-- Login and register rate limiting
+- Cookie and token settings from environment
+- Login, register, and refresh rate limiting
 - Zod request and env validation
 - Centralized error handling
 - Sanitized production errors
-- Same-domain `sameSite: "lax"` CSRF mitigation
+- Same-domain `sameSite: "lax"` CSRF mitigation for refresh-cookie endpoints
 
-The main accepted risk is cross-domain cookie deployment without CSRF tokens. The docs mark this as a deliberate V1 tradeoff that should be avoided unless required.
+The main accepted risk is cross-domain refresh-cookie deployment. The docs require exact CORS and recommend CSRF protection before production use in that mode.
 
 ## 5. Data Review
 
 The approved V1 collections are:
 
 - `users`
+- `refresh_tokens`
 - `tasks`
 - `habits`
 - `habit_check_ins`
@@ -80,7 +82,7 @@ The frontend state plan is appropriate:
 - TanStack Query for server state
 - URL query params for filters
 
-The UI plan includes reusable components, theme variables, and required loading, empty, error, and success states.
+The UI plan includes reusable components, Tailwind CSS v4, theme variables, and required loading, empty, error, and success states.
 
 ## 7. Documentation Readiness
 

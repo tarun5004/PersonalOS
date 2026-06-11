@@ -1,71 +1,94 @@
 # Security
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Authentication Policy
 
-V1 will use cookie-based JWT authentication.
+V1 will use access-token + refresh-token authentication.
 
-- JWT expiry: 7 days
-- No refresh tokens in V1
-- Token stored in an HttpOnly cookie
-- Token never stored in localStorage or sessionStorage
-- Frontend JavaScript must not directly read the token
-- Backend sets the cookie on register and login
-- Backend clears the cookie on logout
-- Frontend restores auth state with `GET /api/auth/me`
+- Access tokens are short-lived bearer JWTs.
+- Refresh tokens are long-lived, opaque, rotated, and stored only as hashed values in MongoDB.
+- Refresh tokens are sent to the browser only through a secure HttpOnly cookie.
+- Frontend JavaScript may keep the access token in memory only.
+- Access tokens and refresh tokens must never be stored in localStorage or sessionStorage.
+- Backend protected APIs validate the `Authorization: Bearer <accessToken>` header.
+- Frontend restores sessions by calling the refresh endpoint with credentials included.
+- Logout revokes the current refresh token when present and clears the refresh cookie.
 
-## 2. Cookie Configuration
+## 2. Token Lifetime
 
-Required cookie options:
+Default V1 lifetimes:
+
+```text
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_MAX_AGE_MS=604800000
+```
+
+The refresh token cookie max age should match the stored refresh token expiry. The server must fail fast when required token or cookie configuration is missing or invalid.
+
+## 3. Refresh Token Rotation
+
+Refresh token rotation is required in V1.
+
+On register, login, and refresh:
+
+1. The backend issues a new short-lived access token.
+2. The backend creates a new opaque refresh token.
+3. The backend stores only a hash of the refresh token.
+4. The backend sends the refresh token in an HttpOnly cookie.
+5. On refresh, the previous refresh token is revoked or marked as replaced.
+
+If refresh token reuse is detected, the backend should revoke the related token family where practical and require the user to log in again.
+
+## 4. Cookie Configuration
+
+Required refresh cookie options:
 
 - `httpOnly: true`
 - `secure: true` in production
-- `maxAge: 604800000`
 - `sameSite` controlled by `COOKIE_SAME_SITE`
+- `maxAge` controlled by `REFRESH_TOKEN_MAX_AGE_MS`
 
-`COOKIE_MAX_AGE_MS` must match `JWT_EXPIRES_IN` converted to milliseconds. Default:
+The refresh cookie is the only authentication token stored in a browser cookie.
+
+## 5. CSRF Decision
+
+Most protected API mutations use the access token in the `Authorization` header and are not authenticated by cookies alone.
+
+Refresh and logout endpoints rely on the refresh cookie. Recommended V1 deployment is same-domain or same-site with:
 
 ```text
-JWT_EXPIRES_IN=7d
-COOKIE_MAX_AGE_MS=604800000
+COOKIE_SAME_SITE=lax
+COOKIE_SECURE=true in production
 ```
 
-The server must fail fast at startup if these values mismatch.
+Cross-domain cookie deployment using `sameSite: "none"` requires `secure: true`, exact credentialed CORS, and should add CSRF protection before production use. Cross-domain refresh-cookie deployment without CSRF protection is not recommended.
 
-## 3. CSRF Decision
-
-V1 will not implement CSRF tokens.
-
-For same-domain deployments, `sameSite: "lax"` is the primary CSRF mitigation.
-
-For cross-domain deployments using `sameSite: "none"`, `secure: true` is required and CORS credentials configuration must be documented. This mode has a larger CSRF tradeoff and should be used deliberately.
-
-Cross-domain cookie deployment without CSRF tokens is a deliberate V1 tradeoff and should be avoided unless required by the deployment setup.
-
-## 4. CORS
+## 6. CORS
 
 CORS must use:
 
-- `credentials: true`
+- `credentials: true` for refresh and logout requests
 - Exact allowed origin from `CORS_ORIGIN`
 - No wildcard origin when credentials are enabled
 
-## 5. Passwords
+Frontend API calls must include credentials when calling refresh-cookie endpoints.
+
+## 7. Passwords
 
 - Passwords will be hashed with bcrypt.
 - `BCRYPT_SALT_ROUNDS` will come from environment variables.
 - API responses must not include password hashes.
 - Logs must not include passwords or password hashes.
 
-## 6. Rate Limiting
+## 8. Rate Limiting
 
-`POST /api/auth/login` and `POST /api/auth/register` must be rate-limited.
+`POST /api/auth/login`, `POST /api/auth/register`, and `POST /api/auth/refresh` must be rate-limited.
 
 V1 will use `express-rate-limit`. Redis is not required for V1.
 
-## 7. Request Validation
+## 9. Request Validation
 
 Zod is preferred for:
 
@@ -76,7 +99,7 @@ Zod is preferred for:
 - Query param validation
 - Environment variable validation at startup
 
-## 8. Error Handling
+## 10. Error Handling
 
 Backend error handling will use:
 
@@ -90,13 +113,13 @@ Backend error handling will use:
 
 Production responses must not include stack traces.
 
-## 9. Protected Routes
+## 11. Protected Routes
 
-Protected backend routes must verify the auth cookie and authenticated user.
+Protected backend routes must verify a valid access token and authenticated user.
 
 Protected frontend routes must depend on restored auth state and redirect unauthenticated users to `/login`.
 
-## 10. Known Limitations
+## 12. Known Limitations
 
 ### UTC Day Boundary
 
@@ -112,19 +135,17 @@ Habit completion percentage uses total days in the selected month as the denomin
 
 Deleted tasks and habits are removed permanently. Analytics are calculated from live data, so deleted records will no longer appear in historical scores.
 
-### CSRF Tokens
+### Refresh Token Storage
 
-CSRF tokens are not implemented in V1. Same-domain deployments rely on `sameSite: "lax"`.
+V1 stores hashed refresh tokens in MongoDB. Global logout from all devices may be added later if not completed during the auth migration chunk.
 
-Cross-domain cookie deployments without CSRF tokens should be avoided unless required. If used, the project must document the tradeoff and keep CORS origins exact.
-
-## 11. Secrets
+## 13. Secrets
 
 Real `.env` files must not be committed.
 
-Required secrets and configuration values must be documented through `.env.example` during Phase 1.
+Required secrets and configuration values must be documented through `.env.example`.
 
-## 12. Responsible Security Reporting
+## 14. Responsible Security Reporting
 
 Security issues should be reported privately through the responsible security reporting process documented in root `SECURITY.md`.
 

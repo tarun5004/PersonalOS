@@ -1,7 +1,7 @@
 # Folder Structure
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Repository Structure
 
@@ -50,8 +50,13 @@ client/
       settings/
     hooks/
     lib/
-    themes/
+    styles/
+      index.css
 ```
+
+The `styles/index.css` file, or the existing Vite global CSS entry if retained during migration, is the only approved global Tailwind CSS entry point. It will contain Tailwind v4 import, resets, theme variables, and global tokens.
+
+Component-level CSS files should be removed during the Tailwind migration unless a documented exception is approved.
 
 ## 3. Frontend Layer Mapping
 
@@ -81,6 +86,7 @@ Infrastructure layer:
 - API client
 - Feature API functions
 - Error normalization
+- Access-token attachment and refresh retry behavior
 
 ## 4. Backend Structure
 
@@ -125,6 +131,8 @@ Examples:
 - `task.service.js`
 - `task.model.js`
 - `task.validation.js`
+
+The auth module may include refresh-token-specific model, service, or utility files when needed to keep token rotation clear.
 
 ## 6. Naming Rules
 

@@ -50,5 +50,5 @@ Source of truth: Master Prompt V4
 ## Themes
 
 - As a user, I want light and dark themes so the app works in different environments.
-- As a contributor, I want themes to use CSS variables so new themes can be added consistently.
+- As a contributor, I want themes to use Tailwind-backed semantic variables so new themes can be added consistently.
 - As a contributor, I want theme rules documented so community themes follow the same token set.

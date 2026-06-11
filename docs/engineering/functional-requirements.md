@@ -1,7 +1,7 @@
 # Functional Requirements
 
 Status: Approved for V1 planning  
-Source of truth: Master Prompt V4 and approved Phase 0-A docs
+Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved architecture update for Tailwind/auth migration
 
 ## 1. Purpose
 
@@ -18,9 +18,11 @@ The backend will expose `POST /api/auth/register`. A user will register with nam
 On success:
 
 - The password will be hashed with bcrypt.
-- A JWT will be set in an HttpOnly cookie.
+- A short-lived access token will be returned in the response body.
+- A rotated refresh token will be set in a secure HttpOnly cookie.
+- Only a hash of the refresh token will be stored in MongoDB.
 - The response will include `{ _id, name, email, createdAt }`.
-- The response will not include password, password hash, or role.
+- The response will not include password, password hash, role, or refresh token.
 
 If the email already exists, the API will return 409.
 
@@ -30,24 +32,38 @@ The backend will expose `POST /api/auth/login`. A user will log in with email an
 
 On success:
 
-- A JWT will be set in an HttpOnly cookie.
+- A short-lived access token will be returned in the response body.
+- A rotated refresh token will be set in a secure HttpOnly cookie.
 - The response will include `{ _id, name, email, createdAt }`.
 
 Invalid credentials will return 401.
 
-### FR-AUTH-03: Logout
+### FR-AUTH-03: Refresh Session
+
+The backend will expose `POST /api/auth/refresh`.
+
+The endpoint will use the HttpOnly refresh-token cookie to:
+
+- Validate the refresh token hash.
+- Reject expired, revoked, reused, or invalid refresh tokens.
+- Rotate the refresh token.
+- Return a new short-lived access token and safe user.
+
+The frontend will call this endpoint on page load to restore auth state.
+
+### FR-AUTH-04: Logout
 
 The backend will expose `POST /api/auth/logout`.
 
-Logout will clear the auth cookie and always return 200. Logout is idempotent, even if the cookie is missing or expired.
+Logout will revoke the current refresh token when present, clear the refresh cookie, and always return 200. Logout is idempotent, even if the cookie is missing or expired.
 
-### FR-AUTH-04: Session Restore
+### FR-AUTH-05: Current User
 
 The backend will expose `GET /api/auth/me`.
 
-The frontend will call this endpoint on page load to restore auth state. A valid cookie returns the user. Missing, expired, or invalid cookies return 401.
+The endpoint requires a valid access token in the `Authorization` header. A valid access token returns the user. Missing, expired, or invalid access tokens return 401.
 
-The frontend will silently clear auth state and redirect to `/login` when `/api/auth/me` returns 401.
+The frontend will clear auth state and redirect to `/login` when refresh fails or when protected API calls cannot be re-authorized.
 
 ## 3. Tasks
 
@@ -190,17 +206,25 @@ When score is `null`, the UI will show "No activity tracked today." Dashboard an
 
 Days with no tasks and no habits tracked will return `productivityScore: null`. The frontend will render a visual gap rather than 0.
 
-## 7. Theme System
+## 7. Theme and Styling System
 
 ### FR-THEME-01: V1 Themes
 
 V1 will support light and dark themes.
 
-### FR-THEME-02: Theme Tokens
+### FR-THEME-02: Tailwind and Theme Tokens
 
-UI colors and visual states will use CSS variables. Components must not hardcode colors.
+V1 will use Tailwind CSS v4 for styling.
 
-### FR-THEME-03: Settings Scope
+UI colors and visual states will use semantic CSS variables exposed through Tailwind utilities. Components must not hardcode colors.
+
+### FR-THEME-03: CSS File Scope
+
+The frontend will keep only the required global Tailwind entry CSS file for Tailwind import, resets, theme variables, and global tokens.
+
+Component-level CSS files should be removed during the Tailwind migration unless a documented exception is approved.
+
+### FR-THEME-04: Settings Scope
 
 Settings in V1 will be limited to theme selection and basic authenticated user context where required.
 
