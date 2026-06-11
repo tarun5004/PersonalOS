@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -13,7 +13,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive(),
   MONGODB_URI: z.string().min(1),
-  JWT_SECRET: z.string().min(1),
+  JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.literal('7d'),
   CLIENT_URL: z.string().url(),
   CORS_ORIGIN: z.string().url(),
@@ -36,6 +36,11 @@ if (!parsedEnv.success) {
 
 if (parsedEnv.data.COOKIE_MAX_AGE_MS !== SEVEN_DAYS_MS) {
   console.error('COOKIE_MAX_AGE_MS must match JWT_EXPIRES_IN=7d.');
+  process.exit(1);
+}
+
+if (parsedEnv.data.NODE_ENV === 'production' && !parsedEnv.data.COOKIE_SECURE) {
+  console.error('COOKIE_SECURE must be true when NODE_ENV is production.');
   process.exit(1);
 }
 
