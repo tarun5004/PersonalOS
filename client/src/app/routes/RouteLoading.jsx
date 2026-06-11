@@ -1,8 +1,9 @@
+import { Loader } from '../../components/ui/Loader.jsx';
+
 export function RouteLoading() {
   return (
-    <div className="route-state" role="status">
-      Loading...
+    <div className="p-8">
+      <Loader label="Loading..." />
     </div>
   );
 }
-

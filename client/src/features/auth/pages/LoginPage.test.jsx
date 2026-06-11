@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, test, vi } from 'vitest';
+import { ThemeProvider } from '../../theme/ThemeProvider.jsx';
 import { useAuth } from '../useAuth.js';
 import LoginPage from './LoginPage.jsx';
 
@@ -19,9 +20,11 @@ function renderLoginPage(authOverrides = {}) {
   });
 
   render(
-    <MemoryRouter>
-      <LoginPage />
-    </MemoryRouter>,
+    <ThemeProvider>
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    </ThemeProvider>,
   );
 
   return { login };

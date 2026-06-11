@@ -1,9 +1,13 @@
 export function PageHeader({ description, eyebrow, title }) {
   return (
-    <div className="page-header">
-      {eyebrow ? <p className="page-eyebrow">{eyebrow}</p> : null}
-      <p className="page-title">{title}</p>
-      {description ? <p className="page-description">{description}</p> : null}
+    <div className="min-w-0">
+      {eyebrow ? (
+        <p className="m-0 text-xs font-extrabold uppercase text-primary-strong">
+          {eyebrow}
+        </p>
+      ) : null}
+      <p className="mt-1 text-xl font-extrabold text-body">{title}</p>
+      {description ? <p className="mt-1 text-sm text-muted">{description}</p> : null}
     </div>
   );
 }

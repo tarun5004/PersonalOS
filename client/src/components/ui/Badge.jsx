@@ -1,0 +1,24 @@
+import { mergeClassNames } from '../../lib/classNames.js';
+
+const VARIANTS = {
+  primary: 'bg-primary-soft text-primary-strong',
+  muted: 'bg-surface-muted text-muted',
+  success: 'bg-success/10 text-success',
+  warning: 'bg-warning/10 text-warning',
+  danger: 'bg-danger/10 text-danger',
+};
+
+export function Badge({ children, className, variant = 'primary', ...props }) {
+  return (
+    <span
+      className={mergeClassNames(
+        'inline-flex min-h-6 items-center rounded-full px-2.5 text-xs font-extrabold uppercase tracking-normal',
+        VARIANTS[variant],
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </span>
+  );
+}

@@ -1,24 +1,99 @@
-:root {
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  background: var(--color-app-bg);
-  color: var(--color-text);
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  --color-app-bg: var(--theme-app-bg);
+  --color-surface: var(--theme-surface);
+  --color-surface-muted: var(--theme-surface-muted);
+  --color-border: var(--theme-border);
+  --color-body: var(--theme-text);
+  --color-muted: var(--theme-text-muted);
+  --color-primary: var(--theme-primary);
+  --color-primary-text: var(--theme-primary-text);
+  --color-primary-soft: var(--theme-primary-soft);
+  --color-primary-strong: var(--theme-primary-strong);
+  --color-focus: var(--theme-focus);
+  --color-success: var(--theme-success);
+  --color-warning: var(--theme-warning);
+  --color-danger: var(--theme-error);
+  --color-info: var(--theme-info);
+
+  --radius-ui: 0.5rem;
+  --shadow-card: 0 16px 38px var(--theme-shadow);
+  --shadow-panel: 0 28px 80px var(--theme-shadow);
 }
 
-* {
-  box-sizing: border-box;
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --theme-app-bg: #eef2fb;
+  --theme-surface: #ffffff;
+  --theme-surface-muted: #f5f6fc;
+  --theme-border: #dde1ef;
+  --theme-text: #201f39;
+  --theme-text-muted: #6f7086;
+  --theme-primary: #6c63ff;
+  --theme-primary-text: #ffffff;
+  --theme-primary-soft: #efedff;
+  --theme-primary-strong: #5148d8;
+  --theme-focus: #16a89e;
+  --theme-success: #1f9d64;
+  --theme-warning: #b7791f;
+  --theme-error: #d1435b;
+  --theme-info: #4776e6;
+  --theme-shadow: rgb(50 45 100 / 13%);
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --theme-app-bg: #11131c;
+  --theme-surface: #1d2030;
+  --theme-surface-muted: #262b3e;
+  --theme-border: #343a54;
+  --theme-text: #f5f4fb;
+  --theme-text-muted: #b9bbcf;
+  --theme-primary: #8b85ff;
+  --theme-primary-text: #11131c;
+  --theme-primary-soft: #302d59;
+  --theme-primary-strong: #d2ceff;
+  --theme-focus: #39c9bb;
+  --theme-success: #65d18f;
+  --theme-warning: #efc06d;
+  --theme-error: #ff8798;
+  --theme-info: #88a8ff;
+  --theme-shadow: rgb(0 0 0 / 36%);
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background: var(--theme-app-bg);
+    color: var(--theme-text);
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    background: var(--theme-app-bg);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  a {
+    color: inherit;
+  }
 }

@@ -6,7 +6,6 @@ import { protectedRoutes, publicRoutes } from './app/routes/routeConfig.js';
 import { RouteLoading } from './app/routes/RouteLoading.jsx';
 import { AppLayout } from './components/layout/AppLayout.jsx';
 import { NotFoundPage } from './features/system/pages/NotFoundPage.jsx';
-import './App.css';
 
 function App() {
   return (

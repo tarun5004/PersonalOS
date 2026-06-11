@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Alert } from '../../../components/ui/Alert.jsx';
+import { Button } from '../../../components/ui/Button.jsx';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../../components/ui/Card.jsx';
+import { Input } from '../../../components/ui/Input.jsx';
 import {
   mapServerValidationErrors,
   normalizeRegisterValues,
   validateRegisterForm,
 } from '../auth.validation.js';
+import { AuthShell } from '../components/AuthShell.jsx';
 import { useAuth } from '../useAuth.js';
-import './AuthPages.css';
 
 const initialValues = {
   email: '',
@@ -68,92 +78,70 @@ export default function RegisterPage() {
   }
 
   return (
-    <section className="auth-page">
-      <p className="auth-eyebrow">Authentication</p>
-      <h1>Create account</h1>
-      <p className="auth-summary">Start your Personal OS workspace.</p>
+    <AuthShell
+      eyebrow="Start here"
+      summary="Create your workspace for tasks, habits, and weekly progress without adding noise to your day."
+      title="Make a personal dashboard that feels easy to return to."
+    >
+      <Card className="bg-[linear-gradient(135deg,var(--theme-surface),var(--theme-primary-soft))] p-6 sm:p-7">
+        <CardHeader>
+          <CardDescription>New workspace</CardDescription>
+          <CardTitle>Create account</CardTitle>
+        </CardHeader>
 
-      <div className="auth-panel">
-        <form className="auth-form" noValidate onSubmit={handleSubmit}>
-          {formError ? (
-            <p className="auth-alert" role="alert">
-              {formError}
-            </p>
-          ) : null}
+        <CardContent>
+          <form className="grid gap-4" noValidate onSubmit={handleSubmit}>
+            {formError ? <Alert variant="error">{formError}</Alert> : null}
 
-          <div className="auth-field">
-            <label htmlFor="register-name">Name</label>
-            <input
-              aria-describedby={fieldErrors.name ? 'register-name-error' : undefined}
-              aria-invalid={Boolean(fieldErrors.name)}
+            <Input
               autoComplete="name"
-              className="auth-input"
+              error={fieldErrors.name}
               id="register-name"
+              label="Name"
               name="name"
               onChange={handleChange}
               type="text"
               value={values.name}
             />
-            {fieldErrors.name ? (
-              <p className="auth-error" id="register-name-error">
-                {fieldErrors.name}
-              </p>
-            ) : null}
-          </div>
 
-          <div className="auth-field">
-            <label htmlFor="register-email">Email</label>
-            <input
-              aria-describedby={
-                fieldErrors.email ? 'register-email-error' : undefined
-              }
-              aria-invalid={Boolean(fieldErrors.email)}
+            <Input
               autoComplete="email"
-              className="auth-input"
+              error={fieldErrors.email}
               id="register-email"
+              label="Email"
               name="email"
               onChange={handleChange}
               type="email"
               value={values.email}
             />
-            {fieldErrors.email ? (
-              <p className="auth-error" id="register-email-error">
-                {fieldErrors.email}
-              </p>
-            ) : null}
-          </div>
 
-          <div className="auth-field">
-            <label htmlFor="register-password">Password</label>
-            <input
-              aria-describedby={
-                fieldErrors.password ? 'register-password-error' : undefined
-              }
-              aria-invalid={Boolean(fieldErrors.password)}
+            <Input
               autoComplete="new-password"
-              className="auth-input"
+              error={fieldErrors.password}
               id="register-password"
+              label="Password"
               name="password"
               onChange={handleChange}
               type="password"
               value={values.password}
             />
-            {fieldErrors.password ? (
-              <p className="auth-error" id="register-password-error">
-                {fieldErrors.password}
-              </p>
-            ) : null}
-          </div>
 
-          <button className="auth-submit" disabled={isBusy} type="submit">
-            {isSubmitting ? 'Creating account...' : 'Create account'}
-          </button>
-        </form>
+            <Button className="mt-1 w-full" disabled={isBusy} size="lg" type="submit">
+              {isSubmitting ? 'Creating account...' : 'Create account'}
+            </Button>
+          </form>
 
-        <p className="auth-switch">
-          Already have an account? <Link to="/login">Log in</Link>
-        </p>
-      </div>
-    </section>
+          <p className="mt-5 text-center text-sm text-muted">
+            Already have an account?{' '}
+            <Link
+              className="font-bold text-primary-strong underline-offset-4 hover:underline"
+              to="/login"
+            >
+              Log in
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
+    </AuthShell>
   );
 }

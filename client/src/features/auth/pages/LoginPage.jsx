@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Alert } from '../../../components/ui/Alert.jsx';
+import { Button } from '../../../components/ui/Button.jsx';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../../components/ui/Card.jsx';
+import { Input } from '../../../components/ui/Input.jsx';
 import {
   mapServerValidationErrors,
   normalizeLoginValues,
   validateLoginForm,
 } from '../auth.validation.js';
+import { AuthShell } from '../components/AuthShell.jsx';
 import { useAuth } from '../useAuth.js';
-import './AuthPages.css';
 
 const initialValues = {
   email: '',
@@ -67,70 +77,59 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="auth-page">
-      <p className="auth-eyebrow">Authentication</p>
-      <h1>Log in</h1>
-      <p className="auth-summary">Continue to your Personal OS workspace.</p>
+    <AuthShell
+      eyebrow="Welcome back"
+      summary="Continue to your workspace and keep today's tasks, habits, and weekly rhythm in one place."
+      title="Pick up your day where you left it."
+    >
+      <Card className="bg-[linear-gradient(135deg,var(--theme-surface),var(--theme-primary-soft))] p-6 sm:p-7">
+        <CardHeader>
+          <CardDescription>Account</CardDescription>
+          <CardTitle>Log in</CardTitle>
+        </CardHeader>
 
-      <div className="auth-panel">
-        <form className="auth-form" noValidate onSubmit={handleSubmit}>
-          {formError ? (
-            <p className="auth-alert" role="alert">
-              {formError}
-            </p>
-          ) : null}
+        <CardContent>
+          <form className="grid gap-4" noValidate onSubmit={handleSubmit}>
+            {formError ? <Alert variant="error">{formError}</Alert> : null}
 
-          <div className="auth-field">
-            <label htmlFor="login-email">Email</label>
-            <input
-              aria-describedby={fieldErrors.email ? 'login-email-error' : undefined}
-              aria-invalid={Boolean(fieldErrors.email)}
+            <Input
               autoComplete="email"
-              className="auth-input"
+              error={fieldErrors.email}
               id="login-email"
+              label="Email"
               name="email"
               onChange={handleChange}
               type="email"
               value={values.email}
             />
-            {fieldErrors.email ? (
-              <p className="auth-error" id="login-email-error">
-                {fieldErrors.email}
-              </p>
-            ) : null}
-          </div>
 
-          <div className="auth-field">
-            <label htmlFor="login-password">Password</label>
-            <input
-              aria-describedby={
-                fieldErrors.password ? 'login-password-error' : undefined
-              }
-              aria-invalid={Boolean(fieldErrors.password)}
+            <Input
               autoComplete="current-password"
-              className="auth-input"
+              error={fieldErrors.password}
               id="login-password"
+              label="Password"
               name="password"
               onChange={handleChange}
               type="password"
               value={values.password}
             />
-            {fieldErrors.password ? (
-              <p className="auth-error" id="login-password-error">
-                {fieldErrors.password}
-              </p>
-            ) : null}
-          </div>
 
-          <button className="auth-submit" disabled={isBusy} type="submit">
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
+            <Button className="mt-1 w-full" disabled={isBusy} size="lg" type="submit">
+              {isSubmitting ? 'Signing in...' : 'Sign in'}
+            </Button>
+          </form>
 
-        <p className="auth-switch">
-          New here? <Link to="/register">Create an account</Link>
-        </p>
-      </div>
-    </section>
+          <p className="mt-5 text-center text-sm text-muted">
+            New here?{' '}
+            <Link
+              className="font-bold text-primary-strong underline-offset-4 hover:underline"
+              to="/register"
+            >
+              Create an account
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
+    </AuthShell>
   );
 }
