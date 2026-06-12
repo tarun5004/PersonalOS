@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus, RefreshCcwDot } from 'lucide-react';
+import { CalendarCheck2, ChevronLeft, ChevronRight, Percent, Plus, Trophy } from 'lucide-react';
 import { Alert } from '../../../components/ui/Alert.jsx';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
@@ -16,9 +16,11 @@ import {
   getMonthLabel,
   shiftUtcMonth,
 } from '../habitFormUtils.js';
-import { HabitCard } from '../components/HabitCard.jsx';
+import { HabitConsistencyChart } from '../components/HabitConsistencyChart.jsx';
 import { HabitForm } from '../components/HabitForm.jsx';
 import { HabitGrid } from '../components/HabitGrid.jsx';
+import { HabitInsightBar } from '../components/HabitInsightBar.jsx';
+import { HabitRiskBanner } from '../components/HabitRiskBanner.jsx';
 import { useHabitMutations, useHabits } from '../useHabits.js';
 
 function getHabitSummary(habits) {
@@ -181,25 +183,26 @@ export default function HabitsPage() {
 
       {pageMessage ? <Alert variant="success">{pageMessage}</Alert> : null}
       {pageError ? <Alert variant="error">{pageError}</Alert> : null}
+      <HabitRiskBanner habits={habits} />
 
       <div className="grid gap-3 md:grid-cols-3">
         <StatCard
           helper="On this loaded page"
-          icon={RefreshCcwDot}
+          icon={CalendarCheck2}
           label="Checked in today"
           tone="success"
           value={`${summary.completedToday}/${habits.length}`}
         />
         <StatCard
           helper="Longest habit run"
-          icon={RefreshCcwDot}
+          icon={Trophy}
           label="Best streak"
           tone="info"
           value={`${summary.bestStreak}d`}
         />
         <StatCard
           helper="Selected UTC month"
-          icon={RefreshCcwDot}
+          icon={Percent}
           label="Average completion"
           tone="primary"
           value={`${summary.averageCompletion}%`}
@@ -254,20 +257,18 @@ export default function HabitsPage() {
         />
       ) : (
         <>
-          <div className="grid gap-3 xl:grid-cols-2">
-            {habits.map((habit) => (
-              <HabitCard
-                habit={habit}
-                isMutating={isMutating}
-                key={habit._id}
-                onCheckInHabit={handleCheckInHabit}
-                onDeleteHabit={handleDeleteHabit}
-                onEditHabit={openEditHabit}
-              />
-            ))}
-          </div>
+          <HabitInsightBar habits={habits} summary={summary} />
 
-          <HabitGrid habits={habits} month={month} />
+          <HabitGrid
+            habits={habits}
+            isMutating={isMutating}
+            month={month}
+            onCheckInHabit={handleCheckInHabit}
+            onDeleteHabit={handleDeleteHabit}
+            onEditHabit={openEditHabit}
+          />
+
+          <HabitConsistencyChart habits={habits} month={month} />
         </>
       )}
 
@@ -298,6 +299,7 @@ export default function HabitsPage() {
 
       <Modal isOpen={isCreateOpen} onClose={closeModal} title="Create habit">
         <HabitForm
+          existingHabits={habits}
           isSubmitting={habitMutations.createHabit.isPending}
           onCancel={closeModal}
           onSubmit={handleCreateHabit}
@@ -307,6 +309,7 @@ export default function HabitsPage() {
 
       <Modal isOpen={isEditOpen} onClose={closeModal} title="Edit habit">
         <HabitForm
+          existingHabits={habits}
           initialHabit={selectedHabit}
           isSubmitting={habitMutations.updateHabit.isPending}
           onCancel={closeModal}

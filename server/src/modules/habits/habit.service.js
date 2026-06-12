@@ -6,6 +6,7 @@ import {
 } from '../../domain/habits/habitStats.js';
 import { Habit } from './habit.model.js';
 import { HabitCheckIn } from './habitCheckIn.model.js';
+import { DEFAULT_HABIT_COLOR } from './habit.model.js';
 
 function toPlainObject(document) {
   return typeof document?.toObject === 'function' ? document.toObject() : document;
@@ -24,6 +25,8 @@ function toHabitResponse(habit, checkIns = [], statsContext = {}, monthCheckIns 
   return {
     _id: source._id.toString(),
     name: source.name,
+    description: source.description || '',
+    color: source.color || DEFAULT_HABIT_COLOR,
     todayCompleted: stats.todayCompleted,
     currentStreak: stats.currentStreak,
     longestStreak: stats.longestStreak,

@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { HABIT_NAME_MAX_LENGTH } from './habit.model.js';
+import {
+  HABIT_COLOR_OPTIONS,
+  HABIT_DESCRIPTION_MAX_LENGTH,
+  HABIT_NAME_MAX_LENGTH,
+} from './habit.model.js';
 
 const objectIdSchema = z
   .string()
@@ -17,6 +21,15 @@ const habitBodySchema = z
       .trim()
       .min(1, 'Habit name is required')
       .max(HABIT_NAME_MAX_LENGTH, `Habit name must be ${HABIT_NAME_MAX_LENGTH} characters or fewer`),
+    description: z
+      .string()
+      .trim()
+      .max(
+        HABIT_DESCRIPTION_MAX_LENGTH,
+        `Description must be ${HABIT_DESCRIPTION_MAX_LENGTH} characters or fewer`,
+      )
+      .optional(),
+    color: z.enum(HABIT_COLOR_OPTIONS).optional(),
   })
   .strict();
 
@@ -28,6 +41,15 @@ const habitUpdateBodySchema = z
       .min(1, 'Habit name cannot be empty')
       .max(HABIT_NAME_MAX_LENGTH, `Habit name must be ${HABIT_NAME_MAX_LENGTH} characters or fewer`)
       .optional(),
+    description: z
+      .string()
+      .trim()
+      .max(
+        HABIT_DESCRIPTION_MAX_LENGTH,
+        `Description must be ${HABIT_DESCRIPTION_MAX_LENGTH} characters or fewer`,
+      )
+      .optional(),
+    color: z.enum(HABIT_COLOR_OPTIONS).optional(),
   })
   .strict()
   .refine((value) => Object.keys(value).length > 0, {

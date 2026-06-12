@@ -292,3 +292,13 @@
     opacity: 0.42;
   }
 }
+
+@keyframes habit-check-pop {
+  0% {
+    transform: scale(0.82);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
