@@ -1,109 +1,138 @@
 # Personal OS
 
-Personal OS is an open-source personal productivity dashboard for students, developers, job seekers, freelancers, and remote workers.
+A personal command center for tasks, habits, analytics, and focused work.
 
-V1 will be a modular MERN productivity dashboard with authentication, tasks, habits, analytics, and theme support.
+## What it does
 
-## V1 Scope
+- Task management: Todo, In Progress, and Completed task flow.
+- Habit tracker: monthly grid, daily check-ins, streaks, and consistency score.
+- Pomodoro focus timer: task-linked focus sessions and daily deep-work count.
+- Dashboard: today's status, urgent attention, next actions, and weekly overview.
+- Analytics: weekly productivity score, task and habit trends, and behavioral insights.
+- Light and dark theme.
 
-V1 will include:
+## Tech stack
 
-- Cookie-based authentication
-- Task management
-- Habit tracking
-- Dashboard summary
-- Weekly analytics
-- Light and dark theme support
-- Open-source contribution workflow
+- Frontend: React, Vite, React Router, TanStack Query, Recharts, Tailwind CSS v4.
+- Backend: Node.js, Express, MongoDB, Mongoose, access-token auth, and HttpOnly refresh cookies.
+- Tooling: npm, Vitest config, Jest config, Docker, Vercel, Railway-ready server Dockerfile.
 
-The "OS" idea means a unified dashboard experience, modular feature structure, reusable components, theme customization, clean architecture, and future extensibility. Personal OS will not be a real operating system.
+## Local setup
 
-## Non-Goals for V1
+### Requirements
 
-V1 will not include:
+- Node.js 18+
+- MongoDB local or Atlas
+- npm
 
-- OAuth
-- Password reset
-- Two-factor authentication
-- Team accounts
-- Admin panel
-- Real-time collaboration
-- Plugin marketplace
-- AI features
-- Mobile app
-- Advanced RBAC
-- Redux
-- TypeScript as a mandatory requirement
-- shadcn/ui as an installed dependency
-- Microservices
-- Kubernetes
+### Steps
 
-## Architecture Direction
-
-Personal OS follows a docs-first, four-layer architecture:
-
-- Presentation: pages, layouts, UI components, route screens, states
-- Application: hooks, form coordination, validation, server-state coordination
-- Domain: business rules, constants, validation schemas, score and streak rules
-- Infrastructure: API clients, Express routes, controllers, services, models, middleware, config
-
-Backend flow:
-
-```text
-Route -> Middleware -> Controller -> Service -> Model
+```bash
+git clone [repo-url]
+cd personal-os
+npm run install:all
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+npm run dev
 ```
 
-Frontend API flow:
+Fill `server/.env` with your MongoDB URI and strong secrets before starting the app.
+
+## Environment variables
+
+### Server
+
+| Variable | Required | Default | Description |
+|---|---:|---|---|
+| `NODE_ENV` | yes | `development` | `development`, `test`, or `production`. |
+| `PORT` | no | `5000` | Server port. |
+| `MONGODB_URI` | yes | - | MongoDB connection string. |
+| `ACCESS_TOKEN_SECRET` | yes | - | Minimum 32 characters. |
+| `ACCESS_TOKEN_EXPIRES_IN` | yes | `15m` | Short-lived access token lifetime. |
+| `CLIENT_URL` | yes | - | Frontend URL for deployment checks and CORS fallback. |
+| `CORS_ORIGIN` | no | `CLIENT_URL` | Exact frontend origin for credentialed CORS. |
+| `BCRYPT_SALT_ROUNDS` | yes | `12` | Password hashing cost. |
+| `RATE_LIMIT_WINDOW_MS` | yes | `900000` | Auth route rate-limit window. |
+| `RATE_LIMIT_MAX_REQUESTS` | yes | `20` | Auth route max requests per window. |
+| `REFRESH_TOKEN_COOKIE_NAME` | yes | `personal_os_refresh` | HttpOnly refresh cookie name. |
+| `REFRESH_TOKEN_MAX_AGE_MS` | yes | `604800000` | Refresh cookie lifetime. |
+| `COOKIE_SECURE` | yes | `false` | Must be `true` in production. |
+| `COOKIE_SAME_SITE` | yes | `lax` | Cookie SameSite mode. |
+
+### Client
+
+| Variable | Required | Default | Description |
+|---|---:|---|---|
+| `VITE_API_URL` | yes in production | `/api` | Backend API base URL. |
+| `VITE_API_BASE_URL` | no | `/api` | Backward-compatible local API base URL. |
+| `VITE_API_PROXY_TARGET` | no | `http://127.0.0.1:5000` | Vite dev proxy target. |
+
+## Deployment
+
+### Server: Railway
+
+1. Connect the repository to Railway.
+2. Set the service root directory to `/server`.
+3. Use the included `server/Dockerfile`.
+4. Add the required server environment variables in Railway.
+5. Deploy and verify `/health`.
+
+### Client: Vercel
+
+1. Connect the repository to Vercel.
+2. Set the project root directory to `/client`.
+3. Build command: `npm run build`.
+4. Output directory: `dist`.
+5. Add `VITE_API_URL` pointing to the Railway API URL.
+6. Deploy.
+
+### Database: MongoDB Atlas
+
+1. Create an Atlas cluster.
+2. Create a database user.
+3. Set the Atlas connection string as `MONGODB_URI` on Railway.
+4. Configure network access for the Railway deployment.
+
+## Project structure
 
 ```text
-Page -> Feature hook -> API client function -> Backend endpoint
+client/src/
+  app/          App providers and route configuration
+  components/   Shared layout and UI components
+  features/     Auth, dashboard, tasks, habits, analytics, settings, theme, pomodoro
+  hooks/        Shared client hooks
+  lib/          API client and helpers
+  styles/       Tailwind v4 entry and design tokens
+  themes/       Theme-related assets
+  utils/        Frontend constants and pure helpers
+
+server/src/
+  config/       Environment, database, and cookie configuration
+  domain/       Pure scoring and habit date rules
+  errors/       Application error types
+  middleware/   Auth, validation, and error middleware
+  modules/      Auth, tasks, habits, dashboard, analytics modules
+  utils/        Backend utility helpers
 ```
 
-## Repository Status
+## Useful scripts
 
-This repository is being built phase by phase.
+```bash
+npm run install:all
+npm run dev
+npm run build
+npm run start
+npm run health
+```
 
-Phase 1 establishes the repository foundation only. Application implementation will be added in later approved phases.
+## Contributing
 
-## Local Setup Direction
-
-Implementation setup commands will be finalized as the frontend and backend are created in later phases.
-
-Current direction:
-
-1. Review the approved docs in `docs/`.
-2. Copy `.env.example` into the appropriate local environment files when implementation phases begin.
-3. Use npm for V1.
-4. Use Docker Compose only as a self-hosting direction stub until app services are implemented.
-
-## Phase-Based Workflow
-
-Work is controlled by `STEPS.md`.
-
-Do not jump phases. Each phase should be small, reviewable, testable, and production-minded.
-
-Developer approval is required before moving to the next phase.
-
-## Documentation
-
-Important docs:
-
-- `docs/product/`
-- `docs/ux/`
-- `docs/engineering/`
-- `docs/open-source/`
-- `docs/architecture/adr/`
-- `docs/review/`
-- `STEPS.md`
-- `AGENTS.md`
+See `CONTRIBUTING.md`.
 
 ## Security
 
-Security issues should be reported privately through the process in `SECURITY.md`.
-
-Please do not open public issues for suspected vulnerabilities until maintainers have reviewed them.
+Report suspected vulnerabilities privately using `SECURITY.md`. Do not open public security issues until maintainers have reviewed them.
 
 ## License
 
-Personal OS is licensed under the MIT License.
-
+MIT
