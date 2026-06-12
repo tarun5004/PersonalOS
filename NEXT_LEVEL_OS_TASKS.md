@@ -46,7 +46,7 @@ Target package groups:
 - [x] Adapt shadcn-style primitives into local PersonalOS components without exposing template styling.
 - [x] Create one animation timing map and one reward intensity map.
 - [x] Ensure new shared primitives use CSS variables.
-- [ ] Replace existing avatar/habit swatch hex data with token or generated-color strategy in the relevant profile/habit chunks.
+- [x] Replace existing avatar/habit swatch hex data with token or generated-color strategy in the relevant profile/habit chunks.
 - [x] Run frontend tests/build.
 - [x] Commit: `feat(ui): add next-level shared interaction primitives`.
 
@@ -113,15 +113,15 @@ Target package groups:
 
 ## Chunk 9 - Final QA And Cleanup
 
-- [ ] Run frontend tests.
-- [ ] Run frontend build.
-- [ ] Run backend tests.
-- [ ] Run `git diff --check`.
-- [ ] Browser QA login, register, dashboard, tasks, habits, analytics, settings.
-- [ ] Verify no secrets are staged.
-- [ ] Verify no hardcoded random colors in JSX.
-- [ ] Verify heavy features are lazy-loaded.
-- [ ] Commit: `chore(next-level): finalize ui qa and cleanup`.
+- [x] Run frontend tests.
+- [x] Run frontend build.
+- [x] Run backend tests.
+- [x] Run `git diff --check`.
+- [x] Browser QA login, register, dashboard, tasks, habits, analytics, settings.
+- [x] Verify no secrets are staged.
+- [x] Verify no hardcoded random colors in JSX.
+- [x] Verify heavy features are lazy-loaded.
+- [x] Commit: `chore(next-level): finalize ui qa and cleanup`.
 
 ## Stop Conditions
 
