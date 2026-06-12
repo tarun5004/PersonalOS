@@ -9,12 +9,12 @@ const booleanFromString = z
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().int().positive(),
+  PORT: z.coerce.number().int().positive().default(5000),
   MONGODB_URI: z.string().min(1),
   ACCESS_TOKEN_SECRET: z.string().min(32),
   ACCESS_TOKEN_EXPIRES_IN: z.literal('15m'),
   CLIENT_URL: z.string().url(),
-  CORS_ORIGIN: z.string().url(),
+  CORS_ORIGIN: z.string().url().optional(),
   BCRYPT_SALT_ROUNDS: z.coerce.number().int().positive(),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive(),
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive(),
@@ -22,7 +22,10 @@ const envSchema = z.object({
   REFRESH_TOKEN_MAX_AGE_MS: z.coerce.number().int().positive(),
   COOKIE_SECURE: booleanFromString,
   COOKIE_SAME_SITE: z.enum(['lax', 'strict', 'none']),
-});
+}).transform((value) => ({
+  ...value,
+  CORS_ORIGIN: value.CORS_ORIGIN || value.CLIENT_URL,
+}));
 
 const parsedEnv = envSchema.safeParse(process.env);
 

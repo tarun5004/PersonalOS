@@ -28,7 +28,7 @@ export function setAuthUnauthorizedHandler(handler) {
 }
 
 function getApiBaseUrl() {
-  return import.meta.env.VITE_API_BASE_URL || '/api';
+  return import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
 }
 
 function buildApiUrl(path) {
