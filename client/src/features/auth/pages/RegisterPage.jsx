@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from '../../../components/ui/Card.jsx';
 import { Input } from '../../../components/ui/Input.jsx';
+import { AvatarPicker } from '../../../components/shared/AvatarPicker.jsx';
+import { DEFAULT_AVATAR_ID } from '../../../utils/avatars.js';
 import {
   mapServerValidationErrors,
   normalizeRegisterValues,
@@ -19,6 +21,7 @@ import { AuthShell } from '../components/AuthShell.jsx';
 import { useAuth } from '../useAuth.js';
 
 const initialValues = {
+  avatarId: DEFAULT_AVATAR_ID,
   email: '',
   name: '',
   password: '',
@@ -43,6 +46,18 @@ export default function RegisterPage() {
     setFieldErrors((currentErrors) => ({
       ...currentErrors,
       [name]: '',
+    }));
+    setFormError('');
+  }
+
+  function handleAvatarChange(avatarId) {
+    setValues((currentValues) => ({
+      ...currentValues,
+      avatarId,
+    }));
+    setFieldErrors((currentErrors) => ({
+      ...currentErrors,
+      avatarId: '',
     }));
     setFormError('');
   }
@@ -125,6 +140,11 @@ export default function RegisterPage() {
               type="password"
               value={values.password}
             />
+
+            <AvatarPicker onChange={handleAvatarChange} value={values.avatarId} />
+            {fieldErrors.avatarId ? (
+              <p className="m-0 text-sm text-danger">{fieldErrors.avatarId}</p>
+            ) : null}
 
             <Button className="mt-1 w-full" disabled={isBusy} size="lg" type="submit">
               {isSubmitting ? 'Creating account...' : 'Create account'}

@@ -1,3 +1,5 @@
+import { DEFAULT_AVATAR_ID, isAvatarId, resolveAvatarId } from '../../utils/avatars.js';
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isBlank(value) {
@@ -16,6 +18,7 @@ export function normalizeRegisterValues(values) {
     name: String(values.name || '').trim(),
     email: String(values.email || '').trim().toLowerCase(),
     password: values.password || '',
+    avatarId: resolveAvatarId(values.avatarId || DEFAULT_AVATAR_ID),
   };
 }
 
@@ -38,6 +41,10 @@ export function validateRegisterForm(values) {
 
   if (isBlank(values.name)) {
     errors.name = 'Name is required';
+  }
+
+  if (!isAvatarId(values.avatarId)) {
+    errors.avatarId = 'Choose an avatar';
   }
 
   return {

@@ -20,10 +20,29 @@ import {
   refreshAuthSession,
   registerUser,
 } from './authApi.js';
+import {
+  readStoredAvatarId,
+  resolveAvatarId,
+  writeStoredAvatarId,
+} from '../../utils/avatars.js';
 
 const PUBLIC_AUTH_PATHS = new Set(['/login', '/register']);
 
 export const AuthContext = createContext(null);
+
+function withAvatarPreference(user) {
+  if (!user) {
+    return null;
+  }
+
+  const avatarId = resolveAvatarId(user.avatarId || readStoredAvatarId());
+  writeStoredAvatarId(avatarId);
+
+  return {
+    ...user,
+    avatarId,
+  };
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -42,7 +61,7 @@ export function AuthProvider({ children }) {
 
   const applySession = useCallback((session) => {
     setApiAccessToken(session.accessToken);
-    setUser(session.user);
+    setUser(withAvatarPreference(session.user));
     setStatus('authenticated');
     setError('');
   }, []);
@@ -159,6 +178,19 @@ export function AuthProvider({ children }) {
     }
   }, [clearSession, navigate]);
 
+  const updateAvatarId = useCallback((avatarId) => {
+    const nextAvatarId = resolveAvatarId(avatarId);
+    writeStoredAvatarId(nextAvatarId);
+    setUser((currentUser) =>
+      currentUser
+        ? {
+            ...currentUser,
+            avatarId: nextAvatarId,
+          }
+        : currentUser,
+    );
+  }, []);
+
   const value = useMemo(
     () => ({
       error,
@@ -168,9 +200,10 @@ export function AuthProvider({ children }) {
       logout,
       register,
       status,
+      updateAvatarId,
       user,
     }),
-    [error, login, logout, register, status, user],
+    [error, login, logout, register, status, updateAvatarId, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

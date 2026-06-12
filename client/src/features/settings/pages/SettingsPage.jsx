@@ -1,6 +1,8 @@
 import { LogOut, Moon, Sun, UserCircle2 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
+import { AvatarDisplay } from '../../../components/shared/AvatarDisplay.jsx';
+import { AvatarPicker } from '../../../components/shared/AvatarPicker.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
 import { useAuth } from '../../auth/useAuth.js';
 import { PomodoroSettings } from '../../pomodoro/components/PomodoroSettings.jsx';
@@ -24,14 +26,8 @@ const themeCards = [
 ];
 
 export default function SettingsPage() {
-  const { logout, user } = useAuth();
+  const { logout, updateAvatarId, user } = useAuth();
   const { setTheme, theme } = useTheme();
-  const initials = user?.name
-    ?.split(' ')
-    .map((part) => part.charAt(0))
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'OS';
 
   return (
     <section className="grid gap-5">
@@ -74,13 +70,18 @@ export default function SettingsPage() {
 
         <DashboardCard title="Profile">
           <div className="flex items-center gap-4 rounded-card border border-border bg-surface-elevated p-4">
-            <div className="grid size-14 place-items-center rounded-card bg-accent text-lg font-bold text-accent-text">
-              {initials}
-            </div>
+            <AvatarDisplay avatarId={user?.avatarId} label={`${user?.name || 'Personal OS user'} avatar`} size="lg" />
             <div className="min-w-0">
               <p className="m-0 truncate text-base font-bold text-body">{user?.name || 'Personal OS user'}</p>
               <p className="mt-1 truncate text-sm text-muted">{user?.email || 'Signed in user'}</p>
             </div>
+          </div>
+          <div className="mt-4 rounded-card border border-border bg-surface p-4">
+            <AvatarPicker
+              label="Profile avatar"
+              onChange={updateAvatarId}
+              value={user?.avatarId}
+            />
           </div>
           <div className="mt-4 rounded-card border border-border bg-surface p-4">
             <div className="flex items-start gap-3">

@@ -7,6 +7,7 @@ import {
   RefreshCcwDot,
   Settings,
 } from 'lucide-react';
+import { AvatarDisplay } from '../shared/AvatarDisplay.jsx';
 import { useAuth } from '../../features/auth/useAuth.js';
 import { mergeClassNames } from '../../lib/classNames.js';
 
@@ -53,12 +54,6 @@ function SidebarLink({ route }) {
 
 export function Sidebar({ routes }) {
   const { logout, user } = useAuth();
-  const initials = user?.name
-    ?.split(' ')
-    .map((part) => part.charAt(0))
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'OS';
   const primaryRoutes = routes.filter((route) => route.label !== 'Settings');
   const systemRoutes = routes.filter((route) => route.label === 'Settings');
   const userLabel = user?.name || 'Personal workspace';
@@ -112,9 +107,7 @@ export function Sidebar({ routes }) {
 
       <div className="hidden gap-3 lg:grid">
         <div className="flex items-center gap-3 border-t border-[var(--sidebar-border)] pt-4">
-          <span className="grid size-10 place-items-center rounded-card bg-[var(--sidebar-active-bg)] text-sm font-semibold text-[var(--sidebar-active-text)]">
-            {initials}
-          </span>
+          <AvatarDisplay avatarId={user?.avatarId} label={`${userLabel} avatar`} size="sm" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-sidebar-text">{userLabel}</p>
             <p className="mt-0.5 truncate text-xs text-sidebar-muted">{userMeta}</p>
