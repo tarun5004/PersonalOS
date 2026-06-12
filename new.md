@@ -29,7 +29,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 2 | Morgan HTTP logger and Pino structured logger | Complete | Agent 2 self-gate passed | `678a58f` |
 | 3 | Design system theme and typography overhaul | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, Playwright login/theme sanity | `2d054a4` |
 | 4 | Sidebar professional redesign | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, sidebar text/static gate | `bdc192a` |
-| 5 | Topbar, navigation, and app shell polish | Pending | Agent 5 self-gate | Pending |
+| 5 | Topbar, navigation, and app shell polish | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, desktop logout duplication removed | `93f4147` |
 | 6 | Dashboard mission-control UI | Pending | Agent 6 self-gate | Pending |
 | 7 | Tasks urgency layer and view redesign | Pending | Agent 7 self-gate | Pending |
 | 8 | Habits behavior layer and square grid polish | Pending | Agent 8 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 5 - Topbar, navigation, and app shell polish.
+Active task: Agent 6 - Dashboard mission-control UI.
 
 ## Saved Attached Prompt Snapshot
 
