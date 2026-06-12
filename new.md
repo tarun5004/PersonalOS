@@ -370,6 +370,7 @@ Final report target:
 - Root lint script: `npm.cmd run lint` passed.
 - Server build script: `npm.cmd run build` passed.
 - Backend tests: first failed because cleanup removed all source tests and Jest lacked `--passWithNoTests`; fixed in `5d84417`, then `npm.cmd test` passed.
+- Server app smoke: fake non-secret env values loaded `createApp()` and `GET /health` returned 200 with `X-Request-Id` and a security header.
 - Diff hygiene: `git diff --check` passed.
 
 Known limitations:
