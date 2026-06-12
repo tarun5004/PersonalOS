@@ -4,7 +4,7 @@ export function Card({ as: Component = 'div', children, className, ...props }) {
   return (
     <Component
       className={mergeClassNames(
-        'rounded-ui border border-border bg-surface shadow-card',
+        'rounded-card border border-border bg-surface shadow-card',
         className,
       )}
       {...props}

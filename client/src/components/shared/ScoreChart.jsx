@@ -55,7 +55,7 @@ export function ScoreChart({
   if (data.length === 0) {
     return (
       <EmptyState
-        className="min-h-64 border border-dashed border-border bg-surface-muted/60"
+        className="min-h-64 border border-dashed border-border bg-surface-elevated/60"
         description="Charts will populate when tracked activity is available."
         framed={false}
         icon={BarChart3}
@@ -76,30 +76,30 @@ export function ScoreChart({
           >
             <defs>
               <linearGradient id="scoreChartFill" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.26} />
-                <stop offset="95%" stopColor="var(--color-secondary)" stopOpacity={0.04} />
+                <stop offset="5%" stopColor="var(--color-accent)" stopOpacity={0.26} />
+                <stop offset="95%" stopColor="var(--color-accent)" stopOpacity={0.04} />
               </linearGradient>
             </defs>
             <CartesianGrid stroke="var(--color-border)" strokeDasharray="4 6" vertical={false} />
             <XAxis
               axisLine={false}
               dataKey="label"
-              tick={{ fill: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 700 }}
+              tick={{ fill: 'var(--color-text-muted)', fontSize: 12, fontWeight: 700 }}
               tickLine={false}
             />
             <YAxis
               axisLine={false}
               domain={[0, 100]}
-              tick={{ fill: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 700 }}
+              tick={{ fill: 'var(--color-text-muted)', fontSize: 12, fontWeight: 700 }}
               tickLine={false}
               width={36}
             />
             <Tooltip
               contentStyle={{
-                background: 'var(--color-canvas)',
+                background: 'var(--color-surface)',
                 border: '1px solid var(--color-border)',
-                borderRadius: '0.8rem',
-                color: 'var(--color-text-primary)',
+                borderRadius: 'var(--radius-card)',
+                color: 'var(--color-text)',
               }}
               formatter={(value) => formatTooltipValue(value, valueLabel)}
             />
@@ -107,7 +107,7 @@ export function ScoreChart({
               connectNulls={false}
               dataKey={dataKey}
               fill="url(#scoreChartFill)"
-              stroke="var(--color-primary)"
+              stroke="var(--color-accent)"
               strokeWidth={3}
               type="monotone"
             />

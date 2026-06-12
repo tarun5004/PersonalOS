@@ -1,8 +1,8 @@
 import { mergeClassNames } from '../../lib/classNames.js';
 
 const VARIANTS = {
-  primary: 'bg-primary-soft text-primary-strong',
-  muted: 'bg-surface-muted text-muted',
+  primary: 'bg-accent-soft text-accent-strong',
+  muted: 'bg-surface-elevated text-muted',
   success: 'bg-success/10 text-success',
   warning: 'bg-warning/10 text-warning',
   danger: 'bg-danger/10 text-danger',

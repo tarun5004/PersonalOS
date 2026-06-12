@@ -7,14 +7,14 @@ export function StatCard({ className, icon: Icon, label, tone = 'primary', value
       ? 'bg-success/10 text-success'
       : tone === 'warning'
         ? 'bg-warning/10 text-warning'
-        : 'bg-primary-soft text-primary-strong';
+        : 'bg-accent-soft text-accent-strong';
 
   return (
     <DashboardCard className={mergeClassNames('p-4', className)}>
       <div className="flex items-center gap-4">
         <div
           className={mergeClassNames(
-            'grid size-12 shrink-0 place-items-center rounded-ui text-sm font-bold',
+            'grid size-12 shrink-0 place-items-center rounded-card text-sm font-bold',
             toneClassName,
           )}
         >

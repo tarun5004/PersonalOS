@@ -6,7 +6,7 @@ export function EventCard({ icon: Icon, label, meta, title }) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 gap-3">
           {Icon ? (
-            <span className="grid size-9 shrink-0 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+            <span className="grid size-9 shrink-0 place-items-center rounded-card bg-accent-soft text-accent-strong">
               <Icon aria-hidden="true" size={17} />
             </span>
           ) : null}

@@ -50,16 +50,16 @@ export default function SettingsPage() {
             {themeCards.map((themeCard) => (
               <button
                 className={mergeClassNames(
-                  'rounded-ui border bg-surface p-5 text-left transition hover:border-focus focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus/25',
+                  'rounded-card border bg-surface p-5 text-left transition hover:border-accent focus-visible:outline-none focus-visible:shadow-focus',
                   theme === themeCard.value
-                    ? 'border-primary bg-primary-soft shadow-card'
+                    ? 'border-accent bg-accent-soft shadow-card'
                     : 'border-border',
                 )}
                 key={themeCard.value}
                 onClick={() => setTheme(themeCard.value)}
                 type="button"
               >
-                <span className="grid size-11 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+                <span className="grid size-11 place-items-center rounded-card bg-accent-soft text-accent-strong">
                   <themeCard.icon aria-hidden="true" size={19} />
                 </span>
                 <span className="mt-4 block text-lg font-bold text-body">{themeCard.title}</span>
@@ -70,8 +70,8 @@ export default function SettingsPage() {
         </DashboardCard>
 
         <DashboardCard title="Profile">
-          <div className="flex items-center gap-4 rounded-ui border border-border bg-surface-muted p-4">
-            <div className="grid size-14 place-items-center rounded-ui bg-primary text-lg font-bold text-primary-text">
+          <div className="flex items-center gap-4 rounded-card border border-border bg-surface-elevated p-4">
+            <div className="grid size-14 place-items-center rounded-card bg-accent text-lg font-bold text-accent-text">
               {initials}
             </div>
             <div className="min-w-0">
@@ -79,9 +79,9 @@ export default function SettingsPage() {
               <p className="mt-1 truncate text-sm text-muted">{user?.email || 'Signed in user'}</p>
             </div>
           </div>
-          <div className="mt-4 rounded-ui border border-border bg-surface p-4">
+          <div className="mt-4 rounded-card border border-border bg-surface p-4">
             <div className="flex items-start gap-3">
-              <UserCircle2 className="mt-0.5 text-primary-strong" aria-hidden="true" size={20} />
+              <UserCircle2 className="mt-0.5 text-accent-strong" aria-hidden="true" size={20} />
               <p className="m-0 text-sm leading-6 text-muted">
                 Profile details are shown for account context. Appearance controls are available for this workspace.
               </p>

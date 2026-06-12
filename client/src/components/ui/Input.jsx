@@ -29,7 +29,7 @@ export function Input({
         aria-describedby={describedBy || undefined}
         aria-invalid={Boolean(error) || props['aria-invalid'] || undefined}
         className={mergeClassNames(
-          'min-h-12 w-full rounded-ui border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-focus focus:bg-surface focus:ring-[3px] focus:ring-focus/20 aria-[invalid=true]:border-danger disabled:cursor-not-allowed disabled:opacity-65',
+          'min-h-12 w-full rounded-card border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-accent focus:bg-surface focus:shadow-focus aria-[invalid=true]:border-danger disabled:cursor-not-allowed disabled:opacity-65',
           inputClassName,
         )}
         id={inputId}

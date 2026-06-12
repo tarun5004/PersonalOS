@@ -20,7 +20,7 @@ export function TaskCard({ isBusy, onComplete, onDelete, onEdit, task }) {
   const isCompleted = task.status === 'Completed';
 
   return (
-    <article className="grid gap-3 rounded-ui border border-border bg-surface px-4 py-3 transition hover:border-focus hover:shadow-card">
+    <article className="grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:border-accent hover:shadow-card">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">

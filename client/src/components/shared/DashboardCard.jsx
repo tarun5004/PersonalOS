@@ -13,7 +13,7 @@ export function DashboardCard({
     <Card
       as="section"
       className={mergeClassNames(
-        'min-w-0 p-4 transition duration-200 hover:border-focus/70 sm:p-5',
+        'min-w-0 p-4 transition duration-200 hover:border-accent/70 sm:p-5',
         className,
       )}
       {...props}

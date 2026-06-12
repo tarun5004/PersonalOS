@@ -10,13 +10,13 @@ const previewRows = [
 export function AuthShell({ children, eyebrow, summary, title }) {
   return (
     <section className="grid min-h-screen place-items-center bg-app-bg p-0 text-body sm:p-6">
-      <div className="grid min-h-screen w-full overflow-hidden border border-border bg-surface shadow-panel sm:min-h-[min(720px,calc(100vh-48px))] sm:max-w-[1160px] sm:rounded-[28px] lg:grid-cols-[minmax(320px,0.9fr)_minmax(360px,1fr)]">
+      <div className="grid min-h-screen w-full overflow-hidden border border-border bg-surface shadow-panel sm:min-h-[min(720px,calc(100vh-48px))] sm:max-w-[1160px] sm:rounded-panel lg:grid-cols-[minmax(320px,0.9fr)_minmax(360px,1fr)]">
         <aside
-          className="sidebar-gradient hidden min-h-0 flex-col justify-between p-8 text-sidebar-text lg:flex"
+          className="app-rail hidden min-h-0 flex-col justify-between p-8 text-sidebar-text lg:flex"
           aria-hidden="true"
         >
           <div>
-            <span className="grid size-12 place-items-center rounded-ui bg-sidebar-text text-sm font-bold text-primary shadow-card">
+            <span className="grid size-12 place-items-center rounded-card bg-sidebar-text text-sm font-bold text-accent shadow-card">
               OS
             </span>
             <h2 className="mt-8 max-w-xs text-4xl font-bold leading-tight">
@@ -30,7 +30,7 @@ export function AuthShell({ children, eyebrow, summary, title }) {
           <div className="grid gap-3">
             {previewRows.map((row) => (
               <div
-                className="flex items-center justify-between rounded-ui border border-sidebar-text/15 bg-sidebar-text/10 px-4 py-3"
+                className="app-rail-surface flex items-center justify-between rounded-card border border-sidebar-text/15 px-4 py-3"
                 key={row.label}
               >
                 <span className="text-sm font-semibold text-sidebar-muted">{row.label}</span>
@@ -44,7 +44,7 @@ export function AuthShell({ children, eyebrow, summary, title }) {
           <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
               <span
-                className="grid size-10 place-items-center rounded-ui bg-primary-soft text-sm font-bold text-primary-strong"
+                className="grid size-10 place-items-center rounded-card bg-accent-soft text-sm font-bold text-accent-strong"
                 aria-hidden="true"
               >
                 OS

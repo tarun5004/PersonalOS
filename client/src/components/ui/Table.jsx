@@ -2,7 +2,7 @@ import { mergeClassNames } from '../../lib/classNames.js';
 
 export function Table({ children, className, ...props }) {
   return (
-    <div className="overflow-x-auto rounded-ui border border-border bg-surface">
+    <div className="overflow-x-auto rounded-card border border-border bg-surface">
       <table className={mergeClassNames('w-full border-collapse text-left text-sm', className)} {...props}>
         {children}
       </table>
@@ -12,7 +12,7 @@ export function Table({ children, className, ...props }) {
 
 export function TableHeader({ children, className, ...props }) {
   return (
-    <thead className={mergeClassNames('bg-surface-muted text-muted', className)} {...props}>
+    <thead className={mergeClassNames('bg-surface-elevated text-muted', className)} {...props}>
       {children}
     </thead>
   );

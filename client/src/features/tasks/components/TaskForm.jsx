@@ -58,7 +58,7 @@ export function TaskForm({ initialTask, isSubmitting, onCancel, onSubmit, server
           Description
         </label>
         <textarea
-          className="min-h-24 w-full resize-y rounded-ui border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-focus focus:bg-surface focus:ring-[3px] focus:ring-focus/20 disabled:cursor-not-allowed disabled:opacity-65"
+          className="min-h-24 w-full resize-y rounded-card border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-accent focus:bg-surface focus:shadow-focus disabled:cursor-not-allowed disabled:opacity-65"
           id="task-description"
           onChange={(event) => updateField('description', event.target.value)}
           placeholder="Optional notes or context"

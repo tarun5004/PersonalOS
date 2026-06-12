@@ -8,13 +8,13 @@ export function Checkbox({ className, description, id, label, ...props }) {
   return (
     <label
       className={mergeClassNames(
-        'flex cursor-pointer items-start gap-3 rounded-ui border border-border bg-surface px-3.5 py-3 text-sm text-body transition hover:bg-surface-muted',
+        'flex cursor-pointer items-start gap-3 rounded-card border border-border bg-surface px-3.5 py-3 text-sm text-body transition hover:bg-surface-elevated',
         className,
       )}
       htmlFor={checkboxId}
     >
       <input
-        className="mt-1 size-4 rounded border-border text-primary focus:ring-[3px] focus:ring-focus/25"
+        className="mt-1 size-4 rounded border-border text-accent focus:shadow-focus"
         id={checkboxId}
         type="checkbox"
         {...props}

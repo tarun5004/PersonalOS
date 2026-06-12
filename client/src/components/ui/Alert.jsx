@@ -13,7 +13,7 @@ export function Alert({ children, className, role, variant = 'info', ...props })
   return (
     <div
       className={mergeClassNames(
-        'rounded-ui border px-3.5 py-3 text-sm font-semibold',
+        'rounded-card border px-3.5 py-3 text-sm font-semibold',
         VARIANTS[variant],
         className,
       )}

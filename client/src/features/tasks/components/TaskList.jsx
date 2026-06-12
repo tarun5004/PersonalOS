@@ -43,8 +43,8 @@ export function TaskList({
             title={status}
             action={<Badge variant="muted">{columnTasks.length}</Badge>}
           >
-            <div className="mb-4 flex items-center gap-3 rounded-ui border border-border bg-surface p-3">
-              <span className="grid size-10 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+            <div className="mb-4 flex items-center gap-3 rounded-card border border-border bg-surface p-3">
+              <span className="grid size-10 place-items-center rounded-card bg-accent-soft text-accent-strong">
                 <Icon aria-hidden="true" size={18} />
               </span>
               <p className="m-0 text-sm text-muted">{columnMeta[status].helper}</p>
@@ -65,7 +65,7 @@ export function TaskList({
               </div>
             ) : (
               <EmptyState
-                className="min-h-52 border border-dashed border-border bg-surface-muted/65"
+                className="min-h-52 border border-dashed border-border bg-surface-elevated/65"
                 description="Tasks will settle here as their status changes."
                 framed={false}
                 icon={CalendarClock}

@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
 
       {!weeklyQuery.isLoading && !weeklyQuery.isError && !hasActivity ? (
         <EmptyState
-          className="border border-dashed border-border bg-surface-muted/70"
+          className="border border-dashed border-border bg-surface-elevated/70"
           description="Create due-dated tasks or check in habits to turn the weekly analytics view on."
           icon={BarChart3}
           title="No weekly activity yet"
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
                 </div>
               ) : (
                 <EmptyState
-                  className="min-h-56 border border-dashed border-border bg-surface-muted/70"
+                  className="min-h-56 border border-dashed border-border bg-surface-elevated/70"
                   description="Task completions and habit check-ins will appear here as activity is tracked."
                   framed={false}
                   icon={BarChart3}

@@ -8,7 +8,7 @@ export function Loader({ className, label = 'Loading...' }) {
     >
       <span
         aria-hidden="true"
-        className="size-4 animate-spin rounded-full border-2 border-primary/25 border-t-primary"
+        className="size-4 animate-spin rounded-full border-2 border-accent/25 border-t-accent"
       />
       <span>{label}</span>
     </div>

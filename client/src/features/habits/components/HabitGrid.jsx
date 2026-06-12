@@ -60,7 +60,7 @@ export function HabitGrid({ habits, month }) {
                 <span className="bg-surface/80 px-2 py-2 text-center text-sm font-bold text-body">
                   {habit.currentStreak}d
                 </span>
-                <span className="rounded-r-ui bg-surface/80 px-2 py-2 text-center text-sm font-bold text-primary-strong">
+                <span className="rounded-r-ui bg-surface/80 px-2 py-2 text-center text-sm font-bold text-accent-strong">
                   {Math.round(habit.completionPercentage)}%
                 </span>
               </div>

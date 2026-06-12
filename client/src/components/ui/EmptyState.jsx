@@ -4,13 +4,13 @@ export function EmptyState({ action, className, description, framed = true, icon
   return (
     <div
       className={mergeClassNames(
-        'grid place-items-center rounded-ui p-8 text-center',
+        'grid place-items-center rounded-card p-8 text-center',
         framed && 'border border-border bg-surface shadow-card',
         className,
       )}
     >
       <div className="max-w-sm">
-        <div className="mx-auto mb-4 grid size-11 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+        <div className="mx-auto mb-4 grid size-11 place-items-center rounded-card bg-accent-soft text-accent-strong">
           {Icon ? <Icon aria-hidden="true" size={19} /> : '+'}
         </div>
         <h2 className="m-0 text-lg font-bold text-body">{title}</h2>

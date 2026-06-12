@@ -183,13 +183,13 @@ export default function TasksPage() {
       ) : tasks.length === 0 ? (
         <EmptyState
           action={<Button onClick={openCreateTask}>Create first task</Button>}
-          className="min-h-80 border-dashed bg-surface-muted/65 shadow-none"
+          className="min-h-80 border-dashed bg-surface-elevated/65 shadow-none"
           description="Create your first task to begin turning plans into visible next actions."
           title="Create your first task"
         />
       ) : visibleTasks.length === 0 ? (
         <EmptyState
-          className="min-h-72 border-dashed bg-surface-muted/65 shadow-none"
+          className="min-h-72 border-dashed bg-surface-elevated/65 shadow-none"
           description="Adjust the filter or search term to find tasks in this page."
           title="No matching tasks"
         />

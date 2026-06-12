@@ -2,7 +2,7 @@ import { Badge } from '../ui/Badge.jsx';
 
 export function NotificationCard({ badge = 'Today', detail, title }) {
   return (
-    <article className="rounded-ui border border-border bg-surface p-4 transition hover:border-focus">
+    <article className="rounded-card border border-border bg-surface p-4 transition hover:border-accent">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="text-sm font-bold text-body">{title}</h3>

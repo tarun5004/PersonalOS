@@ -161,12 +161,12 @@ export default function DashboardPage() {
 
             <DashboardCard title="Weekly score">
               {weeklyQuery.isLoading ? (
-                <div className="grid min-h-64 place-items-center rounded-ui border border-dashed border-border bg-surface-muted/60 p-6 text-center text-sm font-semibold text-muted">
+                <div className="grid min-h-64 place-items-center rounded-card border border-dashed border-border bg-surface-elevated/60 p-6 text-center text-sm font-semibold text-muted">
                   Loading weekly score...
                 </div>
               ) : weeklyQuery.isError ? (
                 <EmptyState
-                  className="min-h-64 border border-dashed border-border bg-surface-muted/70"
+                  className="min-h-64 border border-dashed border-border bg-surface-elevated/70"
                   description={getAnalyticsErrorMessage(weeklyQuery.error)}
                   framed={false}
                   icon={BarChart3}
@@ -187,11 +187,11 @@ export default function DashboardPage() {
               <div className="grid gap-3">
                 {focusItems.map((item) => (
                   <Link
-                    className="group grid gap-3 rounded-ui border border-border bg-surface px-4 py-3 transition hover:-translate-y-px hover:border-focus hover:bg-primary-soft sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
+                    className="group grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:-translate-y-px hover:border-accent hover:bg-accent-soft sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
                     key={item.title}
                     to={item.to}
                   >
-                    <span className="grid size-10 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+                    <span className="grid size-10 place-items-center rounded-card bg-accent-soft text-accent-strong">
                       <item.icon aria-hidden="true" size={18} />
                     </span>
                     <span className="min-w-0">
@@ -200,7 +200,7 @@ export default function DashboardPage() {
                         {item.detail}
                       </span>
                     </span>
-                    <span className="inline-flex items-center gap-2 text-xs font-semibold text-primary-strong">
+                    <span className="inline-flex items-center gap-2 text-xs font-semibold text-accent-strong">
                       {item.action}
                       <ArrowRight
                         aria-hidden="true"
@@ -259,7 +259,7 @@ export default function DashboardPage() {
             <DashboardCard title="Today's task status">
               {summary.tasks.total === 0 ? (
                 <EmptyState
-                  className="min-h-48 border border-dashed border-border bg-surface-muted/70"
+                  className="min-h-48 border border-dashed border-border bg-surface-elevated/70"
                   description="Create a due-today task to make the dashboard actionable."
                   framed={false}
                   icon={CheckSquare}
@@ -279,14 +279,14 @@ export default function DashboardPage() {
             <DashboardCard title="Habit summary">
               {summary.habits.total === 0 ? (
                 <EmptyState
-                  className="min-h-32 border border-dashed border-border bg-surface-muted/70 p-5"
+                  className="min-h-32 border border-dashed border-border bg-surface-elevated/70 p-5"
                   description="Add a habit to begin tracking daily check-ins."
                   framed={false}
                   icon={RefreshCcwDot}
                   title="No habit activity yet"
                 />
               ) : (
-                <div className="rounded-ui border border-border bg-surface-muted/70 p-5">
+                <div className="rounded-card border border-border bg-surface-elevated/70 p-5">
                   <p className="m-0 text-sm font-bold text-body">
                     {summary.habits.completedToday}/{summary.habits.total} habits complete today
                   </p>

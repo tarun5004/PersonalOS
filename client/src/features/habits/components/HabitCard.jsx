@@ -25,17 +25,17 @@ export function HabitCard({
       </div>
 
       <dl className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-ui bg-surface-muted p-3">
+        <div className="rounded-card bg-surface-elevated p-3">
           <dt className="text-xs font-semibold text-muted">Current</dt>
           <dd className="m-0 mt-1 text-lg font-bold text-body">{habit.currentStreak}d</dd>
         </div>
-        <div className="rounded-ui bg-surface-muted p-3">
+        <div className="rounded-card bg-surface-elevated p-3">
           <dt className="text-xs font-semibold text-muted">Best</dt>
           <dd className="m-0 mt-1 text-lg font-bold text-body">{habit.longestStreak}d</dd>
         </div>
-        <div className="rounded-ui bg-surface-muted p-3">
+        <div className="rounded-card bg-surface-elevated p-3">
           <dt className="text-xs font-semibold text-muted">Month</dt>
-          <dd className="m-0 mt-1 text-lg font-bold text-primary-strong">
+          <dd className="m-0 mt-1 text-lg font-bold text-accent-strong">
             {Math.round(habit.completionPercentage)}%
           </dd>
         </div>

@@ -2,7 +2,7 @@ export function PageHeader({ description, eyebrow, title }) {
   return (
     <div className="min-w-0">
       {eyebrow ? (
-        <p className="m-0 text-xs font-semibold uppercase text-primary-strong">
+        <p className="m-0 text-xs font-semibold uppercase text-accent-strong">
           {eyebrow}
         </p>
       ) : null}

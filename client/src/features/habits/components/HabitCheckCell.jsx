@@ -13,9 +13,9 @@ export function HabitCheckCell({ dateKey, day, isCompleted, isFuture, isToday })
     <span
       aria-label={label}
       className={mergeClassNames(
-        'grid size-7 shrink-0 place-items-center rounded-[6px] border text-[11px] transition',
+        'grid size-7 shrink-0 place-items-center rounded-card border text-[11px] transition',
         isCompleted && 'border-success bg-success/15 text-success',
-        !isCompleted && !isFuture && 'border-border bg-surface-muted text-muted',
+        !isCompleted && !isFuture && 'border-border bg-surface-elevated text-muted',
         isFuture && 'border-border bg-surface text-muted/40',
         isToday && 'ring-2 ring-primary ring-offset-2 ring-offset-surface',
       )}

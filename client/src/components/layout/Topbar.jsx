@@ -32,7 +32,7 @@ export function Topbar({ routes }) {
                 className={({ isActive }) =>
                   mergeClassNames(
                     'text-sm font-semibold text-muted transition hover:text-body',
-                    isActive && 'text-body underline decoration-primary decoration-2 underline-offset-4',
+                    isActive && 'text-body underline decoration-accent decoration-2 underline-offset-4',
                   )
                 }
                 key={route.path}

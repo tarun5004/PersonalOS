@@ -2,12 +2,12 @@ import { mergeClassNames } from '../../lib/classNames.js';
 
 const VARIANTS = {
   primary:
-    'border-primary bg-primary text-primary-text shadow-card hover:border-primary-strong hover:bg-primary-strong',
+    'border-accent bg-accent text-accent-text shadow-card hover:border-accent-strong hover:bg-accent-strong',
   secondary:
-    'border-border bg-surface text-body shadow-card hover:border-focus hover:bg-primary-soft',
-  dark: 'border-border bg-surface-muted text-body shadow-card hover:border-focus hover:bg-surface',
+    'border-border bg-surface text-body shadow-card hover:border-accent hover:bg-accent-soft',
+  dark: 'border-border bg-surface-elevated text-body shadow-card hover:border-accent hover:bg-surface',
   ghost:
-    'border-transparent bg-transparent text-muted hover:bg-surface-muted hover:text-body',
+    'border-transparent bg-transparent text-muted hover:bg-surface-elevated hover:text-body',
   danger:
     'border-danger/40 bg-danger/10 text-danger hover:border-danger hover:bg-danger/15',
 };
@@ -33,7 +33,7 @@ export function Button({
   return (
     <Component
       className={mergeClassNames(
-        'inline-flex items-center justify-center gap-2 rounded-ui border font-semibold transition duration-200 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0',
+        'inline-flex items-center justify-center gap-2 rounded-card border font-semibold transition duration-200 hover:-translate-y-px focus-visible:outline-none focus-visible:shadow-focus disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0',
         VARIANTS[variant],
         SIZES[size],
         className,

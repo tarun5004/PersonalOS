@@ -13,8 +13,8 @@ export function CalendarSummaryCard() {
             <span
               className={
                 index === 4
-                  ? 'mx-auto mt-2 grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-text'
-                  : 'mx-auto mt-2 grid size-8 place-items-center rounded-full bg-surface-muted text-xs font-bold text-body'
+                  ? 'mx-auto mt-2 grid size-8 place-items-center rounded-full bg-accent text-xs font-semibold text-accent-text'
+                  : 'mx-auto mt-2 grid size-8 place-items-center rounded-full bg-surface-elevated text-xs font-bold text-body'
               }
             >
               {14 + index}

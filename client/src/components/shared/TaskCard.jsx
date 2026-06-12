@@ -4,11 +4,11 @@ export function TaskCard({ due, progress = 0, status, tag, title }) {
   const boundedProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <article className="grid gap-3 rounded-ui border border-border bg-surface px-4 py-3 transition hover:border-focus hover:shadow-card">
+    <article className="grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:border-accent hover:shadow-card">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            {status ? <span className="size-2 rounded-full bg-primary" aria-hidden="true" /> : null}
+            {status ? <span className="size-2 rounded-full bg-accent" aria-hidden="true" /> : null}
             <h3 className="text-sm font-bold text-body">{title}</h3>
           </div>
           <p className="mt-1 text-xs text-muted">{due}</p>
@@ -16,8 +16,8 @@ export function TaskCard({ due, progress = 0, status, tag, title }) {
         <Badge variant="primary">{tag}</Badge>
       </div>
       <div className="flex items-center gap-3">
-        <div className="h-1.5 flex-1 rounded-full bg-surface-muted">
-          <span className="block h-full rounded-full bg-primary" style={{ width: `${boundedProgress}%` }} />
+        <div className="h-1.5 flex-1 rounded-full bg-surface-elevated">
+          <span className="block h-full rounded-full bg-accent" style={{ width: `${boundedProgress}%` }} />
         </div>
         <span className="text-xs font-bold text-muted">{boundedProgress}%</span>
       </div>

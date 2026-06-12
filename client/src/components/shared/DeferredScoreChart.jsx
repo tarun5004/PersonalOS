@@ -9,9 +9,9 @@ const LazyScoreChart = lazy(() =>
 
 function ChartPlaceholder({ label = 'Chart loads when visible' }) {
   return (
-    <div className="grid min-h-64 place-items-center rounded-ui border border-dashed border-border bg-surface-muted/60 p-6 text-center">
+    <div className="grid min-h-64 place-items-center rounded-card border border-dashed border-border bg-surface-elevated/60 p-6 text-center">
       <div className="grid justify-items-center gap-3">
-        <span className="grid size-11 place-items-center rounded-ui bg-primary-soft text-primary-strong">
+        <span className="grid size-11 place-items-center rounded-card bg-accent-soft text-accent-strong">
           <BarChart3 aria-hidden="true" size={19} />
         </span>
         <Loader label={label} />

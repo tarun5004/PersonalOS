@@ -8,12 +8,12 @@ export function AppLayout({ routes }) {
   return (
     <div className="h-screen overflow-hidden bg-app-bg p-0 text-body sm:p-4 lg:p-6">
       <a
-        className="fixed left-3 top-3 z-20 -translate-y-[140%] rounded-ui bg-primary px-3 py-2 text-sm font-bold text-primary-text transition focus:translate-y-0 focus:outline-none focus:ring-[3px] focus:ring-focus/35"
+        className="fixed left-3 top-3 z-20 -translate-y-[140%] rounded-card bg-accent px-3 py-2 text-sm font-bold text-accent-text transition focus:translate-y-0 focus:outline-none focus:shadow-focus"
         href="#main-content"
       >
         Skip to content
       </a>
-      <div className="mx-auto grid h-full min-h-0 w-full max-w-[1240px] grid-rows-[auto_minmax(0,1fr)] overflow-hidden border border-border bg-surface shadow-panel sm:rounded-[24px] lg:grid-cols-[196px_minmax(0,1fr)] lg:grid-rows-1">
+      <div className="mx-auto grid h-full min-h-0 w-full max-w-[1240px] grid-rows-[auto_minmax(0,1fr)] overflow-hidden border border-border bg-surface shadow-panel sm:rounded-panel lg:grid-cols-[196px_minmax(0,1fr)] lg:grid-rows-1">
         <Sidebar routes={navRoutes} />
         <div className="grid min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)] bg-surface">
           <Topbar routes={navRoutes} />

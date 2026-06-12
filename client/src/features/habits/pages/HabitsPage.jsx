@@ -218,7 +218,7 @@ export default function HabitsPage() {
             >
               <ChevronLeft aria-hidden="true" size={18} />
             </Button>
-            <div className="min-h-10 rounded-ui border border-border bg-surface px-4 py-2 text-sm font-bold text-body">
+            <div className="min-h-10 rounded-card border border-border bg-surface px-4 py-2 text-sm font-bold text-body">
               {getMonthLabel(month.key)}
             </div>
             <Button
@@ -248,7 +248,7 @@ export default function HabitsPage() {
       ) : habits.length === 0 ? (
         <EmptyState
           action={<Button onClick={openCreateHabit}>Create first habit</Button>}
-          className="min-h-80 border-dashed bg-surface-muted/65 shadow-none"
+          className="min-h-80 border-dashed bg-surface-elevated/65 shadow-none"
           description="Add the first routine you want to make visible in your monthly tracker."
           title="Create your first habit"
         />

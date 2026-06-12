@@ -10,10 +10,10 @@ export function TaskFilters({ activeStatus, onSearchChange, onStatusChange, sear
         {TASK_FILTERS.map((filter) => (
           <button
             className={mergeClassNames(
-              'min-h-10 rounded-ui border px-4 text-sm font-semibold transition',
+              'min-h-10 rounded-card border px-4 text-sm font-semibold transition',
               activeStatus === filter
-                ? 'border-primary bg-primary text-primary-text shadow-card'
-                : 'border-border bg-surface text-muted hover:border-focus hover:bg-primary-soft hover:text-body',
+                ? 'border-accent bg-accent text-accent-text shadow-card'
+                : 'border-border bg-surface text-muted hover:border-accent hover:bg-accent-soft hover:text-body',
             )}
             key={filter}
             onClick={() => onStatusChange(filter)}

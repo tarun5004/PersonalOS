@@ -14,7 +14,7 @@ export function NotFoundPage() {
             Return to dashboard
           </Button>
         }
-        className="mt-5 min-h-80 border-dashed bg-surface-muted/70 shadow-none"
+        className="mt-5 min-h-80 border-dashed bg-surface-elevated/70 shadow-none"
         description="The route you requested is not part of the current PersonalOS navigation."
         icon={SearchX}
         title="Page not found"
