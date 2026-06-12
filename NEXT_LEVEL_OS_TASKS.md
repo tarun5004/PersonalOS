@@ -42,11 +42,12 @@ Target package groups:
 
 ## Chunk 2 - Design System Consolidation
 
-- [ ] Create or refine shared `MotionCard`, `AnimatedNumber`, `ConfettiReward`, `LottieState`, and `ThreeCanvasShell`.
-- [ ] Adapt shadcn-style primitives into local PersonalOS components without exposing template styling.
-- [ ] Create one animation timing map and one reward intensity map.
-- [ ] Ensure all colors use CSS variables.
-- [ ] Run frontend tests/build.
+- [x] Create or refine shared `MotionCard`, `AnimatedNumber`, `ConfettiReward`, `LottieState`, and `ThreeCanvasShell`.
+- [x] Adapt shadcn-style primitives into local PersonalOS components without exposing template styling.
+- [x] Create one animation timing map and one reward intensity map.
+- [x] Ensure new shared primitives use CSS variables.
+- [ ] Replace existing avatar/habit swatch hex data with token or generated-color strategy in the relevant profile/habit chunks.
+- [x] Run frontend tests/build.
 - [ ] Commit: `feat(ui): add next-level shared interaction primitives`.
 
 ## Chunk 3 - Dashboard OS Upgrade

@@ -1,5 +1,7 @@
 import { Award, Flame, Play, Sparkles, Zap } from 'lucide-react';
+import { AnimatedNumber } from '../../../components/shared/AnimatedNumber.jsx';
 import { AvatarDisplay } from '../../../components/shared/AvatarDisplay.jsx';
+import { MotionCard } from '../../../components/shared/MotionCard.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { mergeClassNames } from '../../../lib/classNames.js';
 import {
@@ -70,8 +72,8 @@ export function DashboardHero({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <HeroMetric icon={Zap} label="XP today" value={`+${todayXp}`} detail={`${level.remainingXp} XP to next level`} />
-            <HeroMetric icon={Flame} label="Current streak" value={`${summary?.currentStreak || 0}d`} detail="Identity momentum" />
+            <HeroMetric icon={Zap} label="XP today" value={todayXp} prefix="+" detail={`${level.remainingXp} XP to next level`} />
+            <HeroMetric icon={Flame} label="Current streak" value={summary?.currentStreak || 0} suffix="d" detail="Identity momentum" />
             <HeroMetric icon={Sparkles} label="Focus score" value={focusScore} detail={`${dailyFocusCount} focus blocks`} />
           </div>
         </div>
@@ -128,15 +130,17 @@ export function DashboardHero({
   );
 }
 
-function HeroMetric({ detail, icon: Icon, label, value }) {
+function HeroMetric({ detail, icon: Icon, label, prefix = '', suffix = '', value }) {
   return (
-    <div className="rounded-card border border-border bg-surface-elevated p-4">
+    <MotionCard className="bg-surface-elevated p-4" transition="fast">
       <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-muted">
         <Icon aria-hidden="true" size={15} />
         {label}
       </div>
-      <p className="mt-3 text-2xl font-black text-body">{value}</p>
+      <p className="mt-3 text-2xl font-black text-body">
+        <AnimatedNumber end={value} prefix={prefix} suffix={suffix} />
+      </p>
       <p className="mt-1 text-xs font-semibold text-muted">{detail}</p>
-    </div>
+    </MotionCard>
   );
 }
