@@ -1,53 +1,86 @@
 import { Activity, BarChart3, CheckCircle2, RefreshCcwDot } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
-import { EmptyState } from '../../../components/ui/EmptyState.jsx';
 import { ErrorState } from '../../../components/ui/ErrorState.jsx';
 import { LoadingState } from '../../../components/ui/LoadingState.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
-import { DeferredScoreChart } from '../../../components/shared/DeferredScoreChart.jsx';
-import { NotificationCard } from '../../../components/shared/NotificationCard.jsx';
 import { StatCard } from '../../../components/shared/StatCard.jsx';
+import { usePomodoro } from '../../pomodoro/usePomodoro.js';
+import { getAnalyticsErrorMessage } from '../analyticsApi.js';
 import {
-  averageAnalyticsValue,
-  getAnalyticsErrorMessage,
-  getLatestAnalyticsDay,
-  mapWeeklyAnalyticsToChartData,
-} from '../analyticsApi.js';
+  buildAnalyticsInsights,
+  getScoredDays,
+  getTrend,
+  summarizeWeek,
+} from '../analyticsUtils.js';
+import {
+  HabitConsistencyBars,
+  ScoreTrendChart,
+  TaskCompletionBars,
+} from '../components/AnalyticsCharts.jsx';
+import { InsightFeed } from '../components/InsightFeed.jsx';
+import { WeekComparison } from '../components/WeekComparison.jsx';
 import { useWeeklyAnalytics } from '../useWeeklyAnalytics.js';
 
 function formatPercent(value) {
   return value === null || value === undefined ? '--' : `${Math.round(value)}%`;
 }
 
-function getScoredDays(days) {
-  return days.filter((day) => day.productivityScore !== null);
+function formatScore(value) {
+  return value === null || value === undefined ? '--' : String(Math.round(value));
+}
+
+function formatTrendText(trend) {
+  if (trend === null) {
+    return 'No last-week baseline';
+  }
+
+  if (trend > 0) {
+    return `Up ${trend}% vs last week`;
+  }
+
+  if (trend < 0) {
+    return `Down ${Math.abs(trend)}% vs last week`;
+  }
+
+  return 'No change vs last week';
+}
+
+function formatCountRate(completed, total, rate, noun) {
+  if (total === 0) {
+    return `No ${noun} tracked`;
+  }
+
+  return `${completed} of ${total} ${noun} (${formatPercent(rate)})`;
 }
 
 export default function AnalyticsPage() {
   const weeklyQuery = useWeeklyAnalytics();
+  const { totalSessionsToday } = usePomodoro();
   const days = weeklyQuery.data?.days || [];
+  const previousDays = weeklyQuery.data?.previousDays || [];
+  const habitInsights = weeklyQuery.data?.habitInsights || [];
+  const currentSummary = summarizeWeek(days);
+  const previousSummary = summarizeWeek(previousDays);
   const scoredDays = getScoredDays(days);
-  const latestDay = getLatestAnalyticsDay(days);
-  const hasActivity = scoredDays.length > 0;
-  const taskAverage = hasActivity ? averageAnalyticsValue(days, 'taskCompletionRate') : null;
-  const habitAverage = hasActivity ? averageAnalyticsValue(days, 'habitCompletionRate') : null;
-  const latestScore = latestDay?.productivityScore ?? null;
-  const scoreChartData = mapWeeklyAnalyticsToChartData(days);
-  const taskChartData = mapWeeklyAnalyticsToChartData(days, 'taskCompletionRate');
-  const habitChartData = mapWeeklyAnalyticsToChartData(days, 'habitCompletionRate');
-  const visibleScoreChartData = hasActivity ? scoreChartData : [];
-  const visibleTaskChartData = hasActivity ? taskChartData : [];
-  const visibleHabitChartData = hasActivity ? habitChartData : [];
+  const taskTrend = getTrend(currentSummary.taskRate, previousSummary.taskRate);
+  const habitTrend = getTrend(currentSummary.habitRate, previousSummary.habitRate);
+  const scoreTrend = getTrend(currentSummary.score, previousSummary.score);
+  const insightState = buildAnalyticsInsights({
+    days,
+    focusSessions: totalSessionsToday,
+    habitInsights,
+    previousDays,
+  });
 
   return (
     <section className="grid gap-4">
       <div>
         <Badge>Analytics</Badge>
         <h1 className="mt-3 text-[clamp(1.65rem,3vw,2.35rem)] font-bold leading-tight text-body">
-          Weekly productivity trends
+          Weekly insight engine
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          A focused analytics view for task completion, habit consistency, and weekly score trends.
+          Plain-English signals from your task completion, habit consistency, and focus rhythm.
         </p>
       </div>
 
@@ -61,102 +94,80 @@ export default function AnalyticsPage() {
         />
       ) : null}
 
-      {!weeklyQuery.isLoading && !weeklyQuery.isError && !hasActivity ? (
-        <EmptyState
-          className="border border-dashed border-border bg-surface-elevated/70"
-          description="Create due-dated tasks or check in habits to turn the weekly analytics view on."
-          icon={BarChart3}
-          title="No weekly activity yet"
-        />
-      ) : null}
-
       {!weeklyQuery.isLoading && !weeklyQuery.isError ? (
         <>
           <div className="grid gap-4 md:grid-cols-3">
             <StatCard
-              helper={hasActivity ? '7-day task signal' : 'No task activity this week'}
+              helper={formatCountRate(
+                currentSummary.taskCompleted,
+                currentSummary.taskTotal,
+                currentSummary.taskRate,
+                'tasks',
+              )}
               icon={CheckCircle2}
               label="Task completion"
-              value={formatPercent(taskAverage)}
+              value={formatPercent(currentSummary.taskRate)}
             />
             <StatCard
-              helper={hasActivity ? '7-day habit signal' : 'No habit check-ins this week'}
+              helper={`${currentSummary.habitCompleted} of ${currentSummary.habitTotal} check-ins`}
               icon={RefreshCcwDot}
               label="Habit consistency"
               tone="success"
-              value={formatPercent(habitAverage)}
+              value={formatPercent(currentSummary.habitRate)}
             />
             <StatCard
-              helper={latestScore === null ? 'No scored activity today' : 'Today productivity score'}
+              helper={formatTrendText(scoreTrend)}
               icon={Activity}
               label="Productivity score"
               tone="warning"
-              value={formatPercent(latestScore)}
+              value={formatScore(currentSummary.score)}
             />
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
             <DashboardCard
-              action={
-                <Badge variant={hasActivity ? 'success' : 'muted'}>
-                  {scoredDays.length}/7 days
-                </Badge>
-              }
-              title="Score trend"
+              action={<Badge variant={scoredDays.length > 0 ? 'success' : 'muted'}>{scoredDays.length}/7 days</Badge>}
+              title="Weekly snapshot"
             >
-              <DeferredScoreChart
-                data={visibleScoreChartData}
-                emptyTitle="No weekly score yet"
-                valueLabel="Productivity score"
-              />
-              <p className="mt-3 text-xs leading-5 text-muted">
-                Gaps mark UTC days with no task or habit activity. They are not treated as 0%.
-              </p>
+              <div className="grid gap-3">
+                <p className="m-0 text-sm text-muted">{formatTrendText(taskTrend)}</p>
+                <p className="m-0 text-sm text-muted">{formatTrendText(habitTrend)}</p>
+                <p className="m-0 text-sm text-muted">
+                  Score gaps mark days with no task or habit activity. They are not treated as zero.
+                </p>
+              </div>
             </DashboardCard>
 
-            <DashboardCard title="Recent activity">
-              {hasActivity ? (
-                <div className="grid gap-3">
-                  {scoredDays
-                    .slice(-4)
-                    .reverse()
-                    .map((day) => (
-                      <NotificationCard
-                        badge={formatPercent(day.productivityScore)}
-                        detail={`Tasks ${formatPercent(day.taskCompletionRate)} · Habits ${formatPercent(day.habitCompletionRate)}`}
-                        key={day.date}
-                        title={day.label || day.date}
-                      />
-                    ))}
-                </div>
-              ) : (
-                <EmptyState
-                  className="min-h-56 border border-dashed border-border bg-surface-elevated/70"
-                  description="Task completions and habit check-ins will appear here as activity is tracked."
-                  framed={false}
-                  icon={BarChart3}
-                  title="No activity recorded"
-                />
-              )}
+            <DashboardCard title="Insight feed">
+              <InsightFeed
+                insights={insightState.insights}
+                unlockProgress={insightState.unlockProgress}
+              />
             </DashboardCard>
           </div>
+
+          <DashboardCard title="Score trend">
+            <ScoreTrendChart days={days} />
+          </DashboardCard>
 
           <div className="grid gap-4 xl:grid-cols-2">
-            <DashboardCard title="Tasks completed per day">
-              <DeferredScoreChart
-                data={visibleTaskChartData}
-                emptyTitle="No task trend yet"
-                valueLabel="Task completion"
-              />
+            <DashboardCard
+              action={<Badge variant="muted">Completed</Badge>}
+              title="Tasks per day"
+            >
+              <TaskCompletionBars days={days} />
             </DashboardCard>
-            <DashboardCard title="Habit check-ins per day">
-              <DeferredScoreChart
-                data={visibleHabitChartData}
-                emptyTitle="No habit trend yet"
-                valueLabel="Habit consistency"
-              />
+            <DashboardCard
+              action={<Badge variant="success">Consistency</Badge>}
+              title="Habit consistency per day"
+            >
+              <HabitConsistencyBars days={days} />
             </DashboardCard>
           </div>
+
+          <DashboardCard title="Week-over-week comparison">
+            <WeekComparison habitTrend={habitTrend} taskTrend={taskTrend} />
+          </DashboardCard>
         </>
       ) : null}
     </section>

@@ -14,9 +14,25 @@ function normalizeAnalyticsDay(day) {
   return {
     date: typeof source.date === 'string' ? source.date : '',
     label: typeof source.label === 'string' ? source.label : '',
+    taskCompleted: normalizeNumber(source.taskCompleted),
+    taskTotal: normalizeNumber(source.taskTotal),
+    habitCompleted: normalizeNumber(source.habitCompleted),
+    habitTotal: normalizeNumber(source.habitTotal),
     taskCompletionRate: normalizeNumber(source.taskCompletionRate),
     habitCompletionRate: normalizeNumber(source.habitCompletionRate),
     productivityScore: normalizeScore(source.productivityScore),
+  };
+}
+
+function normalizeHabitInsight(habit) {
+  const source = habit && typeof habit === 'object' ? habit : {};
+
+  return {
+    _id: typeof source._id === 'string' ? source._id : '',
+    name: typeof source.name === 'string' ? source.name : 'Habit',
+    currentStreak: normalizeNumber(source.currentStreak),
+    longestStreak: normalizeNumber(source.longestStreak),
+    missedDaysInARow: normalizeNumber(source.missedDaysInARow),
   };
 }
 
@@ -30,9 +46,13 @@ export function getAnalyticsErrorMessage(error) {
 
 export function normalizeWeeklyAnalytics(payload) {
   const days = Array.isArray(payload?.days) ? payload.days : [];
+  const previousDays = Array.isArray(payload?.previousDays) ? payload.previousDays : [];
+  const habitInsights = Array.isArray(payload?.habitInsights) ? payload.habitInsights : [];
 
   return {
     days: days.map(normalizeAnalyticsDay),
+    previousDays: previousDays.map(normalizeAnalyticsDay),
+    habitInsights: habitInsights.map(normalizeHabitInsight),
   };
 }
 
