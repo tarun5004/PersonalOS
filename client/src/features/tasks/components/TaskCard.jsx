@@ -1,6 +1,7 @@
-import { CheckCircle2, Pencil, Trash2 } from 'lucide-react';
+import { CheckCircle2, Pencil, Square, TimerReset, Trash2 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
+import { usePomodoro } from '../../pomodoro/usePomodoro.js';
 import { formatTaskDueDate } from '../taskFormUtils.js';
 import { mergeClassNames } from '../../../lib/classNames.js';
 
@@ -18,6 +19,23 @@ const statusTone = {
 
 export function TaskCard({ isBusy, onComplete, onDelete, onEdit, task }) {
   const isCompleted = task.status === 'Completed';
+  const {
+    linkedTaskId,
+    startSession,
+    status: pomodoroStatus,
+    stopSession,
+  } = usePomodoro();
+  const taskId = task._id || task.id;
+  const isFocusedTask = linkedTaskId === taskId && pomodoroStatus !== 'idle';
+
+  function handleFocusClick() {
+    if (isFocusedTask) {
+      stopSession();
+      return;
+    }
+
+    startSession({ taskId, taskTitle: task.title });
+  }
 
   return (
     <article className="grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:border-accent hover:shadow-card">
@@ -42,6 +60,20 @@ export function TaskCard({ isBusy, onComplete, onDelete, onEdit, task }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Badge variant={isCompleted ? 'success' : 'muted'}>{task.status}</Badge>
         <div className="flex items-center gap-1">
+          <Button
+            aria-label={isFocusedTask ? `Stop focusing on ${task.title}` : `Focus on ${task.title}`}
+            disabled={isBusy || isCompleted}
+            onClick={handleFocusClick}
+            size="sm"
+            variant={isFocusedTask ? 'danger' : 'secondary'}
+          >
+            {isFocusedTask ? (
+              <Square aria-hidden="true" size={15} />
+            ) : (
+              <TimerReset aria-hidden="true" size={15} />
+            )}
+            {isFocusedTask ? 'Stop' : 'Focus'}
+          </Button>
           <Button
             aria-label={`Edit ${task.title}`}
             disabled={isBusy}

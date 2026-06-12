@@ -3,6 +3,7 @@ import { LogOut } from 'lucide-react';
 import { Button } from '../ui/Button.jsx';
 import { Badge } from '../ui/Badge.jsx';
 import { useAuth } from '../../features/auth/useAuth.js';
+import { PomodoroWidget } from '../../features/pomodoro/components/PomodoroWidget.jsx';
 import { ThemeToggle } from '../../features/theme/ThemeToggle.jsx';
 import { PageHeader } from './PageHeader.jsx';
 import { mergeClassNames } from '../../lib/classNames.js';
@@ -45,6 +46,7 @@ export function Topbar({ routes }) {
         </div>
 
         <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:w-auto lg:justify-end">
+          <PomodoroWidget />
           <Badge className="normal-case" variant="muted">
             {userLabel}
           </Badge>

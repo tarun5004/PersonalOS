@@ -3,6 +3,7 @@ import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
 import { useAuth } from '../../auth/useAuth.js';
+import { PomodoroSettings } from '../../pomodoro/components/PomodoroSettings.jsx';
 import { ThemeToggle } from '../../theme/ThemeToggle.jsx';
 import { useTheme } from '../../theme/useTheme.js';
 import { mergeClassNames } from '../../../lib/classNames.js';
@@ -36,13 +37,15 @@ export default function SettingsPage() {
     <section className="grid gap-5">
       <div>
         <Badge>Settings</Badge>
-          <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
-            Theme and preferences
-          </h1>
+        <h1 className="mt-4 text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-body">
+          Theme and preferences
+        </h1>
         <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
           Tune the workspace appearance and review your signed-in profile context.
         </p>
       </div>
+
+      <PomodoroSettings />
 
       <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
         <DashboardCard title="Appearance" action={<ThemeToggle compact />}>

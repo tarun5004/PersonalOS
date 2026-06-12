@@ -4,6 +4,7 @@ import {
   BarChart3,
   CalendarDays,
   CheckSquare,
+  Clock,
   Gauge,
   RefreshCcwDot,
 } from 'lucide-react';
@@ -18,6 +19,7 @@ import { NotificationCard } from '../../../components/shared/NotificationCard.js
 import { StatCard } from '../../../components/shared/StatCard.jsx';
 import { TaskCard } from '../../../components/shared/TaskCard.jsx';
 import { useAuth } from '../../auth/useAuth.js';
+import { usePomodoro } from '../../pomodoro/usePomodoro.js';
 import { PomodoroTimer } from '../../pomodoro/components/PomodoroTimer.jsx';
 import {
   getAnalyticsErrorMessage,
@@ -90,6 +92,7 @@ function getFocusItems(summary) {
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { dailyCount, prepareFocus, settings } = usePomodoro();
   const summaryQuery = useDashboardSummary();
   const summary = summaryQuery.data;
   const weeklyQuery = useWeeklyAnalytics({ enabled: Boolean(summary) });
@@ -135,10 +138,11 @@ export default function DashboardPage() {
                 value={summary.tasks.total}
               />
               <StatCard
-                helper={`${summary.habits.completedToday} checked in today`}
+                helper="Best active habit run"
                 icon={CalendarDays}
-                label="Habits today"
-                value={`${summary.habits.completedToday}/${summary.habits.total}`}
+                label="Habit streak"
+                tone="success"
+                value={`${summary.currentStreak}d`}
               />
               <StatCard
                 helper={
@@ -152,11 +156,10 @@ export default function DashboardPage() {
                 value={formatScore(summary.productivityScore)}
               />
               <StatCard
-                helper="Best active habit run"
-                icon={RefreshCcwDot}
-                label="Habit streak"
-                tone="success"
-                value={`${summary.currentStreak}d`}
+                helper={`~${dailyCount * settings.focusDuration} min deep work`}
+                icon={Clock}
+                label="Focus today"
+                value={`${dailyCount} sessions`}
               />
             </div>
 
@@ -255,6 +258,13 @@ export default function DashboardPage() {
                       <ArrowRight aria-hidden="true" size={16} />
                     </Button>
                   ))}
+                  <Button className="justify-between" onClick={prepareFocus} variant="secondary">
+                    <span className="inline-flex items-center gap-2">
+                      <Clock aria-hidden="true" size={17} />
+                      Start focus
+                    </span>
+                    <ArrowRight aria-hidden="true" size={16} />
+                  </Button>
                 </div>
               </DashboardCard>
             </div>

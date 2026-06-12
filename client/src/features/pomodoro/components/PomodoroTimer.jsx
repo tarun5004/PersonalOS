@@ -1,25 +1,25 @@
-import { Coffee, Pause, Play, RotateCcw, TimerReset } from 'lucide-react';
+import { Pause, Play, RotateCcw, TimerReset } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
-import { mergeClassNames } from '../../../lib/classNames.js';
-import { usePomodoroTimer } from '../usePomodoroTimer.js';
+import { POMODORO_STATUS } from '../../../utils/constants.js';
+import { usePomodoro } from '../usePomodoro.js';
 
-const MODES = [
-  { id: 'focus', label: 'Focus', helper: '25 min', icon: TimerReset },
-  { id: 'break', label: 'Break', helper: '5 min', icon: Coffee },
-];
-
+/** Renders the dashboard focus timer card backed by the global Pomodoro context. */
 export function PomodoroTimer() {
   const {
+    dailyCount,
     formattedTime,
     isRunning,
-    mode,
+    linkedTaskTitle,
+    openModal,
+    prepareFocus,
     progress,
-    reset,
-    setMode,
-    toggleRunning,
-  } = usePomodoroTimer();
+    status,
+    stopSession,
+    togglePause,
+  } = usePomodoro();
+  const isIdle = status === POMODORO_STATUS.IDLE;
 
   return (
     <DashboardCard
@@ -27,46 +27,16 @@ export function PomodoroTimer() {
       title="Focus timer"
     >
       <div className="grid gap-4">
-        <div className="grid grid-cols-2 gap-2 rounded-card border border-border bg-surface-elevated p-1">
-          {MODES.map((timerMode) => {
-            const Icon = timerMode.icon;
-            const isActive = mode === timerMode.id;
-
-            return (
-              <button
-                aria-pressed={isActive}
-                className={mergeClassNames(
-                  'grid min-h-16 rounded-card px-3 py-2 text-left transition focus-visible:outline-none focus-visible:shadow-focus',
-                  isActive
-                    ? 'bg-surface text-body shadow-card'
-                    : 'text-muted hover:bg-surface hover:text-body',
-                )}
-                key={timerMode.id}
-                onClick={() => setMode(timerMode.id)}
-                type="button"
-              >
-                <span className="inline-flex items-center gap-2 text-sm font-bold">
-                  <Icon aria-hidden="true" size={16} />
-                  {timerMode.label}
-                </span>
-                <span className="mt-1 text-xs font-semibold text-muted">
-                  {timerMode.helper}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
         <div className="rounded-card border border-border bg-surface-elevated p-5">
-          <p className="m-0 text-xs font-semibold uppercase text-muted">
-            {mode === 'focus' ? 'Deep work block' : 'Recovery block'}
+          <p className="m-0 text-xs font-semibold uppercase tracking-[0.05em] text-muted">
+            {isIdle ? 'Focus session' : status.replace('_', ' ')}
           </p>
-          <time
-            className="mt-2 block text-5xl font-bold leading-none text-body"
-            dateTime={`PT${formattedTime.replace(':', 'M')}S`}
-          >
+          <time className="mt-2 block text-5xl font-bold leading-none text-body">
             {formattedTime}
           </time>
+          {linkedTaskTitle ? (
+            <p className="mt-2 truncate text-sm text-muted">{linkedTaskTitle}</p>
+          ) : null}
           <div className="mt-5 h-2 overflow-hidden rounded-full bg-surface">
             <span
               className="block h-full rounded-full bg-accent transition-all duration-300"
@@ -75,16 +45,30 @@ export function PomodoroTimer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-[1fr_auto] gap-2">
-          <Button onClick={toggleRunning} variant="primary">
+        <div className="grid grid-cols-2 gap-2 rounded-card border border-border bg-surface p-3 text-sm text-muted">
+          <span>Focus today</span>
+          <strong className="text-right text-body">{dailyCount} sessions</strong>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto_auto] gap-2">
+          <Button onClick={isIdle ? prepareFocus : togglePause} variant="primary">
             {isRunning ? (
               <Pause aria-hidden="true" size={17} />
             ) : (
               <Play aria-hidden="true" size={17} />
             )}
-            {isRunning ? 'Pause' : 'Start'}
+            {isIdle ? 'Start focus' : isRunning ? 'Pause' : 'Resume'}
           </Button>
-          <Button aria-label="Reset focus timer" onClick={reset} size="icon" variant="secondary">
+          <Button aria-label="Open focus timer" onClick={openModal} size="icon" variant="secondary">
+            <TimerReset aria-hidden="true" size={17} />
+          </Button>
+          <Button
+            aria-label="Stop focus timer"
+            disabled={isIdle}
+            onClick={stopSession}
+            size="icon"
+            variant="danger"
+          >
             <RotateCcw aria-hidden="true" size={17} />
           </Button>
         </div>
