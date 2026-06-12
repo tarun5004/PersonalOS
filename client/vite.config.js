@@ -11,7 +11,8 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       sourcemap: false,
-      chunkSizeWarningLimit: 600,
+      // Three.js is isolated into an optional lazy chunk for the focus modal.
+      chunkSizeWarningLimit: 900,
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -25,6 +26,10 @@ export default defineConfig(({ mode }) => {
 
             if (id.includes('@tanstack/react-query')) {
               return 'query';
+            }
+
+            if (id.includes('three') || id.includes('@react-three/fiber')) {
+              return 'three';
             }
 
             if (

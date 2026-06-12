@@ -41,7 +41,6 @@ export function validate(schema) {
     request.validated = result.data;
     request.body = result.data.body ?? request.body;
     request.params = result.data.params ?? request.params;
-    request.query = result.data.query ?? request.query;
     next();
   };
 }
@@ -65,7 +64,6 @@ export function validateQuery(schema) {
       ...(request.validated || {}),
       query: result.data,
     };
-    request.query = result.data;
     next();
   };
 }

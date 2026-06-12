@@ -1,8 +1,11 @@
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { CheckCircle2, Pause, Play, SkipForward, Square, X } from 'lucide-react';
 import { Button } from '../../../components/ui/Button.jsx';
 import { mergeClassNames } from '../../../lib/classNames.js';
 import { POMODORO_RING, POMODORO_STATUS } from '../../../utils/constants.js';
 import { usePomodoro } from '../usePomodoro.js';
+
+const FocusProgressScene = lazy(() => import('./FocusProgressScene.jsx'));
 
 const sessionLabels = {
   [POMODORO_STATUS.IDLE]: 'FOCUS SESSION',
@@ -32,6 +35,71 @@ function getSessionTone(status) {
   };
 }
 
+function isLowPowerDevice() {
+  if (typeof navigator === 'undefined') {
+    return true;
+  }
+
+  const coreCount = navigator.hardwareConcurrency || 8;
+  const memory = navigator.deviceMemory || 8;
+  return coreCount <= 4 || memory <= 2;
+}
+
+function useCanRenderFocusScene(isModalOpen) {
+  const [canRender, setCanRender] = useState(false);
+
+  useEffect(() => {
+    if (!isModalOpen || typeof window === 'undefined') {
+      setCanRender(false);
+      return undefined;
+    }
+
+    const motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const updatePreference = () => {
+      setCanRender(!motionQuery?.matches && !isLowPowerDevice());
+    };
+
+    updatePreference();
+    motionQuery?.addEventListener?.('change', updatePreference);
+
+    return () => motionQuery?.removeEventListener?.('change', updatePreference);
+  }, [isModalOpen]);
+
+  return canRender;
+}
+
+function ProgressRing({ circumference, dashOffset, tone }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90"
+      height={POMODORO_RING.size}
+      viewBox={`0 0 ${POMODORO_RING.size} ${POMODORO_RING.size}`}
+      width={POMODORO_RING.size}
+    >
+      <circle
+        cx={POMODORO_RING.size / 2}
+        cy={POMODORO_RING.size / 2}
+        fill="none"
+        r={POMODORO_RING.radius}
+        stroke="var(--bg-surface-3)"
+        strokeWidth={POMODORO_RING.strokeWidth}
+      />
+      <circle
+        cx={POMODORO_RING.size / 2}
+        cy={POMODORO_RING.size / 2}
+        fill="none"
+        r={POMODORO_RING.radius}
+        stroke={tone.text}
+        strokeDasharray={circumference}
+        strokeDashoffset={dashOffset}
+        strokeLinecap="round"
+        strokeWidth={POMODORO_RING.strokeWidth}
+      />
+    </svg>
+  );
+}
+
 /** Renders the full-screen focus session modal for the global Pomodoro timer. */
 export function PomodoroModal() {
   const {
@@ -50,6 +118,7 @@ export function PomodoroModal() {
     stopSession,
     togglePause,
   } = usePomodoro();
+  const canRenderFocusScene = useCanRenderFocusScene(isModalOpen);
 
   if (!isModalOpen) {
     return null;
@@ -59,6 +128,7 @@ export function PomodoroModal() {
   const circumference = 2 * Math.PI * POMODORO_RING.radius;
   const progress = duration > 0 ? Math.min(elapsedSeconds / duration, 1) : 0;
   const dashOffset = circumference - progress * circumference;
+  const shouldRenderScene = canRenderFocusScene && status !== POMODORO_STATUS.IDLE;
 
   return (
     <div className="focus-modal-backdrop fixed inset-0 z-50 grid place-items-center p-4">
@@ -92,35 +162,27 @@ export function PomodoroModal() {
           ) : null}
         </div>
 
-        <div className="relative mx-auto size-[200px]">
-          <svg
-            aria-hidden="true"
-            className="-rotate-90"
-            height={POMODORO_RING.size}
-            viewBox={`0 0 ${POMODORO_RING.size} ${POMODORO_RING.size}`}
-            width={POMODORO_RING.size}
-          >
-            <circle
-              cx={POMODORO_RING.size / 2}
-              cy={POMODORO_RING.size / 2}
-              fill="none"
-              r={POMODORO_RING.radius}
-              stroke="var(--bg-surface-3)"
-              strokeWidth={POMODORO_RING.strokeWidth}
-            />
-            <circle
-              cx={POMODORO_RING.size / 2}
-              cy={POMODORO_RING.size / 2}
-              fill="none"
-              r={POMODORO_RING.radius}
-              stroke={tone.text}
-              strokeDasharray={circumference}
-              strokeDashoffset={dashOffset}
-              strokeLinecap="round"
-              strokeWidth={POMODORO_RING.strokeWidth}
-            />
-          </svg>
-          <time className="absolute inset-0 grid place-items-center font-mono text-[72px] font-bold leading-none text-body">
+        <div className="relative mx-auto size-[220px]">
+          {shouldRenderScene ? (
+            <Suspense
+              fallback={
+                <ProgressRing
+                  circumference={circumference}
+                  dashOffset={dashOffset}
+                  tone={tone}
+                />
+              }
+            >
+              <FocusProgressScene
+                isPaused={!isRunning}
+                progress={progress}
+                status={status}
+              />
+            </Suspense>
+          ) : (
+            <ProgressRing circumference={circumference} dashOffset={dashOffset} tone={tone} />
+          )}
+          <time className="pointer-events-none absolute inset-0 z-10 grid place-items-center font-mono text-[72px] font-bold leading-none text-body">
             {formattedTime}
           </time>
         </div>

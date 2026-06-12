@@ -103,12 +103,13 @@ Target package groups:
 
 ## Chunk 8 - 3D Focus / Progress Layer
 
-- [ ] Add lazy-loaded React Three Fiber scene.
-- [ ] Use it only in focus mode or an optional progress view.
-- [ ] Add loading fallback and reduced-motion/low-power fallback.
-- [ ] Verify canvas is nonblank with browser screenshot.
-- [ ] Confirm bundle impact is acceptable.
-- [ ] Commit: `feat(focus): add optional 3d progress layer`.
+- [x] Add lazy-loaded React Three Fiber scene.
+- [x] Use it only in focus mode or an optional progress view.
+- [x] Add loading fallback and reduced-motion/low-power fallback.
+- [x] Verify canvas is nonblank with browser screenshot.
+- [x] Confirm bundle impact is acceptable.
+- [x] Fix Express 5 query-validation assignment bug discovered during authenticated browser QA.
+- [x] Commit: `feat(focus): add optional 3d progress layer`.
 
 ## Chunk 9 - Final QA And Cleanup
 

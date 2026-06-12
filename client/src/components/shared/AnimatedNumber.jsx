@@ -1,5 +1,7 @@
-import CountUp from 'react-countup';
+import CountUpModule from 'react-countup';
 import { mergeClassNames } from '../../lib/classNames.js';
+
+const CountUp = CountUpModule.default || CountUpModule;
 
 /** Animates meaningful numeric progress without changing the surrounding layout. */
 export function AnimatedNumber({
