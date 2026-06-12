@@ -7,7 +7,9 @@ Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved archite
 
 The frontend component system will be reusable, theme-aware, accessible, responsive, and simple enough for contributors to understand.
 
-V1 will use Tailwind CSS v4 with custom reusable components. It will not install shadcn/ui as a dependency.
+V1 will use Tailwind CSS v4 with custom reusable components.
+
+The approved Next-Level OS track may introduce controlled shadcn/ui-derived primitives, Magic UI patterns, and Aceternity UI patterns when they are adapted into PersonalOS components and theme tokens. These libraries must not replace the PersonalOS visual identity or create a generic template/demo look.
 
 ## 2. Component Groups
 
@@ -72,6 +74,11 @@ Planned components:
 - `ConfirmDialog`
 - `ProgressRing`
 - `DatePicker`
+- `MotionCard`
+- `AnimatedNumber`
+- `ConfettiReward`
+- `LottieState`
+- `ThreeCanvasShell`
 
 The protected app shell should follow the approved PersonalOS visual direction:
 
@@ -89,6 +96,17 @@ The protected app shell should follow the approved PersonalOS visual direction:
 Reference-style cards may be used for layout structure before data APIs are complete, but they must not imply undocumented backend features are implemented.
 
 Avoid visual patterns that make the app feel AI-generated or template-like: bright gradients, glow effects, glassmorphism, arbitrary accent colors, excessive border radius, and duplicated decorative card patterns.
+
+Next-Level OS visual packages must follow these rules:
+
+- shadcn/ui primitives may be copied/adapted into local `components/ui/` files, but app pages should still use PersonalOS shared components.
+- Magic UI and Aceternity UI patterns may be adapted only for high-value moments such as command surfaces, achievement cards, premium empty states, and controlled visual accents.
+- Framer Motion should handle page, card, modal, and achievement transitions.
+- Auto Animate should handle low-cost list transitions for task columns, habit rows, and achievement lists.
+- Lottie should be optional and used for a small set of empty/reward states.
+- Canvas Confetti should trigger only for milestone moments.
+- React CountUp should be used only for meaningful metrics.
+- React Three Fiber and Three.js must be lazy-loaded and optional.
 
 The visual identity modernization chunk before Phase 8 may polish Dashboard, Tasks, Habits, Analytics, Settings, Login, and Register screens using placeholder-safe structures only. It must not implement backend feature behavior or duplicate app layout code.
 
@@ -146,6 +164,7 @@ Feature components may be added only when the active phase needs them.
 - Feature components may compose shared components but should not redefine them.
 - Components must use Tailwind utility classes backed by semantic theme variables.
 - Components must support light and dark themes.
+- Components must remain readable when animation, 3D, or generated assets fail to load.
 - Avoid duplicated utility-class strings when a shared component would be clearer.
 - Component-level CSS files should be removed during the Tailwind migration unless a specific exception is documented.
 

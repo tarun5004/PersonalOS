@@ -25,7 +25,9 @@ Comments should explain why important decisions exist, especially around securit
 
 Do not add packages, APIs, database fields, routes, features, or architecture changes unless they are documented and allowed by the active phase.
 
-V1 does not use Redux, mandatory TypeScript, shadcn/ui as a dependency, OAuth, microservices, AI features, or real-time collaboration.
+V1 does not use Redux, mandatory TypeScript, OAuth, microservices, or real-time collaboration.
+
+The approved Next-Level OS track may add controlled shadcn/ui-derived primitives, premium UI patterns, motion/reward libraries, 3D, and server-side AI image generation. Follow `NEXT_LEVEL_OS_PLAN.md` and `NEXT_LEVEL_OS_TASKS.md` before changing those areas.
 
 ## Security
 
@@ -59,4 +61,3 @@ Pull requests should include:
 - Tests run
 - Manual QA steps
 - Known limitations
-

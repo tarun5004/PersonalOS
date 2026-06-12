@@ -24,16 +24,16 @@ Do not introduce V1-excluded features:
 
 - TypeScript as mandatory
 - Redux
-- shadcn/ui as an installed dependency
 - OAuth
 - Microservices
 - Kubernetes
 - Redis unless a documented need appears
 - Real-time collaboration
 - Plugin marketplace
-- AI features
 - Mobile app
 - Advanced RBAC
+
+The approved Next-Level OS track is an exception for controlled premium UI packages and server-side AI image generation. Contributors must follow `NEXT_LEVEL_OS_PLAN.md` and `NEXT_LEVEL_OS_TASKS.md` before adding or changing those packages.
 
 ## 4. Documentation First
 

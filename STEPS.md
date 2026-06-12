@@ -6,30 +6,31 @@ Source of truth: Master Prompt V4
 
 ## 0. Current Control Chunk
 
-Active chunk: Overnight multi-agent execution through Phase 15.
+Active chunk: Next-Level OS package, AI asset, motion, and visual-system implementation.
 
-Completed:
+Completed before this track:
 
 - Phase 8 Task Backend
 - Phase 9 Task Frontend
+- V3 gamified dashboard and Cloudinary avatar foundation
 
-Active execution order:
+Active execution order now follows:
 
-1. Phase 10: Habit Backend
-2. Phase 11: Habit Frontend
-3. Phase 12: Dashboard Summary Backend
-4. Phase 13: Dashboard Frontend
-5. Phase 14: Analytics Backend
-6. Phase 15: Analytics Frontend
+1. `NEXT_LEVEL_OS_PLAN.md`
+2. `NEXT_LEVEL_OS_TASKS.md`
+3. One checklist chunk at a time
+4. Test/build/QA after every chunk
+5. Commit after every completed chunk
 
 Execution requirements:
 
-- Work one phase at a time.
-- Implement, review, test, browser/manual QA, fix, retest, and internally approve each phase before advancing.
+- Work one checklist chunk at a time.
+- Implement, review, test, browser/manual QA where relevant, fix, retest, and internally approve each chunk before advancing.
 - Use the mandatory multi-agent phase gate from `AGENTS.md`.
 - Use realistic seeded data for browser/manual QA as soon as the required backend feature data exists.
 - Runtime crashes, white screens, console errors, broken navigation, failing tests, failing builds, or blocking API errors must be fixed before moving forward.
-- Do not start Phase 16, release action, post-V1 work, AI features, auth redesigns, or unrelated backend/frontend features during this execution.
+- Do not start release action, auth redesigns, or unrelated backend/frontend features during this execution.
+- OpenAI Images API work is allowed only through the server-side asset pipeline documented in the Next-Level OS plan.
 - Run required automated checks, browser/manual QA, performance review, security review, red-team review, and `git diff --check`.
 
 ## 1. Operating Rules
@@ -42,12 +43,14 @@ Execution requirements:
 - Do not start the next phase unless the developer explicitly says `Proceed to Phase X`, `Proceed to next phase`, or gives an approved continuous execution plan naming the phase range.
 - Do not touch unrelated files.
 - Do not install packages unless the active phase allows it.
+- The active Next-Level OS track allows installing the documented packages after the source-of-truth docs chunk is committed.
 - Tailwind CSS v4 is the approved V1 styling system.
 - Keep one global frontend CSS entry file only.
 - Use reusable shared components and approved theme variables for UI colors.
 - Do not create generic placeholder UI.
 - Do not duplicate sidebar, topbar, or layout code.
 - Do not make the app look like ChatGPT, Linear, Notion, Vercel, a startup admin template, or a shadcn demo.
+- shadcn/ui, Magic UI, and Aceternity UI may be used only as controlled local primitives or inspiration adapted into PersonalOS tokens and components.
 - Prefer calm, dense, durable productivity UI over flashy gradients, glass effects, and decorative styling.
 - Do not write implementation code during documentation phases.
 - If requirements are unclear, ask before assuming.

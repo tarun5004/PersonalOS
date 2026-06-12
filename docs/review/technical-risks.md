@@ -104,3 +104,30 @@ Mitigation:
 - Prefer explicit modules.
 - Add abstractions only when they remove real duplication or complexity.
 - Use comments to explain why important decisions exist.
+
+## 9. Premium UI Package Risk
+
+The Next-Level OS track introduces shadcn/ui-derived primitives, Magic UI, Aceternity UI, motion, reward, and 3D libraries.
+
+Risk: PersonalOS can start looking like a template collection instead of a coherent daily-use operating system.
+
+Mitigation:
+
+- Adapt every imported pattern into PersonalOS tokens and shared components.
+- Avoid one-off animation and decorative effects.
+- Lazy-load heavy visual experiences.
+- Keep dashboard, tasks, habits, analytics, settings, login, and register readable without animations.
+
+## 10. AI Asset Generation Risk
+
+The Next-Level OS track introduces server-side OpenAI Images API usage with Cloudinary storage.
+
+Risk: AI image generation adds cost, latency, abuse, prompt safety, and secret-management concerns.
+
+Mitigation:
+
+- Keep OpenAI API keys on the backend only.
+- Validate and rate-limit image-generation requests.
+- Store generated outputs in Cloudinary and return optimized delivery URLs.
+- Never block core productivity workflows on image generation.
+- Do not commit OpenAI or Cloudinary secrets.

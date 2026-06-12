@@ -15,8 +15,8 @@ Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved archite
 ## 2. Simplicity
 
 - V1 will not use TypeScript as a mandatory requirement.
-- V1 will not use Redux, microservices, Kubernetes, OAuth, real-time collaboration, plugin marketplace, AI features, mobile app, or advanced RBAC.
-- V1 will not install shadcn/ui as a dependency.
+- V1 will not use Redux, microservices, Kubernetes, OAuth, real-time collaboration, plugin marketplace, mobile app, or advanced RBAC.
+- The approved Next-Level OS track may add AI image generation, shadcn/ui-derived primitives, Magic UI, Aceternity UI, motion, reward, and 3D libraries only through the documented chunk plan.
 - V1 will use npm.
 - V1 will use Tailwind CSS v4 for styling.
 
@@ -49,6 +49,10 @@ Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved archite
 - Mutations will invalidate only relevant query groups.
 - Analytics charts may be lazy loaded if bundle size becomes a concern.
 - Tailwind CSS output should remain constrained through normal Vite/Tailwind production builds.
+- Heavy UI packages such as Three.js, React Three Fiber, Lottie, and AI image-generation views must be lazy-loaded or isolated so they do not slow the core dashboard.
+- Motion should support reduced-motion expectations and should communicate state rather than decorate every surface.
+- Confetti and reward effects must be rare, short, and tied to real user achievements.
+- Generated image workflows must be rate-limited and should not block core task, habit, auth, or dashboard flows.
 
 ## 6. Accessibility
 
@@ -59,6 +63,7 @@ Source of truth: Master Prompt V4, approved Phase 0-A docs, and approved archite
 - Dialogs will handle focus reasonably.
 - Status will not be communicated by color alone.
 - Theme tokens must preserve sufficient contrast.
+- 3D, Lottie, and generated media must include fallback UI and accessible text labels where they communicate meaning.
 
 ## 7. Compatibility
 

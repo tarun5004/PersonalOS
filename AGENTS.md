@@ -27,7 +27,8 @@ The current user request defines the active task only when it does not conflict 
 - Do not add packages unless the current approved phase allows it.
 - Do not rename, move, or delete files unless the active chunk explicitly requires it.
 - Do not make TypeScript mandatory for V1.
-- Do not introduce Redux, shadcn/ui as a dependency, microservices, AI features, OAuth, Redis, Kubernetes, or real-time collaboration in V1.
+- Do not introduce Redux, microservices, OAuth, Redis, Kubernetes, or real-time collaboration in V1.
+- The approved Next-Level OS track may introduce controlled shadcn/ui-derived primitives, Magic UI, Aceternity UI, OpenAI Images API, Cloudinary assets, 3D, motion, and reward libraries only through the documented chunk plan in `NEXT_LEVEL_OS_PLAN.md` and `NEXT_LEVEL_OS_TASKS.md`.
 - Do not store JWTs in localStorage or sessionStorage.
 - Use npm for V1.
 - Tailwind CSS v4 is the approved V1 styling system.
@@ -135,20 +136,19 @@ API calls must remain centralized. Components must not contain raw backend endpo
 
 ## 6. Active Execution Guardrails
 
-The current active execution is the approved overnight run from Phase 10 through Phase 15.
+The current active execution is the approved Next-Level OS implementation track.
 
-- Phase 9 Task Frontend is complete and committed.
-- Phase 10 Habit Backend is the next implementation phase.
-- Continue one phase at a time through Phase 15 only.
-- Do not start Phase 16, release action, or post-V1 work during this run.
-- Do not skip required implementation, review, test, browser QA, performance review, security review, red-team review, or internal approval gates.
-- Do not change auth behavior, routing contracts, API contracts outside the active phase, or state-management ownership unless a verified integration bug requires it.
-- Preserve existing user-facing behavior unless the active phase explicitly adds or wires the documented feature.
-- Use realistic seeded data for browser/manual QA once the relevant backend data exists.
+- `NEXT_LEVEL_OS_PLAN.md` defines the architecture and dependency strategy.
+- `NEXT_LEVEL_OS_TASKS.md` defines the chunk checklist.
+- Work chunk by chunk: update source-of-truth docs, test, commit, then move to dependency and implementation chunks.
+- Do not skip required tests, build checks, browser QA for visible UI work, performance review, security review, red-team review, or internal approval gates.
+- Do not change auth behavior, routing contracts, existing API contracts, or state-management ownership unless a verified integration bug requires it.
+- Preserve existing user-facing behavior unless the active chunk explicitly adds or wires the documented feature.
 - Runtime crashes, white screens, console errors, broken navigation, failed tests, failed builds, and blocking API errors must be fixed before advancing.
-- Keep commits logical and readable at phase or major-chunk boundaries.
+- Keep commits logical and readable at chunk boundaries.
 - Report tooling gaps honestly instead of adding dependencies by default.
-- Add dependencies only when the active phase or a measured optimization justifies the value.
+- Add dependencies only when the active chunk or a measured optimization justifies the value.
+- Phase 10 through Phase 15 feature work is paused while the approved Next-Level OS package/design-system track is active.
 
 ## 7. UI and Theme Guardrails
 
@@ -166,6 +166,12 @@ The approved PersonalOS visual direction remains in effect for future UI work.
 - Use `@headlessui/react` only for accessible dialogs, menus, toggles, or similar UI primitives where needed.
 - Use `framer-motion` only for subtle transitions; do not over-animate the app.
 - Use `clsx` and `tailwind-merge` through the local class-name helper after they are installed.
+- Use shadcn/ui, Magic UI, and Aceternity UI as sources for controlled local primitives and premium patterns, not as a replacement brand or template system.
+- Use Auto Animate for low-cost list/layout transitions where it improves clarity.
+- Use DiceBear for generated fallback avatar identities.
+- Use Lottie and Canvas Confetti sparingly for empty states and milestone rewards.
+- Use React CountUp for meaningful progress metrics only.
+- Use React Three Fiber and Three.js only in lazy-loaded, optional experiences with fallbacks.
 - Do not use random hardcoded colors in JSX or JS files; add semantic CSS variables when a new color role is required.
 - Avoid purple-first startup themes, bright AI-style gradients, glow effects, glassmorphism, excessive border radius, inconsistent shadows, and arbitrary color accents.
 - Sidebar, topbar, cards, forms, and page headers must feel stable, readable, and built for daily use.
@@ -175,6 +181,8 @@ The approved PersonalOS visual direction remains in effect for future UI work.
 
 - V1 auth uses short-lived access tokens in frontend memory and rotated refresh tokens in secure HttpOnly cookies.
 - Backend validates refresh cookies, access tokens, and env configuration.
+- OpenAI Images API calls must run on the backend only. Never expose OpenAI API keys in frontend code.
+- Cloudinary signed upload secrets must stay on the backend only. Frontend code may use returned delivery URLs, not API secrets.
 - CORS must use `credentials: true` and exact `CORS_ORIGIN`.
 - Frontend requests must include credentials.
 - Auth login and register routes require rate limiting.
