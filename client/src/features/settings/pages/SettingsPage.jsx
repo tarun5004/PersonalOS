@@ -1,11 +1,31 @@
 import { useRef, useState } from 'react';
-import { Camera, LogOut, Moon, Sun, UserCircle2 } from 'lucide-react';
+import {
+  Award,
+  Camera,
+  Flame,
+  Gauge,
+  LogOut,
+  Moon,
+  Sparkles,
+  Sun,
+  UserCircle2,
+} from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { AvatarDisplay } from '../../../components/shared/AvatarDisplay.jsx';
 import { AvatarPicker } from '../../../components/shared/AvatarPicker.jsx';
+import { AnimatedNumber } from '../../../components/shared/AnimatedNumber.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
+import { useDashboardSummary } from '../../dashboard/useDashboardSummary.js';
+import {
+  calculateTodayXp,
+  getAchievements,
+  getLevelProgress,
+} from '../../gamification/gamificationUtils.js';
+import { HABIT_LIST_LIMIT } from '../../habits/habitConstants.js';
+import { useHabits } from '../../habits/useHabits.js';
 import { useAuth } from '../../auth/useAuth.js';
+import { usePomodoro } from '../../pomodoro/usePomodoro.js';
 import { PomodoroSettings } from '../../pomodoro/components/PomodoroSettings.jsx';
 import { ThemeToggle } from '../../theme/ThemeToggle.jsx';
 import { useTheme } from '../../theme/useTheme.js';
@@ -29,8 +49,20 @@ const themeCards = [
 export default function SettingsPage() {
   const { logout, updateAvatarId, uploadAvatar, user } = useAuth();
   const { setTheme, theme } = useTheme();
+  const { dailyCount } = usePomodoro();
+  const summaryQuery = useDashboardSummary();
+  const habitsQuery = useHabits({ limit: HABIT_LIST_LIMIT, offset: 0 });
   const fileInputRef = useRef(null);
   const [uploadState, setUploadState] = useState({ status: 'idle', message: '' });
+  const summary = summaryQuery.data;
+  const habits = habitsQuery.data?.habits || [];
+  const todayXp = calculateTodayXp({ dailyFocusCount: dailyCount, summary });
+  const level = getLevelProgress((user?.xp || 0) + todayXp);
+  const achievements = getAchievements({ dailyFocusCount: dailyCount, habits, summary });
+  const unlockedAchievementCount = achievements.filter((achievement) => achievement.unlocked).length;
+  const habitTotal = summary?.habits?.total || 0;
+  const habitCompleted = summary?.habits?.completedToday || 0;
+  const todayCompletion = habitTotal === 0 ? 0 : Math.round((habitCompleted / habitTotal) * 100);
 
   async function handleAvatarFileChange(event) {
     const file = event.target.files?.[0];
@@ -100,25 +132,68 @@ export default function SettingsPage() {
         </DashboardCard>
 
         <DashboardCard title="Profile">
-          <div className="flex items-center gap-4 rounded-card border border-border bg-surface-elevated p-4">
-            <div className="relative">
-              <AvatarDisplay
-                avatarId={user?.avatarId}
-                avatarUrl={user?.avatarUrl}
-                className="ring-2 ring-accent-soft"
-                label={`${user?.name || 'Personal OS user'} avatar`}
-                size="lg"
-              />
-              <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full border border-border bg-success text-white">
-                <span className="sr-only">Online</span>
-              </span>
+          <div className="rounded-card border border-border bg-surface-elevated p-4">
+            <div className="flex items-center gap-4">
+              <div
+                className="relative grid size-24 shrink-0 place-items-center rounded-full p-1"
+                style={{
+                  background: `conic-gradient(var(--accent) ${level.progress}%, var(--bg-surface-3) 0)`,
+                }}
+              >
+                <AvatarDisplay
+                  avatarId={user?.avatarId}
+                  avatarUrl={user?.avatarUrl}
+                  className="size-[5.25rem] rounded-full"
+                  label={`${user?.name || 'Personal OS user'} avatar`}
+                  size="lg"
+                />
+                <span className="absolute -bottom-1 left-1/2 inline-flex -translate-x-1/2 items-center rounded-full border border-border bg-surface px-2 py-1 text-[0.68rem] font-black uppercase tracking-[0.12em] text-accent shadow-card">
+                  Lv {level.level}
+                </span>
+              </div>
+              <div className="min-w-0">
+                <p className="m-0 truncate text-base font-bold text-body">{user?.name || 'Personal OS user'}</p>
+                <p className="mt-1 truncate text-sm text-muted">{user?.email || 'Signed in user'}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Badge variant={todayCompletion === 100 && habitTotal > 0 ? 'success' : 'muted'}>
+                    {habitCompleted}/{habitTotal} habits today
+                  </Badge>
+                  <Badge variant={dailyCount > 0 ? 'success' : 'muted'}>{dailyCount} focus sessions</Badge>
+                </div>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="m-0 truncate text-base font-bold text-body">{user?.name || 'Personal OS user'}</p>
-              <p className="mt-1 truncate text-sm text-muted">{user?.email || 'Signed in user'}</p>
-              <p className="mt-2 text-xs font-bold uppercase tracking-[0.16em] text-accent">
-                Level ready profile
-              </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <ProfileMetric
+                icon={Sparkles}
+                label="XP today"
+                prefix="+"
+                value={todayXp}
+              />
+              <ProfileMetric
+                icon={Award}
+                label="Achievements"
+                suffix={`/${achievements.length}`}
+                value={unlockedAchievementCount}
+              />
+              <ProfileMetric
+                icon={Flame}
+                label="Current streak"
+                suffix="d"
+                value={summary?.currentStreak || 0}
+              />
+            </div>
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-surface-muted">
+              <div
+                className="h-full rounded-full bg-accent transition-all"
+                style={{ width: `${Math.max(4, level.progress)}%` }}
+              />
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-3 text-xs font-semibold text-muted">
+              <span>{level.remainingXp} XP to next level</span>
+              <span className="inline-flex items-center gap-1 text-accent">
+                <Gauge aria-hidden="true" size={14} />
+                {todayCompletion}% habit signal
+              </span>
             </div>
           </div>
           <div className="mt-4 rounded-card border border-border bg-surface p-4">
@@ -200,4 +275,18 @@ function readFileAsDataUrl(file) {
     reader.addEventListener('error', () => reject(new Error('Could not read avatar file.')));
     reader.readAsDataURL(file);
   });
+}
+
+function ProfileMetric({ icon: Icon, label, prefix = '', suffix = '', value }) {
+  return (
+    <div className="rounded-card border border-border bg-surface px-3 py-3">
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-muted">
+        <Icon aria-hidden="true" size={14} />
+        {label}
+      </div>
+      <p className="mt-2 text-xl font-black text-body">
+        <AnimatedNumber end={value} prefix={prefix} suffix={suffix} />
+      </p>
+    </div>
+  );
 }

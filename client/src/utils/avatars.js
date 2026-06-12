@@ -1,5 +1,9 @@
+import { createAvatar } from '@dicebear/core';
+import { notionistsNeutral } from '@dicebear/collection';
+
 export const AVATAR_STORAGE_KEY = 'pos-avatar-id';
 export const DEFAULT_AVATAR_ID = 'teal-reader';
+const avatarDataUriCache = new Map();
 
 export const AVATARS = [
   {
@@ -82,6 +86,23 @@ export function isAvatarId(value) {
 
 export function getAvatar(value) {
   return AVATARS.find((avatar) => avatar.id === value) || AVATARS[0];
+}
+
+export function getAvatarDataUri(value) {
+  const avatar = getAvatar(value);
+
+  if (!avatarDataUriCache.has(avatar.id)) {
+    const generatedAvatar = createAvatar(notionistsNeutral, {
+      backgroundColor: [avatar.background.replace('#', '')],
+      radius: 18,
+      seed: avatar.id,
+      size: 96,
+    });
+
+    avatarDataUriCache.set(avatar.id, generatedAvatar.toDataUri());
+  }
+
+  return avatarDataUriCache.get(avatar.id);
 }
 
 export function resolveAvatarId(value) {

@@ -82,12 +82,12 @@ Target package groups:
 
 ## Chunk 6 - Profile And Avatar Upgrade
 
-- [ ] Add DiceBear avatar generation.
-- [ ] Keep Cloudinary custom avatar upload.
-- [ ] Add avatar frame, XP ring, level badge, achievement count, streak, and completion signal.
-- [ ] Store only safe avatar metadata.
-- [ ] Run frontend/backend checks if endpoints change.
-- [ ] Commit: `feat(profile): add avatar identity system`.
+- [x] Add DiceBear avatar generation.
+- [x] Keep Cloudinary custom avatar upload.
+- [x] Add avatar frame, XP ring, level badge, achievement count, streak, and completion signal.
+- [x] Store only safe avatar metadata.
+- [x] Run frontend checks; backend endpoints were not changed.
+- [x] Commit: `feat(profile): add avatar identity system`.
 
 ## Chunk 7 - OpenAI Images + Cloudinary Asset Pipeline
 
