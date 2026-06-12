@@ -35,12 +35,12 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 8 | Habits behavior layer and square grid polish | Complete | Square habit cells, missed/done/today states, color picker, insight bar, risk banner, frontend tests/build/lint/diff passed | `3a09b61` |
 | 9 | Analytics insight engine polish | Complete | Existing implementation audited: insight feed, token charts, score trend, bars, week-over-week, unlock empty state, frontend tests/build/lint/diff passed | This commit |
 | 10 | PWA installability and offline support | Complete | Manifest linked, `dist/sw.js` generated, offline/install UI added, production preview SW registration verified, frontend tests/build/lint/diff passed | `80c4b24` |
-| 11 | Avatar system and profile/register integration | Pending | Agent 11 self-gate | Pending |
+| 11 | Avatar system and profile/register integration | Complete | 8 avatars, register picker, auth avatar persistence, sidebar avatar, settings avatar picker, frontend tests/build/lint/diff passed | `4177fff` |
 | 12 | Final audit and smoke test | Pending | Agent 12 final audit | Pending |
 
 ## Current Agent Notes
 
-Active task: Agent 11 - Avatar system and profile/register integration.
+Active task: Agent 12 - Final audit and smoke test.
 
 ## Saved Attached Prompt Snapshot
 
