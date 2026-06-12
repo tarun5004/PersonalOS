@@ -1,7 +1,7 @@
-import { useId } from 'react';
+import { forwardRef, useId } from 'react';
 import { mergeClassNames } from '../../lib/classNames.js';
 
-export function Select({
+export const Select = forwardRef(function Select({
   children,
   className,
   error,
@@ -9,7 +9,7 @@ export function Select({
   label,
   selectClassName,
   ...props
-}) {
+}, ref) {
   const generatedId = useId();
   const selectId = id || generatedId;
   const errorId = error ? `${selectId}-error` : undefined;
@@ -29,6 +29,7 @@ export function Select({
           selectClassName,
         )}
         id={selectId}
+        ref={ref}
         {...props}
       >
         {children}
@@ -40,4 +41,4 @@ export function Select({
       ) : null}
     </div>
   );
-}
+});

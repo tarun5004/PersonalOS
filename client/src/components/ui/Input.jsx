@@ -1,7 +1,7 @@
-import { useId } from 'react';
+import { forwardRef, useId } from 'react';
 import { mergeClassNames } from '../../lib/classNames.js';
 
-export function Input({
+export const Input = forwardRef(function Input({
   className,
   description,
   error,
@@ -9,7 +9,7 @@ export function Input({
   inputClassName,
   label,
   ...props
-}) {
+}, ref) {
   const generatedId = useId();
   const inputId = id || generatedId;
   const descriptionId = description ? `${inputId}-description` : undefined;
@@ -33,6 +33,7 @@ export function Input({
           inputClassName,
         )}
         id={inputId}
+        ref={ref}
         {...props}
       />
       {description ? (
@@ -47,4 +48,4 @@ export function Input({
       ) : null}
     </div>
   );
-}
+});

@@ -1,4 +1,18 @@
+import { z } from 'zod';
+import { TASK_PRIORITIES, TASK_STATUSES } from './taskConstants.js';
+
 const DEFAULT_TIME = '09:00';
+
+export const taskFormSchema = z.object({
+  title: z.string().trim().min(1, 'Title is required').max(200, 'Title is too long'),
+  description: z.string().trim().max(2000, 'Description is too long'),
+  priority: z.enum([...TASK_PRIORITIES], { message: 'Choose a valid priority' }),
+  dueDate: z
+    .string()
+    .min(1, 'Valid due date is required')
+    .refine((value) => !Number.isNaN(new Date(value).getTime()), 'Valid due date is required'),
+  status: z.enum([...TASK_STATUSES], { message: 'Choose a valid status' }),
+});
 
 function pad(value) {
   return String(value).padStart(2, '0');
@@ -39,17 +53,49 @@ export function taskToFormValues(task) {
 }
 
 export function validateTaskForm(values) {
-  const errors = {};
+  const result = taskFormSchema.safeParse(values);
 
-  if (!values.title.trim()) {
-    errors.title = 'Title is required';
+  if (result.success) {
+    return {};
   }
 
-  if (!values.dueDate || Number.isNaN(new Date(values.dueDate).getTime())) {
-    errors.dueDate = 'Valid due date is required';
+  return result.error.issues.reduce((errors, issue) => {
+    const field = issue.path[0];
+
+    return field ? { ...errors, [field]: issue.message } : errors;
+  }, {});
+}
+
+export function resolveTaskFormValues(values) {
+  const result = taskFormSchema.safeParse(values);
+
+  if (result.success) {
+    return {
+      errors: {},
+      values: result.data,
+    };
   }
 
-  return errors;
+  const errors = result.error.issues.reduce((fieldErrors, issue) => {
+    const field = issue.path[0];
+
+    if (!field || fieldErrors[field]) {
+      return fieldErrors;
+    }
+
+    return {
+      ...fieldErrors,
+      [field]: {
+        message: issue.message,
+        type: 'validation',
+      },
+    };
+  }, {});
+
+  return {
+    errors,
+    values: {},
+  };
 }
 
 export function serializeTaskFormValues(values) {

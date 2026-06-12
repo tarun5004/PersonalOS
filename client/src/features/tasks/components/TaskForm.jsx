@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Alert } from '../../../components/ui/Alert.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { Input } from '../../../components/ui/Input.jsx';
@@ -6,53 +7,42 @@ import { Select } from '../../../components/ui/Select.jsx';
 import { TASK_PRIORITIES, TASK_STATUSES } from '../taskConstants.js';
 import {
   createDefaultTaskFormValues,
+  resolveTaskFormValues,
   serializeTaskFormValues,
   taskToFormValues,
-  validateTaskForm,
 } from '../taskFormUtils.js';
 
 export function TaskForm({ initialTask, isSubmitting, onCancel, onSubmit, serverError }) {
-  const [values, setValues] = useState(() =>
-    initialTask ? taskToFormValues(initialTask) : createDefaultTaskFormValues(),
-  );
-  const [errors, setErrors] = useState({});
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm({
+    defaultValues: initialTask ? taskToFormValues(initialTask) : createDefaultTaskFormValues(),
+    resolver: resolveTaskFormValues,
+  });
 
   useEffect(() => {
-    setValues(initialTask ? taskToFormValues(initialTask) : createDefaultTaskFormValues());
-    setErrors({});
-  }, [initialTask]);
+    reset(initialTask ? taskToFormValues(initialTask) : createDefaultTaskFormValues());
+  }, [initialTask, reset]);
 
-  function updateField(field, value) {
-    setValues((current) => ({ ...current, [field]: value }));
-    setErrors((current) => ({ ...current, [field]: '' }));
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const nextErrors = validateTaskForm(values);
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      return;
-    }
-
+  function handleValidSubmit(values) {
     onSubmit(serializeTaskFormValues(values));
   }
 
   return (
-    <form className="grid gap-5" onSubmit={handleSubmit}>
+    <form className="grid gap-5" onSubmit={handleSubmit(handleValidSubmit)}>
       {serverError ? <Alert variant="error">{serverError}</Alert> : null}
 
       <Input
         autoFocus
         className="gap-1"
-        error={errors.title}
+        error={errors.title?.message}
         inputClassName="min-h-14 border-transparent bg-transparent px-0 text-xl font-semibold leading-tight placeholder:text-muted/70 focus:border-transparent focus:bg-transparent focus:shadow-focus"
         label="Task title"
-        onChange={(event) => updateField('title', event.target.value)}
         placeholder="Untitled task"
-        value={values.title}
+        {...register('title')}
       />
 
       <div className="grid gap-2">
@@ -62,17 +52,19 @@ export function TaskForm({ initialTask, isSubmitting, onCancel, onSubmit, server
         <textarea
           className="min-h-24 w-full resize-y rounded-card border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-accent focus:bg-surface focus:shadow-focus disabled:cursor-not-allowed disabled:opacity-65"
           id="task-description"
-          onChange={(event) => updateField('description', event.target.value)}
           placeholder="Optional notes or context"
-          value={values.description}
+          {...register('description')}
         />
+        {errors.description?.message ? (
+          <p className="m-0 text-sm text-danger">{errors.description.message}</p>
+        ) : null}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Select
+          error={errors.priority?.message}
           label="Priority"
-          onChange={(event) => updateField('priority', event.target.value)}
-          value={values.priority}
+          {...register('priority')}
         >
           {TASK_PRIORITIES.map((priority) => (
             <option key={priority} value={priority}>
@@ -82,9 +74,9 @@ export function TaskForm({ initialTask, isSubmitting, onCancel, onSubmit, server
         </Select>
 
         <Select
+          error={errors.status?.message}
           label="Status"
-          onChange={(event) => updateField('status', event.target.value)}
-          value={values.status}
+          {...register('status')}
         >
           {TASK_STATUSES.map((status) => (
             <option key={status} value={status}>
@@ -95,11 +87,10 @@ export function TaskForm({ initialTask, isSubmitting, onCancel, onSubmit, server
       </div>
 
       <Input
-        error={errors.dueDate}
+        error={errors.dueDate?.message}
         label="Due date"
-        onChange={(event) => updateField('dueDate', event.target.value)}
         type="datetime-local"
-        value={values.dueDate}
+        {...register('dueDate')}
       />
 
       <div className="flex flex-wrap justify-end gap-2">

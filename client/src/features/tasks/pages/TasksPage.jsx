@@ -8,6 +8,7 @@ import { ErrorState } from '../../../components/ui/ErrorState.jsx';
 import { LoadingState } from '../../../components/ui/LoadingState.jsx';
 import { Modal } from '../../../components/ui/Modal.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
+import { fireRewardConfetti } from '../../../components/shared/ConfettiReward.jsx';
 import { getTaskErrorMessage } from '../taskApi.js';
 import { TASK_LIST_LIMIT, TASK_VIEW_MODES } from '../taskConstants.js';
 import { getNextTaskStatus } from '../taskStatusUtils.js';
@@ -15,6 +16,8 @@ import { TaskFilters } from '../components/TaskFilters.jsx';
 import { TaskForm } from '../components/TaskForm.jsx';
 import { TaskList } from '../components/TaskList.jsx';
 import { useTaskMutations, useTasks } from '../useTasks.js';
+
+const FIRST_TASK_COMPLETION_REWARD_KEY = 'pos-first-task-completion-reward';
 
 function getVisibleTasks(tasks, { search, status }) {
   const normalizedSearch = search.trim().toLowerCase();
@@ -28,6 +31,19 @@ function getVisibleTasks(tasks, { search, status }) {
 
     return matchesStatus && matchesSearch;
   });
+}
+
+function maybeFireFirstCompletionReward() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (window.localStorage.getItem(FIRST_TASK_COMPLETION_REWARD_KEY)) {
+    return;
+  }
+
+  window.localStorage.setItem(FIRST_TASK_COMPLETION_REWARD_KEY, new Date().toISOString());
+  fireRewardConfetti({ intensity: 'subtle', origin: { x: 0.75, y: 0.28 } });
 }
 
 export default function TasksPage() {
@@ -112,7 +128,10 @@ export default function TasksPage() {
     setPageError('');
     taskMutations.completeTask.mutate(task._id, {
       onError: (error) => setPageError(getTaskErrorMessage(error)),
-      onSuccess: () => setPageMessage('Task completed successfully'),
+      onSuccess: () => {
+        maybeFireFirstCompletionReward();
+        setPageMessage('Task completed successfully');
+      },
     });
   }
 
@@ -124,7 +143,13 @@ export default function TasksPage() {
       { taskId: task._id, values: { status: nextStatus } },
       {
         onError: (error) => setPageError(getTaskErrorMessage(error)),
-        onSuccess: () => setPageMessage(`Task moved to ${nextStatus}`),
+        onSuccess: () => {
+          if (nextStatus === 'Completed') {
+            maybeFireFirstCompletionReward();
+          }
+
+          setPageMessage(`Task moved to ${nextStatus}`);
+        },
       },
     );
   }

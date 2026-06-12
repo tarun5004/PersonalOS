@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { Check, CheckCircle2, Pencil, Square, TimerReset, Trash2 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
@@ -53,7 +54,18 @@ export function TaskCard({ isBusy, onComplete, onCycleStatus, onDelete, onEdit, 
   }
 
   return (
-    <article className="grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:border-accent hover:shadow-card">
+    <motion.article
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      className={mergeClassNames(
+        'grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:border-accent hover:shadow-card',
+        isCompleted && 'bg-surface-elevated/80',
+      )}
+      exit={{ opacity: 0, scale: 0.98, y: 8 }}
+      initial={{ opacity: 0, scale: 0.98, y: 8 }}
+      layout
+      transition={{ duration: 0.18, ease: 'easeOut' }}
+      whileHover={{ y: -1 }}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -69,7 +81,9 @@ export function TaskCard({ isBusy, onComplete, onCycleStatus, onDelete, onEdit, 
             >
               {isCompleted ? <Check aria-hidden="true" size={13} strokeWidth={3} /> : null}
             </button>
-            <h3 className="truncate text-sm font-bold text-body">{task.title}</h3>
+            <h3 className={mergeClassNames('truncate text-sm font-bold text-body', isCompleted && 'text-muted line-through')}>
+              {task.title}
+            </h3>
           </div>
           <p className={mergeClassNames('mt-1 text-xs font-semibold', overdue ? 'text-danger' : 'text-muted')}>
             {overdue ? `Overdue - ${formatTaskDueDate(task.dueDate)}` : formatTaskDueDate(task.dueDate)}
@@ -128,6 +142,6 @@ export function TaskCard({ isBusy, onComplete, onCycleStatus, onDelete, onEdit, 
           </Button>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }

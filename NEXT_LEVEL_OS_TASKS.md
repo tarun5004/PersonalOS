@@ -62,13 +62,13 @@ Target package groups:
 
 ## Chunk 4 - Tasks Experience Upgrade
 
-- [ ] Use Auto Animate for task columns.
-- [ ] Use React Hook Form + Zod for task create/edit form.
-- [ ] Add motion for task card completion and status movement.
-- [ ] Add subtle reward on first completed task only.
-- [ ] Preserve existing API contracts and React Query invalidation.
-- [ ] Run frontend tests/build.
-- [ ] Commit: `feat(tasks): polish task flow interactions`.
+- [x] Use Auto Animate for task columns.
+- [x] Use React Hook Form + Zod for task create/edit form.
+- [x] Add motion for task card completion and status movement.
+- [x] Add subtle reward on first completed task only.
+- [x] Preserve existing API contracts and React Query invalidation.
+- [x] Run frontend tests/build.
+- [x] Commit: `feat(tasks): polish task flow interactions`.
 
 ## Chunk 5 - Habits Experience Upgrade
 
