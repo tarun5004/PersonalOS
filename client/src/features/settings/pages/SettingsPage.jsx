@@ -16,6 +16,7 @@ import { AvatarDisplay } from '../../../components/shared/AvatarDisplay.jsx';
 import { AvatarPicker } from '../../../components/shared/AvatarPicker.jsx';
 import { AnimatedNumber } from '../../../components/shared/AnimatedNumber.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
+import { AssetImageForm } from '../../assets/components/AssetImageForm.jsx';
 import { useDashboardSummary } from '../../dashboard/useDashboardSummary.js';
 import {
   calculateTodayXp,
@@ -251,6 +252,10 @@ export default function SettingsPage() {
           </div>
         </DashboardCard>
       </div>
+
+      <DashboardCard title="Generated assets">
+        <AssetImageForm />
+      </DashboardCard>
 
       <DashboardCard title="Account">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">

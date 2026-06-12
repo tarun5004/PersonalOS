@@ -91,15 +91,15 @@ Target package groups:
 
 ## Chunk 7 - OpenAI Images + Cloudinary Asset Pipeline
 
-- [ ] Add backend env placeholders for OpenAI API key.
-- [ ] Add server-side OpenAI image service.
-- [ ] Validate prompt length, asset type, and ownership.
-- [ ] Add rate limiting for AI image generation endpoint.
-- [ ] Generate image, upload to Cloudinary, store Cloudinary URL/public ID.
-- [ ] Add frontend prompt form with React Hook Form + Zod.
-- [ ] Never expose OpenAI key or Cloudinary secret to client code.
-- [ ] Run backend tests and frontend build.
-- [ ] Commit: `feat(assets): add ai image generation pipeline`.
+- [x] Add backend env placeholders for OpenAI API key.
+- [x] Add server-side OpenAI image service.
+- [x] Validate prompt length, asset type, and ownership.
+- [x] Add rate limiting for AI image generation endpoint.
+- [x] Generate image, upload to Cloudinary, store Cloudinary URL/public ID.
+- [x] Add frontend prompt form with React Hook Form + Zod.
+- [x] Never expose OpenAI key or Cloudinary secret to client code.
+- [x] Run backend tests and frontend build.
+- [x] Commit: `feat(assets): add ai image generation pipeline`.
 
 ## Chunk 8 - 3D Focus / Progress Layer
 

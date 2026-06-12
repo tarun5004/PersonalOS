@@ -27,6 +27,14 @@ export const writeLimiter = rateLimit({
   message: rateLimitMessage('Too many requests', 'RATE_LIMITED'),
 });
 
+export const aiImageLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: rateLimitMessage('Too many image generation requests. Try again later.', 'AI_IMAGE_RATE_LIMITED'),
+});
+
 export const readLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 120,

@@ -9,6 +9,7 @@ import { readLimiter, writeLimiter } from './middleware/rateLimit.middleware.js'
 import { requestId } from './middleware/requestId.middleware.js';
 import { sanitizeBody } from './middleware/sanitize.middleware.js';
 import { analyticsRoutes } from './modules/analytics/analytics.routes.js';
+import { assetRoutes } from './modules/assets/asset.routes.js';
 import { authRoutes } from './modules/auth/auth.routes.js';
 import { dashboardRoutes } from './modules/dashboard/dashboard.routes.js';
 import { habitRoutes } from './modules/habits/habit.routes.js';
@@ -57,11 +58,12 @@ export function createApp() {
   });
 
   app.use('/api/auth', authRoutes);
-  app.use(['/api/tasks', '/api/habits', '/api/dashboard', '/api/analytics'], apiMethodLimiter);
+  app.use(['/api/tasks', '/api/habits', '/api/dashboard', '/api/analytics', '/api/assets'], apiMethodLimiter);
   app.use('/api/tasks', taskRoutes);
   app.use('/api/habits', habitRoutes);
   app.use('/api/dashboard', dashboardRoutes);
   app.use('/api/analytics', analyticsRoutes);
+  app.use('/api/assets', assetRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
