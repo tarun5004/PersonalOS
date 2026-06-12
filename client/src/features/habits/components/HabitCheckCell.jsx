@@ -34,7 +34,7 @@ export function HabitCheckCell({
     <Component
       aria-label={label}
       className={mergeClassNames(
-        'grid size-7 shrink-0 place-items-center rounded-card border text-[11px] transition duration-150',
+        'grid size-7 shrink-0 place-items-center rounded-none border text-[11px] transition duration-150',
         isCompleted &&
           'animate-[habit-check-pop_180ms_ease-out] border-[var(--habit-row-color,var(--habit-done))] bg-[var(--habit-done-bg)] text-[var(--habit-row-color,var(--habit-done))]',
         isMissed &&
@@ -46,13 +46,7 @@ export function HabitCheckCell({
       title={label}
       {...componentProps}
     >
-      {isCompleted ? (
-        <span className="grid size-5 place-items-center rounded-full bg-[var(--habit-row-color,var(--habit-done))] text-[var(--text-inverse)]">
-          <Icon aria-hidden="true" size={12} strokeWidth={3} />
-        </span>
-      ) : (
-        <Icon aria-hidden="true" size={13} strokeWidth={2.5} />
-      )}
+      <Icon aria-hidden="true" size={isCompleted ? 14 : 13} strokeWidth={isCompleted ? 3 : 2.5} />
       <span className="sr-only">Day {day}</span>
     </Component>
   );
