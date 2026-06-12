@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, test, vi } from 'vitest';
@@ -29,12 +29,73 @@ function createSummary(overrides = {}) {
   };
 }
 
+function createWeeklyAnalytics(overrides = {}) {
+  return {
+    days: [
+      {
+        date: '2026-06-10',
+        label: 'Jun 10',
+        taskCompletionRate: 0,
+        habitCompletionRate: 0,
+        productivityScore: null,
+      },
+      {
+        date: '2026-06-11',
+        label: 'Jun 11',
+        taskCompletionRate: 100,
+        habitCompletionRate: 50,
+        productivityScore: 75,
+      },
+      {
+        date: '2026-06-12',
+        label: 'Jun 12',
+        taskCompletionRate: 33.33,
+        habitCompletionRate: 50,
+        productivityScore: 41.67,
+      },
+    ],
+    ...overrides,
+  };
+}
+
 function jsonResponse(body, init = {}) {
   return new Response(JSON.stringify(body), {
     headers: {
       'Content-Type': 'application/json',
     },
     ...init,
+  });
+}
+
+function createDashboardFetchMock({ summary, summaryError, weekly = createWeeklyAnalytics() }) {
+  return vi.fn(async (url) => {
+    const requestPath = String(url).replace('http://localhost', '');
+
+    if (requestPath === '/api/dashboard/summary') {
+      if (summaryError) {
+        return jsonResponse(
+          {
+            success: false,
+            message: summaryError,
+          },
+          { status: 500 },
+        );
+      }
+
+      return jsonResponse({
+        success: true,
+        data: summary,
+      });
+    }
+
+    if (requestPath === '/api/analytics/weekly') {
+      return jsonResponse({
+        success: true,
+        data: weekly,
+      });
+    }
+
+    return jsonResponse({ success: false, message: 'Not found' }, { status: 404 });
   });
 }
 
@@ -94,27 +155,24 @@ describe('DashboardPage', () => {
   });
 
   test('renders empty dashboard summary state', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      jsonResponse({
-        success: true,
-        data: createSummary({
-          tasks: {
-            total: 0,
-            completed: 0,
-            incomplete: 0,
-            completionRate: 0,
-          },
-          habits: {
-            total: 0,
-            completedToday: 0,
-            incompleteToday: 0,
-            completionRate: 0,
-          },
-          productivityScore: null,
-          currentStreak: 0,
-        }),
+    const fetchMock = createDashboardFetchMock({
+      summary: createSummary({
+        tasks: {
+          total: 0,
+          completed: 0,
+          incomplete: 0,
+          completionRate: 0,
+        },
+        habits: {
+          total: 0,
+          completedToday: 0,
+          incompleteToday: 0,
+          completionRate: 0,
+        },
+        productivityScore: null,
+        currentStreak: 0,
       }),
-    );
+    });
 
     renderDashboard(fetchMock);
 
@@ -128,12 +186,7 @@ describe('DashboardPage', () => {
   });
 
   test('renders successful dashboard summary values', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      jsonResponse({
-        success: true,
-        data: createSummary(),
-      }),
-    );
+    const fetchMock = createDashboardFetchMock({ summary: createSummary() });
 
     renderDashboard(fetchMock);
 
@@ -147,27 +200,52 @@ describe('DashboardPage', () => {
     expect(screen.getByText('1 of 2 habits checked in for the UTC day.')).toBeInTheDocument();
     expect(screen.getByText('Weekly score')).toBeInTheDocument();
     expect(screen.queryByText('Phase 14')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        '/api/analytics/weekly',
+        expect.objectContaining({
+          credentials: 'include',
+        }),
+      );
+    });
   });
 
   test('shows error state and retries summary load', async () => {
     const user = userEvent.setup();
+    let summaryCalls = 0;
     const fetchMock = vi
       .fn()
-      .mockResolvedValueOnce(
-        jsonResponse(
-          {
-            success: false,
-            message: 'Dashboard unavailable',
-          },
-          { status: 500 },
-        ),
-      )
-      .mockResolvedValueOnce(
-        jsonResponse({
-          success: true,
-          data: createSummary(),
-        }),
-      );
+      .mockImplementation(async (url) => {
+        const requestPath = String(url).replace('http://localhost', '');
+
+        if (requestPath === '/api/dashboard/summary') {
+          summaryCalls += 1;
+
+          if (summaryCalls === 1) {
+            return jsonResponse(
+              {
+                success: false,
+                message: 'Dashboard unavailable',
+              },
+              { status: 500 },
+            );
+          }
+
+          return jsonResponse({
+            success: true,
+            data: createSummary(),
+          });
+        }
+
+        if (requestPath === '/api/analytics/weekly') {
+          return jsonResponse({
+            success: true,
+            data: createWeeklyAnalytics(),
+          });
+        }
+
+        return jsonResponse({ success: false, message: 'Not found' }, { status: 404 });
+      });
 
     renderDashboard(fetchMock);
 
@@ -179,20 +257,17 @@ describe('DashboardPage', () => {
     await user.click(screen.getByRole('button', { name: /try again/i }));
 
     expect(await screen.findByText('Review today tasks')).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(summaryCalls).toBe(2);
   });
 
   test('renders safe defaults for partial successful summary payloads', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      jsonResponse({
-        success: true,
-        data: {
-          tasks: null,
-          habits: null,
-          productivityScore: null,
-        },
-      }),
-    );
+    const fetchMock = createDashboardFetchMock({
+      summary: {
+        tasks: null,
+        habits: null,
+        productivityScore: null,
+      },
+    });
 
     renderDashboard(fetchMock);
 

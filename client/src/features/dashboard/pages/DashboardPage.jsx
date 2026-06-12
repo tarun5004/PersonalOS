@@ -18,6 +18,11 @@ import { NotificationCard } from '../../../components/shared/NotificationCard.js
 import { StatCard } from '../../../components/shared/StatCard.jsx';
 import { TaskCard } from '../../../components/shared/TaskCard.jsx';
 import { useAuth } from '../../auth/useAuth.js';
+import {
+  getAnalyticsErrorMessage,
+  mapWeeklyAnalyticsToChartData,
+} from '../../analytics/analyticsApi.js';
+import { useWeeklyAnalytics } from '../../analytics/useWeeklyAnalytics.js';
 import { getDashboardErrorMessage } from '../dashboardApi.js';
 import { useDashboardSummary } from '../useDashboardSummary.js';
 
@@ -86,7 +91,9 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const summaryQuery = useDashboardSummary();
   const summary = summaryQuery.data;
+  const weeklyQuery = useWeeklyAnalytics({ enabled: Boolean(summary) });
   const focusItems = getFocusItems(summary);
+  const weeklyChartData = mapWeeklyAnalyticsToChartData(weeklyQuery.data?.days || []);
 
   return (
     <section className="grid gap-4">
@@ -153,7 +160,25 @@ export default function DashboardPage() {
             </div>
 
             <DashboardCard title="Weekly score">
-              <DeferredScoreChart emptyTitle="Weekly score is not available yet" />
+              {weeklyQuery.isLoading ? (
+                <div className="grid min-h-64 place-items-center rounded-ui border border-dashed border-border bg-surface-muted/60 p-6 text-center text-sm font-semibold text-muted">
+                  Loading weekly score...
+                </div>
+              ) : weeklyQuery.isError ? (
+                <EmptyState
+                  className="min-h-64 border border-dashed border-border bg-surface-muted/70"
+                  description={getAnalyticsErrorMessage(weeklyQuery.error)}
+                  framed={false}
+                  icon={BarChart3}
+                  title="Weekly score unavailable"
+                />
+              ) : (
+                <DeferredScoreChart
+                  data={weeklyChartData}
+                  emptyTitle="Weekly score is not available yet"
+                  valueLabel="Productivity score"
+                />
+              )}
             </DashboardCard>
           </div>
 

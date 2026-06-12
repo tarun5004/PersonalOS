@@ -12,7 +12,20 @@ import { EmptyState } from '../ui/EmptyState.jsx';
 
 const CHART_HEIGHT = 256;
 
-export function ScoreChart({ data = [], emptyTitle = 'No trend data yet' }) {
+function formatTooltipValue(value, label) {
+  if (value === null || value === undefined) {
+    return ['No activity', label];
+  }
+
+  return [`${Math.round(Number(value))}%`, label];
+}
+
+export function ScoreChart({
+  data = [],
+  dataKey = 'score',
+  emptyTitle = 'No trend data yet',
+  valueLabel = 'Score',
+}) {
   const chartRef = useRef(null);
   const [chartWidth, setChartWidth] = useState(0);
 
@@ -58,7 +71,7 @@ export function ScoreChart({ data = [], emptyTitle = 'No trend data yet' }) {
           <AreaChart
             data={data}
             height={CHART_HEIGHT}
-            margin={{ bottom: 0, left: -18, right: 8, top: 8 }}
+            margin={{ bottom: 0, left: 2, right: 8, top: 8 }}
             width={chartWidth}
           >
             <defs>
@@ -88,9 +101,11 @@ export function ScoreChart({ data = [], emptyTitle = 'No trend data yet' }) {
                 borderRadius: '0.8rem',
                 color: 'var(--color-text-primary)',
               }}
+              formatter={(value) => formatTooltipValue(value, valueLabel)}
             />
             <Area
-              dataKey="score"
+              connectNulls={false}
+              dataKey={dataKey}
               fill="url(#scoreChartFill)"
               stroke="var(--color-primary)"
               strokeWidth={3}
