@@ -28,7 +28,7 @@ V1 will include:
 - Light theme
 - Dark theme
 
-Theme variables will live in the global Tailwind entry CSS file or a single imported theme token file if implementation requires it. The project should avoid multiple component-specific CSS files.
+Theme variables will live in `client/src/styles/tokens.css`, the single global Tailwind entry file. The project should avoid multiple component-specific CSS files.
 
 ## 4. Token Categories
 
@@ -54,12 +54,47 @@ The V1 approved CSS variable names are:
 
 - `--color-app-bg`
 - `--color-canvas`
-- `--color-sidebar-from`
-- `--color-sidebar-to`
+- `--accent`
+- `--accent-hover`
+- `--accent-subtle`
+- `--accent-text`
+- `--bg-page`
+- `--bg-surface`
+- `--bg-surface-2`
+- `--bg-surface-3`
+- `--text-primary`
+- `--text-secondary`
+- `--text-tertiary`
+- `--text-inverse`
+- `--border`
+- `--border-strong`
+- `--danger`
+- `--danger-subtle`
+- `--danger-text`
+- `--warning`
+- `--warning-subtle`
+- `--warning-text`
+- `--success`
+- `--success-subtle`
+- `--success-text`
+- `--pomo-focus`
+- `--pomo-focus-subtle`
+- `--pomo-break`
+- `--pomo-break-subtle`
+- `--pomo-idle`
+- `--habit-done`
+- `--habit-done-bg`
+- `--habit-missed`
+- `--habit-missed-bg`
+- `--habit-future`
+- `--habit-today`
+- `--habit-today-bg`
 - `--color-sidebar-text`
 - `--color-sidebar-muted`
 - `--color-primary`
+- `--color-primary-soft`
 - `--color-secondary`
+- `--color-secondary-soft`
 - `--color-text-primary`
 - `--color-text-secondary`
 - `--color-border`
@@ -67,48 +102,62 @@ The V1 approved CSS variable names are:
 - `--color-success`
 - `--color-error`
 - `--color-warning`
+- `--shadow-card`
+- `--shadow-floating`
 
 Approved light theme values:
 
 ```text
---color-app-bg: #F3F4F1
---color-canvas: #FFFFFF
---color-sidebar-from: #202824
---color-sidebar-to: #143A36
---color-sidebar-text: #F7FAF6
---color-sidebar-muted: #B8C7C0
---color-primary: #2D7D73
---color-secondary: #57706A
---color-text-primary: #171B19
---color-text-secondary: #636D68
---color-border: #DFE4E0
---color-card-soft: #F7F8F5
---color-success: #2F7D57
---color-error: #B84F61
---color-warning: #A36B2C
+--accent: #1D9E75
+--accent-hover: #0F6E56
+--accent-subtle: #E1F5EE
+--accent-text: #085041
+--bg-page: #F7F6F3
+--bg-surface: #FFFFFF
+--bg-surface-2: #F2F1EE
+--bg-surface-3: #ECEAE5
+--text-primary: #1C1B19
+--text-secondary: #5A5955
+--text-tertiary: #8F8D89
+--text-inverse: #FFFFFF
+--border: rgba(28,27,25,0.10)
+--border-strong: rgba(28,27,25,0.20)
+--danger: #C0392B
+--danger-subtle: #FDEDEC
+--danger-text: #922B21
+--warning: #D68910
+--warning-subtle: #FEF9E7
+--warning-text: #9A6109
+--success: #1D9E75
+--success-subtle: #E1F5EE
+--success-text: #085041
 ```
 
 Approved dark theme values:
 
 ```text
---color-app-bg: #0E1416
---color-canvas: #171D20
---color-sidebar-from: #0F1719
---color-sidebar-to: #12312E
---color-sidebar-text: #F1F6F3
---color-sidebar-muted: #90A29B
---color-primary: #55B5A9
---color-secondary: #8BA7A0
---color-text-primary: #F3F6F3
---color-text-secondary: #A6B1AC
---color-border: #293335
---color-card-soft: #1F272A
---color-success: #6BC58E
---color-error: #E07083
---color-warning: #D2A05A
+--bg-page: #141413
+--bg-surface: #1E1D1B
+--bg-surface-2: #262522
+--bg-surface-3: #2E2C29
+--text-primary: #F0EEE9
+--text-secondary: #A8A69F
+--text-tertiary: #6B6965
+--border: rgba(240,238,233,0.08)
+--border-strong: rgba(240,238,233,0.16)
+--accent-subtle: #0A2E22
+--accent-text: #5DCAA5
+--danger-subtle: #2A0D0B
+--danger-text: #F09595
+--warning-subtle: #2A1E05
+--warning-text: #EF9F27
+--success-subtle: #0A2E22
+--success-text: #5DCAA5
 ```
 
-These values intentionally avoid a purple-first startup palette. PersonalOS should look like a calm personal command center: neutral, readable, dense, and durable.
+These values intentionally use a mature productivity palette. The light theme should read as warm off-white, clean white surfaces, near-black text, and restrained teal accents. The dark theme should read as deep graphite, elevated dark surfaces, soft white text, and refined teal accents.
+
+The sidebar is always dark in V1. Light theme uses a near-black sidebar and dark theme uses deep graphite. This keeps navigation feeling like a stable command center across themes.
 
 ## 5. Tailwind Usage Rules
 

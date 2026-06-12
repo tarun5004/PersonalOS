@@ -24,7 +24,11 @@ Theme selection will live in Settings and may also be exposed through an app-lev
 
 The UI will use Tailwind CSS v4 utility classes backed by semantic theme variables for colors, surfaces, borders, text, focus states, and status indicators. Components will not hardcode colors.
 
-The experience should feel clean, modern, professional, dashboard-first, and close to the approved reference direction in both light and dark modes.
+The experience should feel calm, dense, durable, and closer to a daily productivity cockpit than a startup dashboard or marketing surface.
+
+The final V1 palette uses a warm off-white light theme, clean white cards, near-black text, and restrained teal as the primary accent. Dark theme uses deep graphite surfaces, soft white text, low-contrast borders, and refined teal accents.
+
+The sidebar remains dark in both themes. This is intentional: navigation should feel stable, command-center-like, and always available rather than decorative.
 
 ## 5. Accessibility Requirements
 
@@ -48,7 +52,7 @@ Component-level CSS files should not be introduced for theme changes by default.
 
 ## 7. Persistence
 
-The selected theme should persist across page refreshes. The exact persistence mechanism will be defined in engineering docs.
+The selected theme should persist across page refreshes with the `pos-theme` local storage key. This key stores only the visual preference and must not be used for auth or sensitive data.
 
 ## 8. Motion
 

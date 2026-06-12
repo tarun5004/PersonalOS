@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
-const STORAGE_KEY = 'personal-os-theme';
+const STORAGE_KEY = 'pos-theme';
 const THEME_VALUES = ['light', 'dark'];
 
 export const ThemeContext = createContext(null);
@@ -27,12 +27,11 @@ function getPreferredTheme() {
     return 'light';
   }
 
+  const systemTheme = window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
   const storedTheme = readStoredTheme();
-  if (storedTheme) {
-    return storedTheme;
-  }
-
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return storedTheme ?? systemTheme;
 }
 
 export function ThemeProvider({ children }) {
@@ -66,4 +65,3 @@ export function ThemeProvider({ children }) {
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
-

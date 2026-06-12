@@ -78,6 +78,12 @@ export function AuthProvider({ children }) {
     let isMounted = true;
 
     async function restoreSession() {
+      if (PUBLIC_AUTH_PATHS.has(location.pathname)) {
+        clearSession();
+        hasRestoredSession.current = true;
+        return;
+      }
+
       try {
         const restoredSession = await requestFreshSession();
 
