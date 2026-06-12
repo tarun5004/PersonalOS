@@ -16,27 +16,27 @@ Rule: Complete one chunk, test it, commit it, then move to the next chunk.
 
 ## Chunk 1 - Package Installation And Baseline Verification
 
-- [ ] Install only the required missing packages after docs are updated.
-- [ ] Confirm installed package versions in `client/package.json` and server package file if OpenAI SDK is added server-side.
-- [ ] Run frontend tests.
-- [ ] Run frontend build.
-- [ ] Run backend tests if server package/config changes.
+- [x] Install only the required missing packages after docs are updated.
+- [x] Confirm installed package versions in `client/package.json` and server package file if OpenAI SDK is added server-side.
+- [x] Run frontend tests.
+- [x] Run frontend build.
+- [x] Run backend tests if server package/config changes.
 - [ ] Commit: `chore(deps): add next-level ui and asset packages`.
 
 Target package groups:
 
-- [ ] `framer-motion`
-- [ ] `@formkit/auto-animate`
-- [ ] `@dicebear/core`
-- [ ] DiceBear collection package selected during implementation
-- [ ] `lottie-react`
-- [ ] `canvas-confetti`
-- [ ] `react-countup`
-- [ ] `react-hook-form`
-- [ ] `three`
-- [ ] `@react-three/fiber`
-- [ ] OpenAI SDK on the server if needed
-- [ ] shadcn/ui setup only after conflict docs are updated
+- [x] `framer-motion`
+- [x] `@formkit/auto-animate`
+- [x] `@dicebear/core`
+- [x] DiceBear collection package selected during implementation
+- [x] `lottie-react`
+- [x] `canvas-confetti`
+- [x] `react-countup`
+- [x] `react-hook-form`
+- [x] `three`
+- [x] `@react-three/fiber`
+- [x] OpenAI SDK on the server if needed
+- [x] shadcn/ui setup only after conflict docs are updated
 - [ ] Magic UI components copied/adapted only where useful
 - [ ] Aceternity UI components copied/adapted only where useful
 
