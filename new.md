@@ -25,7 +25,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 |---|---|---|---|---|
 | 0 | Create current-command tracker | Complete | `new.md` created and committed | `d9ca268` |
 | 0.1 | Save attached prompt requirements into tracker | Complete | Prompt outline and task details copied into `new.md` | This commit |
-| 1 | Backend validation, sanitization, rate limits, request IDs, security headers | Complete | Agent 1 self-gate passed | This commit |
+| 1 | Backend validation, sanitization, rate limits, request IDs, security headers | Complete | Agent 1 self-gate passed | `630a6a9` |
 | 2 | Morgan HTTP logger and Pino structured logger | Pending | Agent 2 self-gate | Pending |
 | 3 | Design system theme and typography overhaul | Pending | Agent 3 self-gate | Pending |
 | 4 | Sidebar professional redesign | Pending | Agent 4 self-gate | Pending |
