@@ -28,7 +28,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 1 | Backend validation, sanitization, rate limits, request IDs, security headers | Complete | Agent 1 self-gate passed | `630a6a9` |
 | 2 | Morgan HTTP logger and Pino structured logger | Complete | Agent 2 self-gate passed | `678a58f` |
 | 3 | Design system theme and typography overhaul | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, Playwright login/theme sanity | `2d054a4` |
-| 4 | Sidebar professional redesign | Pending | Agent 4 self-gate | Pending |
+| 4 | Sidebar professional redesign | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, sidebar text/static gate | `bdc192a` |
 | 5 | Topbar, navigation, and app shell polish | Pending | Agent 5 self-gate | Pending |
 | 6 | Dashboard mission-control UI | Pending | Agent 6 self-gate | Pending |
 | 7 | Tasks urgency layer and view redesign | Pending | Agent 7 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 4 - Sidebar professional redesign.
+Active task: Agent 5 - Topbar, navigation, and app shell polish.
 
 ## Saved Attached Prompt Snapshot
 
