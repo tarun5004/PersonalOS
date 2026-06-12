@@ -31,7 +31,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 4 | Sidebar professional redesign | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, sidebar text/static gate | `bdc192a` |
 | 5 | Topbar, navigation, and app shell polish | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, desktop logout duplication removed | `93f4147` |
 | 6 | Dashboard mission-control UI | Complete | Existing implementation audited: fake cards absent, dynamic headline/alerts, four stats, focus quick action, frontend tests/build/lint/diff passed | This commit |
-| 7 | Tasks urgency layer and view redesign | Pending | Agent 7 self-gate | Pending |
+| 7 | Tasks urgency layer and view redesign | Complete | List default, board toggle, Notion-style task modal, overdue text, status-cycle control, frontend tests/build/lint/diff passed | `a31141e` |
 | 8 | Habits behavior layer and square grid polish | Pending | Agent 8 self-gate | Pending |
 | 9 | Analytics insight engine polish | Pending | Agent 9 self-gate | Pending |
 | 10 | PWA installability and offline support | Pending | Agent 10 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 7 - Tasks urgency layer and view redesign.
+Active task: Agent 8 - Habits behavior layer and square grid polish.
 
 ## Saved Attached Prompt Snapshot
 
