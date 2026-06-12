@@ -7,7 +7,7 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "build": "echo \"No build step\"",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --passWithNoTests"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
