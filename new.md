@@ -30,7 +30,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 3 | Design system theme and typography overhaul | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, Playwright login/theme sanity | `2d054a4` |
 | 4 | Sidebar professional redesign | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, sidebar text/static gate | `bdc192a` |
 | 5 | Topbar, navigation, and app shell polish | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, desktop logout duplication removed | `93f4147` |
-| 6 | Dashboard mission-control UI | Pending | Agent 6 self-gate | Pending |
+| 6 | Dashboard mission-control UI | Complete | Existing implementation audited: fake cards absent, dynamic headline/alerts, four stats, focus quick action, frontend tests/build/lint/diff passed | This commit |
 | 7 | Tasks urgency layer and view redesign | Pending | Agent 7 self-gate | Pending |
 | 8 | Habits behavior layer and square grid polish | Pending | Agent 8 self-gate | Pending |
 | 9 | Analytics insight engine polish | Pending | Agent 9 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 6 - Dashboard mission-control UI.
+Active task: Agent 7 - Tasks urgency layer and view redesign.
 
 ## Saved Attached Prompt Snapshot
 
