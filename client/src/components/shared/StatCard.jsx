@@ -7,7 +7,9 @@ export function StatCard({ className, icon: Icon, label, tone = 'primary', value
       ? 'bg-success/10 text-success'
       : tone === 'warning'
         ? 'bg-warning/10 text-warning'
-        : 'bg-accent-soft text-accent-strong';
+        : tone === 'danger'
+          ? 'bg-danger/10 text-danger'
+          : 'bg-accent-soft text-accent-strong';
 
   return (
     <DashboardCard className={mergeClassNames('p-4', className)}>
