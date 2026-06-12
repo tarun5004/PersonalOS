@@ -9,9 +9,7 @@ async function startServer() {
     await connectDatabase();
     const app = createApp();
 
-    server = app.listen(env.PORT, () => {
-      console.log(`Personal OS API listening on port ${env.PORT}`);
-    });
+    server = app.listen(env.PORT);
   } catch (error) {
     console.error('Failed to start Personal OS API.');
     console.error(error.message);
@@ -19,9 +17,7 @@ async function startServer() {
   }
 }
 
-function shutdown(signal) {
-  console.log(`${signal} received. Closing Personal OS API.`);
-
+function shutdown() {
   if (!server) {
     process.exit(0);
   }
