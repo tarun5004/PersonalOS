@@ -1,8 +1,9 @@
-import { CheckCircle2, Pencil, Square, TimerReset, Trash2 } from 'lucide-react';
+import { Check, CheckCircle2, Pencil, Square, TimerReset, Trash2 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { usePomodoro } from '../../pomodoro/usePomodoro.js';
 import { formatTaskDueDate } from '../taskFormUtils.js';
+import { getNextTaskStatus } from '../taskStatusUtils.js';
 import { mergeClassNames } from '../../../lib/classNames.js';
 
 const priorityVariants = {
@@ -12,13 +13,27 @@ const priorityVariants = {
 };
 
 const statusTone = {
-  Todo: 'bg-muted',
-  'In Progress': 'bg-warning',
-  Completed: 'bg-success',
+  Todo: 'border-muted bg-transparent',
+  'In Progress': 'border-warning bg-warning',
+  Completed: 'border-success bg-success',
 };
 
-export function TaskCard({ isBusy, onComplete, onDelete, onEdit, task }) {
+function isOverdue(task) {
+  if (!task.dueDate || task.status === 'Completed') {
+    return false;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dueDate = new Date(task.dueDate);
+
+  return Number.isFinite(dueDate.getTime()) && dueDate.getTime() < today.getTime();
+}
+
+export function TaskCard({ isBusy, onComplete, onCycleStatus, onDelete, onEdit, task }) {
   const isCompleted = task.status === 'Completed';
+  const nextStatus = getNextTaskStatus(task.status);
+  const overdue = isOverdue(task);
   const {
     linkedTaskId,
     startSession,
@@ -42,13 +57,23 @@ export function TaskCard({ isBusy, onComplete, onDelete, onEdit, task }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className={mergeClassNames('size-2 shrink-0 rounded-full', statusTone[task.status])}
-            />
+            <button
+              aria-label={`Move ${task.title} to ${nextStatus}`}
+              className={mergeClassNames(
+                'grid size-5 shrink-0 place-items-center rounded-full border text-[10px] text-[var(--text-inverse)] transition hover:scale-105 focus-visible:outline-none focus-visible:shadow-focus disabled:cursor-not-allowed disabled:opacity-60',
+                statusTone[task.status],
+              )}
+              disabled={isBusy}
+              onClick={() => onCycleStatus(task)}
+              type="button"
+            >
+              {isCompleted ? <Check aria-hidden="true" size={13} strokeWidth={3} /> : null}
+            </button>
             <h3 className="truncate text-sm font-bold text-body">{task.title}</h3>
           </div>
-          <p className="mt-1 text-xs text-muted">{formatTaskDueDate(task.dueDate)}</p>
+          <p className={mergeClassNames('mt-1 text-xs font-semibold', overdue ? 'text-danger' : 'text-muted')}>
+            {overdue ? `Overdue - ${formatTaskDueDate(task.dueDate)}` : formatTaskDueDate(task.dueDate)}
+          </p>
         </div>
         <Badge variant={priorityVariants[task.priority] || 'primary'}>{task.priority}</Badge>
       </div>

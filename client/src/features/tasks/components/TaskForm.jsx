@@ -41,15 +41,17 @@ export function TaskForm({ initialTask, isSubmitting, onCancel, onSubmit, server
   }
 
   return (
-    <form className="grid gap-4" onSubmit={handleSubmit}>
+    <form className="grid gap-5" onSubmit={handleSubmit}>
       {serverError ? <Alert variant="error">{serverError}</Alert> : null}
 
       <Input
         autoFocus
+        className="gap-1"
         error={errors.title}
-        label="Title"
+        inputClassName="min-h-14 border-transparent bg-transparent px-0 text-xl font-semibold leading-tight placeholder:text-muted/70 focus:border-transparent focus:bg-transparent focus:shadow-focus"
+        label="Task title"
         onChange={(event) => updateField('title', event.target.value)}
-        placeholder="e.g. Prepare tomorrow's study plan"
+        placeholder="Untitled task"
         value={values.title}
       />
 

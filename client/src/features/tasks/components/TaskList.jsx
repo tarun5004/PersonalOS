@@ -2,7 +2,7 @@ import { CalendarClock, CircleDot, ListTodo, TimerReset } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { EmptyState } from '../../../components/ui/EmptyState.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
-import { TASK_STATUSES } from '../taskConstants.js';
+import { TASK_STATUSES, TASK_VIEW_MODES } from '../taskConstants.js';
 import { TaskCard } from './TaskCard.jsx';
 
 const columnMeta = {
@@ -24,11 +24,37 @@ export function TaskList({
   activeStatus,
   isMutating,
   onCompleteTask,
+  onCycleStatus,
   onDeleteTask,
   onEditTask,
   tasks,
+  viewMode = TASK_VIEW_MODES.LIST,
 }) {
   const statuses = activeStatus === 'All' ? TASK_STATUSES : [activeStatus];
+
+  if (viewMode === TASK_VIEW_MODES.LIST) {
+    return (
+      <DashboardCard
+        action={<Badge variant="muted">{tasks.length}</Badge>}
+        className="bg-surface"
+        title="Task queue"
+      >
+        <div className="grid gap-3">
+          {tasks.map((task) => (
+            <TaskCard
+              isBusy={isMutating}
+              key={task._id}
+              onComplete={onCompleteTask}
+              onCycleStatus={onCycleStatus}
+              onDelete={onDeleteTask}
+              onEdit={onEditTask}
+              task={task}
+            />
+          ))}
+        </div>
+      </DashboardCard>
+    );
+  }
 
   return (
     <div className="grid gap-4 xl:grid-cols-3">
@@ -57,6 +83,7 @@ export function TaskList({
                     isBusy={isMutating}
                     key={task._id}
                     onComplete={onCompleteTask}
+                    onCycleStatus={onCycleStatus}
                     onDelete={onDeleteTask}
                     onEdit={onEditTask}
                     task={task}

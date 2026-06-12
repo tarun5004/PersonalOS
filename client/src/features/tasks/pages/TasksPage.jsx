@@ -9,7 +9,8 @@ import { LoadingState } from '../../../components/ui/LoadingState.jsx';
 import { Modal } from '../../../components/ui/Modal.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
 import { getTaskErrorMessage } from '../taskApi.js';
-import { TASK_LIST_LIMIT } from '../taskConstants.js';
+import { TASK_LIST_LIMIT, TASK_VIEW_MODES } from '../taskConstants.js';
+import { getNextTaskStatus } from '../taskStatusUtils.js';
 import { TaskFilters } from '../components/TaskFilters.jsx';
 import { TaskForm } from '../components/TaskForm.jsx';
 import { TaskList } from '../components/TaskList.jsx';
@@ -33,6 +34,7 @@ export default function TasksPage() {
   const [offset, setOffset] = useState(0);
   const [activeStatus, setActiveStatus] = useState('All');
   const [search, setSearch] = useState('');
+  const [viewMode, setViewMode] = useState(TASK_VIEW_MODES.LIST);
   const [modalMode, setModalMode] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [formError, setFormError] = useState('');
@@ -114,6 +116,19 @@ export default function TasksPage() {
     });
   }
 
+  function handleCycleTaskStatus(task) {
+    const nextStatus = getNextTaskStatus(task.status);
+
+    setPageError('');
+    taskMutations.updateTask.mutate(
+      { taskId: task._id, values: { status: nextStatus } },
+      {
+        onError: (error) => setPageError(getTaskErrorMessage(error)),
+        onSuccess: () => setPageMessage(`Task moved to ${nextStatus}`),
+      },
+    );
+  }
+
   function handleDeleteTask(task) {
     if (!window.confirm(`Delete "${task.title}"?`)) {
       return;
@@ -168,7 +183,9 @@ export default function TasksPage() {
           activeStatus={activeStatus}
           onSearchChange={setSearch}
           onStatusChange={handleStatusChange}
+          onViewModeChange={setViewMode}
           search={search}
+          viewMode={viewMode}
         />
       </DashboardCard>
 
@@ -198,9 +215,11 @@ export default function TasksPage() {
           activeStatus={activeStatus}
           isMutating={isMutating}
           onCompleteTask={handleCompleteTask}
+          onCycleStatus={handleCycleTaskStatus}
           onDeleteTask={handleDeleteTask}
           onEditTask={openEditTask}
           tasks={visibleTasks}
+          viewMode={viewMode}
         />
       )}
 
@@ -221,7 +240,7 @@ export default function TasksPage() {
         </div>
       </DashboardCard>
 
-      <Modal isOpen={isCreateOpen} onClose={closeModal} title="Create task">
+      <Modal className="max-w-2xl" isOpen={isCreateOpen} onClose={closeModal} title="New task">
         <TaskForm
           isSubmitting={taskMutations.createTask.isPending}
           onCancel={closeModal}
@@ -230,7 +249,7 @@ export default function TasksPage() {
         />
       </Modal>
 
-      <Modal isOpen={isEditOpen} onClose={closeModal} title="Edit task">
+      <Modal className="max-w-2xl" isOpen={isEditOpen} onClose={closeModal} title="Edit task">
         <TaskForm
           initialTask={selectedTask}
           isSubmitting={taskMutations.updateTask.isPending}
