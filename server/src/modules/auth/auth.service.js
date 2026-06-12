@@ -13,6 +13,7 @@ function toSafeUser(user) {
     _id: source._id.toString(),
     name: source.name,
     email: source.email,
+    avatarId: source.avatarId || 'avatar_01',
     createdAt: source.createdAt,
   };
 }
@@ -48,7 +49,7 @@ export class AuthService {
     this.crypto = cryptoAdapter;
   }
 
-  async registerUser({ name, email, password }, requestMeta = {}) {
+  async registerUser({ name, email, password, avatarId = 'avatar_01' }, requestMeta = {}) {
     const existingUser = await this.UserModel.findOne({ email });
 
     if (existingUser) {
@@ -62,6 +63,7 @@ export class AuthService {
       user = await this.UserModel.create({
         name,
         email,
+        avatarId,
         passwordHash,
       });
     } catch (error) {

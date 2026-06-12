@@ -30,6 +30,8 @@ const habitBodySchema = z
       )
       .optional(),
     color: z.enum(HABIT_COLOR_OPTIONS).optional(),
+    icon: z.string().trim().max(30).optional().default('default'),
+    frequency: z.literal('daily').optional().default('daily'),
   })
   .strict();
 
@@ -50,6 +52,8 @@ const habitUpdateBodySchema = z
       )
       .optional(),
     color: z.enum(HABIT_COLOR_OPTIONS).optional(),
+    icon: z.string().trim().max(30).optional(),
+    frequency: z.literal('daily').optional(),
   })
   .strict()
   .refine((value) => Object.keys(value).length > 0, {
@@ -71,7 +75,14 @@ const optionalMonthQuerySchema = z
   .strict();
 
 const emptyObjectSchema = z.object({}).strict();
-const absentBodySchema = z.undefined().or(z.null());
+const checkInBodySchema = z
+  .object({
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD').optional(),
+    note: z.string().trim().max(200).optional(),
+  })
+  .strict()
+  .optional()
+  .default({});
 
 export const listHabitsSchema = z.object({
   body: emptyObjectSchema.optional(),
@@ -102,7 +113,7 @@ export const updateHabitSchema = z.object({
 });
 
 export const checkInHabitSchema = z.object({
-  body: absentBodySchema.optional(),
+  body: checkInBodySchema,
   params: z.object({
     id: objectIdSchema,
   }),

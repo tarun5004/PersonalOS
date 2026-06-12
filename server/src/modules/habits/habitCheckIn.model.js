@@ -20,6 +20,12 @@ const habitCheckInSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    note: {
+      type: String,
+      default: '',
+      trim: true,
+      maxLength: 200,
+    },
   },
   {
     collection: 'habit_check_ins',

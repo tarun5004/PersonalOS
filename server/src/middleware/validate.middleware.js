@@ -7,6 +7,18 @@ function formatIssues(issues) {
   }));
 }
 
+function formatFields(issues) {
+  return issues.reduce((fields, issue) => {
+    const [scope, ...pathParts] = issue.path;
+    const key = pathParts.join('.') || String(scope || 'request');
+
+    fields[key] = fields[key] || [];
+    fields[key].push(issue.message);
+
+    return fields;
+  }, {});
+}
+
 export function validate(schema) {
   return (request, response, next) => {
     const result = schema.safeParse({
@@ -16,12 +28,44 @@ export function validate(schema) {
     });
 
     if (!result.success) {
-      next(new ValidationError('Validation failed', formatIssues(result.error.issues)));
+      next(
+        new ValidationError(
+          'Validation failed',
+          formatIssues(result.error.issues),
+          formatFields(result.error.issues),
+        ),
+      );
       return;
     }
 
     request.validated = result.data;
+    request.body = result.data.body ?? request.body;
+    request.params = result.data.params ?? request.params;
+    request.query = result.data.query ?? request.query;
     next();
   };
 }
 
+export function validateQuery(schema) {
+  return (request, response, next) => {
+    const result = schema.safeParse(request.query);
+
+    if (!result.success) {
+      next(
+        new ValidationError(
+          'Validation failed',
+          formatIssues(result.error.issues),
+          formatFields(result.error.issues),
+        ),
+      );
+      return;
+    }
+
+    request.validated = {
+      ...(request.validated || {}),
+      query: result.data,
+    };
+    request.query = result.data;
+    next();
+  };
+}

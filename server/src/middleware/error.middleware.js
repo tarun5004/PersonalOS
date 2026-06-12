@@ -20,9 +20,15 @@ export function errorHandler(error, request, response, next) {
 
   const body = {
     success: false,
+    error: message,
     message,
+    code: isKnownError ? error.code : 'INTERNAL_SERVER_ERROR',
     errors: isKnownError ? error.errors : [],
   };
+
+  if (isKnownError && Object.keys(error.fields || {}).length > 0) {
+    body.fields = error.fields;
+  }
 
   if (env.NODE_ENV !== 'production') {
     body.stack = error.stack;
@@ -30,4 +36,3 @@ export function errorHandler(error, request, response, next) {
 
   response.status(statusCode).json(body);
 }
-

@@ -13,21 +13,13 @@ export function createAuthRoutes({
 } = {}) {
   const router = Router();
 
-  router.post(
-    '/register',
-    rateLimiter,
-    validate(registerSchema),
-    asyncHandler(controller.register),
-  );
+  router.use(rateLimiter);
 
-  router.post(
-    '/login',
-    rateLimiter,
-    validate(loginSchema),
-    asyncHandler(controller.login),
-  );
+  router.post('/register', validate(registerSchema), asyncHandler(controller.register));
 
-  router.post('/refresh', rateLimiter, asyncHandler(controller.refresh));
+  router.post('/login', validate(loginSchema), asyncHandler(controller.login));
+
+  router.post('/refresh', asyncHandler(controller.refresh));
 
   router.post('/logout', asyncHandler(controller.logout));
 

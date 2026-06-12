@@ -11,9 +11,15 @@ function toTaskResponse(task) {
     priority: source.priority,
     dueDate: source.dueDate,
     status: source.status,
+    estimatedMinutes: source.estimatedMinutes ?? null,
+    tags: source.tags || [],
     createdAt: source.createdAt,
     updatedAt: source.updatedAt,
   };
+}
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 export class TaskService {
@@ -30,8 +36,21 @@ export class TaskService {
     return toTaskResponse(task);
   }
 
-  async listTasks(userId, { limit = 50, offset = 0 } = {}) {
+  async listTasks(userId, { limit = 50, offset = 0, status, priority, search } = {}) {
     const filter = { userId };
+
+    if (status && status !== 'all') {
+      filter.status = status;
+    }
+
+    if (priority) {
+      filter.priority = priority;
+    }
+
+    if (search) {
+      filter.title = { $regex: escapeRegex(search), $options: 'i' };
+    }
+
     const [tasks, total] = await Promise.all([
       this.TaskModel.find(filter)
         .sort({ createdAt: -1 })

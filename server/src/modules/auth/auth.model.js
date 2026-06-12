@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    avatarId: {
+      type: String,
+      default: 'avatar_01',
+      trim: true,
+    },
   },
   {
     collection: 'users',

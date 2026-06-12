@@ -66,7 +66,11 @@ export class HabitController {
   };
 
   checkIn = async (request, response) => {
-    const result = await this.service.checkInHabit(request.user._id, request.validated.params.id);
+    const result = await this.service.checkInHabit(
+      request.user._id,
+      request.validated.params.id,
+      request.validated.body,
+    );
 
     response.status(201).json({
       success: true,

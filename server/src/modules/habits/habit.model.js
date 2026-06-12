@@ -39,6 +39,17 @@ const habitSchema = new mongoose.Schema(
       default: DEFAULT_HABIT_COLOR,
       enum: HABIT_COLOR_OPTIONS,
     },
+    icon: {
+      type: String,
+      default: 'default',
+      trim: true,
+      maxLength: 30,
+    },
+    frequency: {
+      type: String,
+      enum: ['daily'],
+      default: 'daily',
+    },
   },
   {
     collection: 'habits',

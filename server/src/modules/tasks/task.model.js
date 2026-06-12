@@ -29,7 +29,7 @@ const taskSchema = new mongoose.Schema(
     },
     dueDate: {
       type: Date,
-      required: true,
+      default: null,
     },
     status: {
       type: String,
@@ -37,6 +37,16 @@ const taskSchema = new mongoose.Schema(
       default: 'Todo',
       required: true,
       index: true,
+    },
+    estimatedMinutes: {
+      type: Number,
+      default: null,
+      min: 1,
+      max: 480,
+    },
+    tags: {
+      type: [String],
+      default: [],
     },
   },
   {

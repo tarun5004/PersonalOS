@@ -27,6 +27,8 @@ function toHabitResponse(habit, checkIns = [], statsContext = {}, monthCheckIns 
     name: source.name,
     description: source.description || '',
     color: source.color || DEFAULT_HABIT_COLOR,
+    icon: source.icon || 'default',
+    frequency: source.frequency || 'daily',
     todayCompleted: stats.todayCompleted,
     currentStreak: stats.currentStreak,
     longestStreak: stats.longestStreak,
@@ -46,6 +48,7 @@ function toCheckInResponse(checkIn) {
     habitId: source.habitId.toString(),
     date: source.date,
     month: source.month,
+    note: source.note || '',
     createdAt: source.createdAt,
     updatedAt: source.updatedAt,
   };
@@ -159,7 +162,7 @@ export class HabitService {
     });
   }
 
-  async checkInHabit(userId, habitId) {
+  async checkInHabit(userId, habitId, checkInInput = {}) {
     return this.withHabitMutationLock(userId, habitId, async () => {
       const habit = await this.HabitModel.findOne({ _id: habitId, userId }).lean();
 
@@ -168,7 +171,9 @@ export class HabitService {
       }
 
       const now = this.clock();
-      const date = startOfUtcDay(now);
+      const date = checkInInput.date
+        ? startOfUtcDay(new Date(`${checkInInput.date}T00:00:00.000Z`))
+        : startOfUtcDay(now);
       const month = toUtcMonthKey(date);
       let checkIn;
 
@@ -178,6 +183,7 @@ export class HabitService {
           habitId,
           date,
           month,
+          note: checkInInput.note || '',
         });
       } catch (error) {
         if (isDuplicateKeyError(error)) {

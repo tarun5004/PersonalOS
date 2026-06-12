@@ -25,7 +25,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 |---|---|---|---|---|
 | 0 | Create current-command tracker | Complete | `new.md` created and committed | `d9ca268` |
 | 0.1 | Save attached prompt requirements into tracker | Complete | Prompt outline and task details copied into `new.md` | This commit |
-| 1 | Backend validation, sanitization, rate limits, request IDs, security headers | Pending | Agent 1 self-gate | Pending |
+| 1 | Backend validation, sanitization, rate limits, request IDs, security headers | Complete | Agent 1 self-gate passed | This commit |
 | 2 | Morgan HTTP logger and Pino structured logger | Pending | Agent 2 self-gate | Pending |
 | 3 | Design system theme and typography overhaul | Pending | Agent 3 self-gate | Pending |
 | 4 | Sidebar professional redesign | Pending | Agent 4 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 1 - Backend validation, sanitization, rate limits, request IDs, security headers.
+Active task: Agent 2 - Morgan HTTP logger and Pino structured logger.
 
 ## Saved Attached Prompt Snapshot
 
@@ -332,3 +332,17 @@ Final report target:
 
 - Task 0: Created this tracker and committed it as `d9ca268`.
 - Task 0.1: Saved the new attached prompt requirements into this tracker.
+- Task 1: Added request IDs, XSS sanitization, validation metadata, read/write/auth limiters, explicit security headers, preflight handling, and schema support for the prompt's new auth/task/habit fields.
+
+## Verification Log
+
+### Agent 1
+
+- Backend tests: `npm.cmd test -- --passWithNoTests` passed.
+- Backend build script: `npm.cmd run build` passed.
+- App import: passed.
+- `git diff --check`: passed.
+- Self-gate validation check: bad register payload returned HTTP 400 with `code: VALIDATION_ERROR`.
+- Self-gate rate-limit check: `GET /api/tasks` returned `RateLimit` header and `X-Request-Id`.
+- Self-gate security header check: `GET /health` returned `X-Frame-Options`, `X-Content-Type-Options`, `Strict-Transport-Security`, and `X-Request-Id`.
+- Self-gate fingerprint check: `GET /health` did not return `X-Powered-By`.
