@@ -18,6 +18,7 @@ import { NotificationCard } from '../../../components/shared/NotificationCard.js
 import { StatCard } from '../../../components/shared/StatCard.jsx';
 import { TaskCard } from '../../../components/shared/TaskCard.jsx';
 import { useAuth } from '../../auth/useAuth.js';
+import { PomodoroTimer } from '../../pomodoro/components/PomodoroTimer.jsx';
 import {
   getAnalyticsErrorMessage,
   mapWeeklyAnalyticsToChartData,
@@ -234,25 +235,29 @@ export default function DashboardPage() {
               </div>
             </DashboardCard>
 
-            <DashboardCard title="Quick actions">
-              <div className="grid gap-3">
-                {quickActions.map((action) => (
-                  <Button
-                    as={Link}
-                    className="justify-between"
-                    key={action.to}
-                    to={action.to}
-                    variant="secondary"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <action.icon aria-hidden="true" size={17} />
-                      {action.label}
-                    </span>
-                    <ArrowRight aria-hidden="true" size={16} />
-                  </Button>
-                ))}
-              </div>
-            </DashboardCard>
+            <div className="grid gap-4">
+              <PomodoroTimer />
+
+              <DashboardCard title="Quick actions">
+                <div className="grid gap-3">
+                  {quickActions.map((action) => (
+                    <Button
+                      as={Link}
+                      className="justify-between"
+                      key={action.to}
+                      to={action.to}
+                      variant="secondary"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <action.icon aria-hidden="true" size={17} />
+                        {action.label}
+                      </span>
+                      <ArrowRight aria-hidden="true" size={16} />
+                    </Button>
+                  ))}
+                </div>
+              </DashboardCard>
+            </div>
           </div>
 
           <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
