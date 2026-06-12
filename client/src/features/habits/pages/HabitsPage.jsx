@@ -8,6 +8,7 @@ import { ErrorState } from '../../../components/ui/ErrorState.jsx';
 import { LoadingState } from '../../../components/ui/LoadingState.jsx';
 import { Modal } from '../../../components/ui/Modal.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
+import { fireRewardConfetti } from '../../../components/shared/ConfettiReward.jsx';
 import { StatCard } from '../../../components/shared/StatCard.jsx';
 import { getHabitErrorMessage } from '../habitApi.js';
 import { HABIT_LIST_LIMIT } from '../habitConstants.js';
@@ -22,6 +23,9 @@ import { HabitGrid } from '../components/HabitGrid.jsx';
 import { HabitInsightBar } from '../components/HabitInsightBar.jsx';
 import { HabitRiskBanner } from '../components/HabitRiskBanner.jsx';
 import { useHabitMutations, useHabits } from '../useHabits.js';
+
+const HABIT_STREAK_REWARD_KEY = 'pos-habit-streak-rewards';
+const HABIT_REWARD_MILESTONES = [7, 30, 100];
 
 function getHabitSummary(habits) {
   const completedToday = habits.filter((habit) => habit.todayCompleted).length;
@@ -42,6 +46,38 @@ function getHabitSummary(habits) {
     bestStreak,
     averageCompletion,
   };
+}
+
+function readHabitRewards() {
+  try {
+    const storedRewards = JSON.parse(window.localStorage.getItem(HABIT_STREAK_REWARD_KEY) || '[]');
+
+    return Array.isArray(storedRewards) ? storedRewards : [];
+  } catch {
+    return [];
+  }
+}
+
+function maybeFireHabitMilestoneReward(habit) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const nextStreak = (habit.currentStreak || 0) + 1;
+
+  if (!HABIT_REWARD_MILESTONES.includes(nextStreak)) {
+    return;
+  }
+
+  const rewardId = `${habit._id || habit.id}-${nextStreak}`;
+  const storedRewards = readHabitRewards();
+
+  if (storedRewards.includes(rewardId)) {
+    return;
+  }
+
+  window.localStorage.setItem(HABIT_STREAK_REWARD_KEY, JSON.stringify([...storedRewards, rewardId]));
+  fireRewardConfetti({ intensity: nextStreak >= 30 ? 'milestone' : 'standard', origin: { x: 0.72, y: 0.3 } });
 }
 
 export default function HabitsPage() {
@@ -129,7 +165,10 @@ export default function HabitsPage() {
     setPageError('');
     habitMutations.checkInHabit.mutate(habit._id, {
       onError: (error) => setPageError(getHabitErrorMessage(error)),
-      onSuccess: () => setPageMessage('Habit checked in for today'),
+      onSuccess: () => {
+        maybeFireHabitMilestoneReward(habit);
+        setPageMessage('Habit checked in for today');
+      },
     });
   }
 
@@ -187,25 +226,31 @@ export default function HabitsPage() {
 
       <div className="grid gap-3 md:grid-cols-3">
         <StatCard
+          animatedValue={summary.completedToday}
           helper="On this loaded page"
           icon={CalendarCheck2}
           label="Checked in today"
           tone="success"
           value={`${summary.completedToday}/${habits.length}`}
+          valueSuffix={`/${habits.length}`}
         />
         <StatCard
+          animatedValue={summary.bestStreak}
           helper="Longest habit run"
           icon={Trophy}
           label="Best streak"
           tone="info"
           value={`${summary.bestStreak}d`}
+          valueSuffix="d"
         />
         <StatCard
+          animatedValue={summary.averageCompletion}
           helper="Selected UTC month"
           icon={Percent}
           label="Average completion"
           tone="primary"
           value={`${summary.averageCompletion}%`}
+          valueSuffix="%"
         />
       </div>
 

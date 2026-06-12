@@ -72,13 +72,13 @@ Target package groups:
 
 ## Chunk 5 - Habits Experience Upgrade
 
-- [ ] Use Auto Animate for habit rows.
-- [ ] Use React Hook Form + Zod for habit form.
-- [ ] Add motion for check-in, missed day emphasis, streak milestone, and monthly summary.
-- [ ] Add CountUp for consistency and streak metrics.
-- [ ] Add optional confetti only for streak milestones.
-- [ ] Browser QA desktop/mobile light/dark.
-- [ ] Commit: `feat(habits): add habit reward and motion layer`.
+- [x] Use Auto Animate for habit rows.
+- [x] Use React Hook Form + Zod for habit form.
+- [x] Add motion for check-in, missed day emphasis, streak milestone, and monthly summary.
+- [x] Add CountUp for consistency and streak metrics.
+- [x] Add optional confetti only for streak milestones.
+- [ ] Deferred: authenticated habit browser QA needs a seeded logged-in session; frontend tests/build passed for this chunk.
+- [x] Commit: `feat(habits): add habit reward and motion layer`.
 
 ## Chunk 6 - Profile And Avatar Upgrade
 

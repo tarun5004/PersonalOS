@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import { Alert } from '../../../components/ui/Alert.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { Input } from '../../../components/ui/Input.jsx';
@@ -10,8 +11,8 @@ import {
 } from '../habitConstants.js';
 import {
   getDefaultHabitFormValues,
+  resolveHabitFormValues,
   serializeHabitForm,
-  validateHabitForm,
 } from '../habitFormUtils.js';
 
 export function HabitForm({
@@ -22,61 +23,50 @@ export function HabitForm({
   onSubmit,
   serverError,
 }) {
-  const [values, setValues] = useState(() => getDefaultHabitFormValues(initialHabit));
-  const [errors, setErrors] = useState({});
-  const nameRemaining = HABIT_NAME_MAX_LENGTH - values.name.trim().length;
-  const descriptionRemaining = HABIT_DESCRIPTION_MAX_LENGTH - values.description.trim().length;
+  const resolver = useMemo(
+    () => resolveHabitFormValues({ currentHabitId: initialHabit?._id, existingHabits }),
+    [existingHabits, initialHabit?._id],
+  );
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    reset,
+    setValue,
+    watch,
+  } = useForm({
+    defaultValues: getDefaultHabitFormValues(initialHabit),
+    resolver,
+  });
+  const name = watch('name') || '';
+  const description = watch('description') || '';
+  const selectedColor = watch('color');
+  const nameRemaining = HABIT_NAME_MAX_LENGTH - name.trim().length;
+  const descriptionRemaining = HABIT_DESCRIPTION_MAX_LENGTH - description.trim().length;
 
   useEffect(() => {
-    setValues(getDefaultHabitFormValues(initialHabit));
-    setErrors({});
-  }, [initialHabit]);
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-
-    setValues((currentValues) => ({
-      ...currentValues,
-      [name]: value,
-    }));
-  }
+    reset(getDefaultHabitFormValues(initialHabit));
+  }, [initialHabit, reset]);
 
   function handleColorSelect(color) {
-    setValues((currentValues) => ({
-      ...currentValues,
-      color,
-    }));
+    setValue('color', color, { shouldDirty: true, shouldValidate: true });
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const nextErrors = validateHabitForm(values, {
-      currentHabitId: initialHabit?._id,
-      existingHabits,
-    });
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      return;
-    }
-
+  function handleValidSubmit(values) {
     onSubmit(serializeHabitForm(values));
   }
 
   return (
-    <form className="grid gap-4" onSubmit={handleSubmit}>
+    <form className="grid gap-4" onSubmit={handleSubmit(handleValidSubmit)}>
       {serverError ? <Alert variant="error">{serverError}</Alert> : null}
 
       <Input
         autoComplete="off"
         autoFocus
-        error={errors.name}
+        error={errors.name?.message}
         label="Habit name"
-        name="name"
-        onChange={handleChange}
         placeholder="Read 20 minutes"
-        value={values.name}
+        {...register('name')}
       />
 
       <p
@@ -93,13 +83,11 @@ export function HabitForm({
         <textarea
           aria-invalid={Boolean(errors.description) || undefined}
           className="min-h-24 w-full resize-y rounded-card border border-border bg-surface px-3.5 py-3 text-body outline-none transition duration-200 placeholder:text-muted/70 focus:border-accent focus:bg-surface focus:shadow-focus aria-[invalid=true]:border-danger"
-          name="description"
-          onChange={handleChange}
           placeholder="Why this habit matters"
-          value={values.description}
+          {...register('description')}
         />
         {errors.description ? (
-          <span className="text-sm text-danger">{errors.description}</span>
+          <span className="text-sm text-danger">{errors.description.message}</span>
         ) : null}
       </label>
 
@@ -116,7 +104,7 @@ export function HabitForm({
         <span className="text-sm font-semibold text-body">Streak color</span>
         <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Habit streak color">
           {HABIT_COLOR_CHOICES.map(({ label, value }) => {
-            const isSelected = values.color === value;
+            const isSelected = selectedColor === value;
 
             return (
               <button
@@ -139,7 +127,7 @@ export function HabitForm({
             );
           })}
         </div>
-        {errors.color ? <p className="m-0 text-sm text-danger">{errors.color}</p> : null}
+        {errors.color ? <p className="m-0 text-sm text-danger">{errors.color.message}</p> : null}
       </div>
 
       <div className="flex flex-wrap justify-end gap-2">

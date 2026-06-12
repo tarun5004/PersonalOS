@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import {
   DEFAULT_HABIT_COLOR,
   HABIT_COLOR_OPTIONS,
@@ -58,38 +59,93 @@ export function getDefaultHabitFormValues(habit) {
   };
 }
 
-export function validateHabitForm(values, { currentHabitId, existingHabits = [] } = {}) {
-  const errors = {};
-  const name = values.name.trim();
-  const description = values.description.trim();
-  const normalizedName = name.toLocaleLowerCase();
-  const hasDuplicateName = existingHabits.some((habit) => {
-    const habitId = habit._id || habit.id;
+function createHabitFormSchema({ currentHabitId, existingHabits = [] } = {}) {
+  return z
+    .object({
+      color: z.enum([...HABIT_COLOR_OPTIONS], { message: 'Choose one of the approved habit colors' }),
+      description: z
+        .string()
+        .trim()
+        .max(
+          HABIT_DESCRIPTION_MAX_LENGTH,
+          `Description must be ${HABIT_DESCRIPTION_MAX_LENGTH} characters or fewer`,
+        ),
+      name: z
+        .string()
+        .trim()
+        .min(1, 'Habit name is required')
+        .max(HABIT_NAME_MAX_LENGTH, `Habit name must be ${HABIT_NAME_MAX_LENGTH} characters or fewer`),
+    })
+    .superRefine((values, context) => {
+      const normalizedName = values.name.toLocaleLowerCase();
+      const hasDuplicateName = existingHabits.some((habit) => {
+        const habitId = habit._id || habit.id;
 
-    if (currentHabitId && habitId === currentHabitId) {
-      return false;
+        if (currentHabitId && habitId === currentHabitId) {
+          return false;
+        }
+
+        return habit.name.trim().toLocaleLowerCase() === normalizedName;
+      });
+
+      if (hasDuplicateName) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'A habit with this exact name already exists',
+          path: ['name'],
+        });
+      }
+    });
+}
+
+function issuesToFieldMessages(issues) {
+  return issues.reduce((errors, issue) => {
+    const field = issue.path[0];
+
+    return field ? { ...errors, [field]: issue.message } : errors;
+  }, {});
+}
+
+function issuesToResolverErrors(issues) {
+  return issues.reduce((errors, issue) => {
+    const field = issue.path[0];
+
+    if (!field || errors[field]) {
+      return errors;
     }
 
-    return habit.name.trim().toLocaleLowerCase() === normalizedName;
-  });
+    return {
+      ...errors,
+      [field]: {
+        message: issue.message,
+        type: 'validation',
+      },
+    };
+  }, {});
+}
 
-  if (!name) {
-    errors.name = 'Habit name is required';
-  } else if (name.length > HABIT_NAME_MAX_LENGTH) {
-    errors.name = `Habit name must be ${HABIT_NAME_MAX_LENGTH} characters or fewer`;
-  } else if (hasDuplicateName) {
-    errors.name = 'A habit with this exact name already exists';
-  }
+export function validateHabitForm(values, options = {}) {
+  const result = createHabitFormSchema(options).safeParse(values);
 
-  if (description.length > HABIT_DESCRIPTION_MAX_LENGTH) {
-    errors.description = `Description must be ${HABIT_DESCRIPTION_MAX_LENGTH} characters or fewer`;
-  }
+  return result.success ? {} : issuesToFieldMessages(result.error.issues);
+}
 
-  if (!HABIT_COLOR_OPTIONS.includes(values.color)) {
-    errors.color = 'Choose one of the approved habit colors';
-  }
+export function resolveHabitFormValues(options = {}) {
+  return (values) => {
+    const result = createHabitFormSchema(options).safeParse(values);
 
-  return errors;
+    if (result.success) {
+      return {
+        errors: {},
+        values: result.data,
+      };
+    }
+
+    return {
+      errors: issuesToResolverErrors(result.error.issues),
+      values: {},
+    };
+  };
 }
 
 export function serializeHabitForm(values) {
