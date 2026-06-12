@@ -1,12 +1,10 @@
-import { NavLink, matchPath, useLocation } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
+import { matchPath, useLocation } from 'react-router-dom';
+import { LogOut, UserCircle } from 'lucide-react';
 import { Button } from '../ui/Button.jsx';
-import { Badge } from '../ui/Badge.jsx';
 import { useAuth } from '../../features/auth/useAuth.js';
 import { PomodoroWidget } from '../../features/pomodoro/components/PomodoroWidget.jsx';
 import { ThemeToggle } from '../../features/theme/ThemeToggle.jsx';
 import { PageHeader } from './PageHeader.jsx';
-import { mergeClassNames } from '../../lib/classNames.js';
 
 function findActiveRoute(routes, pathname) {
   return routes.find((route) => matchPath({ end: true, path: route.path }, pathname));
@@ -16,42 +14,25 @@ export function Topbar({ routes }) {
   const { logout, user } = useAuth();
   const location = useLocation();
   const activeRoute = findActiveRoute(routes, location.pathname);
-  const userLabel = user?.name ? user.name : 'Personal session';
+  const userLabel = user?.name || 'Personal session';
 
   return (
-    <header className="z-10 grid shrink-0 gap-3 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-6">
-          <PageHeader
-            description={activeRoute?.description}
-            eyebrow="Command center"
-            title={activeRoute?.label || 'Personal OS'}
-          />
-          <nav className="hidden items-center gap-5 lg:flex" aria-label="Top navigation">
-            {routes.slice(0, 4).map((route) => (
-              <NavLink
-                className={({ isActive }) =>
-                  mergeClassNames(
-                    'text-sm font-semibold text-muted transition hover:text-body',
-                    isActive && 'text-body underline decoration-accent decoration-2 underline-offset-4',
-                  )
-                }
-                key={route.path}
-                to={route.path}
-              >
-                {route.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
+    <header className="z-10 shrink-0 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <PageHeader
+          description={activeRoute?.description}
+          eyebrow="Current workspace"
+          title={activeRoute?.label || 'Personal OS'}
+        />
 
-        <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:w-auto lg:justify-end">
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
           <PomodoroWidget />
-          <Badge className="normal-case" variant="muted">
-            {userLabel}
-          </Badge>
           <ThemeToggle compact />
-          <Button onClick={logout} size="sm" variant="dark">
+          <div className="hidden min-h-9 max-w-48 items-center gap-2 rounded-card border border-border bg-surface-elevated px-3 text-sm font-medium text-muted sm:inline-flex">
+            <UserCircle aria-hidden="true" size={16} />
+            <span className="truncate">{userLabel}</span>
+          </div>
+          <Button className="lg:hidden" onClick={logout} size="sm" variant="ghost">
             <LogOut aria-hidden="true" size={16} />
             Log out
           </Button>
