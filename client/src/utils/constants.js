@@ -11,6 +11,7 @@ export const POMODORO_STORAGE_KEYS = {
   SETTINGS: 'pos-pomo-settings',
   STATE: 'pos-pomo-state',
   DAILY: 'pos-pomo-daily',
+  FLOATING_WIDGET: 'pos-pomo-floating-widget',
 };
 
 export const POMODORO_OPTIONS = {

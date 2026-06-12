@@ -46,3 +46,18 @@ export const loginSchema = z.object({
   params: z.object({}).optional(),
   query: z.object({}).optional(),
 });
+
+export const avatarUploadSchema = z.object({
+  body: z
+    .object({
+      dataUrl: z
+        .string()
+        .trim()
+        .min(1, 'Image data is required')
+        .max(7_000_000, 'Image is too large')
+        .regex(/^data:image\/(png|jpe?g|webp);base64,/i, 'Use a PNG, JPG, or WebP image data URL'),
+    })
+    .strict(),
+  params: z.object({}).optional(),
+  query: z.object({}).optional(),
+});

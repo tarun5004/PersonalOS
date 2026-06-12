@@ -19,6 +19,7 @@ import {
   logoutUser,
   refreshAuthSession,
   registerUser,
+  uploadAvatarImage,
 } from './authApi.js';
 import {
   readStoredAvatarId,
@@ -191,6 +192,13 @@ export function AuthProvider({ children }) {
     );
   }, []);
 
+  const uploadAvatar = useCallback(async (dataUrl) => {
+    const nextUser = await uploadAvatarImage(dataUrl);
+    setUser(withAvatarPreference(nextUser));
+
+    return nextUser;
+  }, []);
+
   const value = useMemo(
     () => ({
       error,
@@ -201,9 +209,10 @@ export function AuthProvider({ children }) {
       register,
       status,
       updateAvatarId,
+      uploadAvatar,
       user,
     }),
-    [error, login, logout, register, status, updateAvatarId, user],
+    [error, login, logout, register, status, updateAvatarId, uploadAvatar, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

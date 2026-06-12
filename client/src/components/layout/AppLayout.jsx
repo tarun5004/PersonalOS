@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { FloatingPomodoroWidget } from '../../features/pomodoro/components/FloatingPomodoroWidget.jsx';
 import { Sidebar } from './Sidebar.jsx';
 import { Topbar } from './Topbar.jsx';
 
@@ -26,6 +27,7 @@ export function AppLayout({ routes }) {
           </main>
         </div>
       </div>
+      <FloatingPomodoroWidget />
     </div>
   );
 }

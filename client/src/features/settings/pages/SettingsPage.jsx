@@ -1,4 +1,5 @@
-import { LogOut, Moon, Sun, UserCircle2 } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Camera, LogOut, Moon, Sun, UserCircle2 } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { AvatarDisplay } from '../../../components/shared/AvatarDisplay.jsx';
@@ -26,8 +27,38 @@ const themeCards = [
 ];
 
 export default function SettingsPage() {
-  const { logout, updateAvatarId, user } = useAuth();
+  const { logout, updateAvatarId, uploadAvatar, user } = useAuth();
   const { setTheme, theme } = useTheme();
+  const fileInputRef = useRef(null);
+  const [uploadState, setUploadState] = useState({ status: 'idle', message: '' });
+
+  async function handleAvatarFileChange(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setUploadState({ status: 'error', message: 'Choose a PNG, JPG, or WebP image.' });
+      return;
+    }
+
+    setUploadState({ status: 'loading', message: 'Uploading avatar...' });
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      await uploadAvatar(dataUrl);
+      setUploadState({ status: 'success', message: 'Avatar uploaded and optimized with Cloudinary.' });
+    } catch (error) {
+      setUploadState({
+        status: 'error',
+        message: error.message || 'Could not upload avatar.',
+      });
+    } finally {
+      event.target.value = '';
+    }
+  }
 
   return (
     <section className="grid gap-5">
@@ -70,10 +101,24 @@ export default function SettingsPage() {
 
         <DashboardCard title="Profile">
           <div className="flex items-center gap-4 rounded-card border border-border bg-surface-elevated p-4">
-            <AvatarDisplay avatarId={user?.avatarId} label={`${user?.name || 'Personal OS user'} avatar`} size="lg" />
+            <div className="relative">
+              <AvatarDisplay
+                avatarId={user?.avatarId}
+                avatarUrl={user?.avatarUrl}
+                className="ring-2 ring-accent-soft"
+                label={`${user?.name || 'Personal OS user'} avatar`}
+                size="lg"
+              />
+              <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full border border-border bg-success text-white">
+                <span className="sr-only">Online</span>
+              </span>
+            </div>
             <div className="min-w-0">
               <p className="m-0 truncate text-base font-bold text-body">{user?.name || 'Personal OS user'}</p>
               <p className="mt-1 truncate text-sm text-muted">{user?.email || 'Signed in user'}</p>
+              <p className="mt-2 text-xs font-bold uppercase tracking-[0.16em] text-accent">
+                Level ready profile
+              </p>
             </div>
           </div>
           <div className="mt-4 rounded-card border border-border bg-surface p-4">
@@ -82,6 +127,44 @@ export default function SettingsPage() {
               onChange={updateAvatarId}
               value={user?.avatarId}
             />
+            <div className="mt-4 rounded-card border border-border bg-surface-elevated p-3">
+              <input
+                accept="image/png,image/jpeg,image/webp"
+                className="sr-only"
+                onChange={handleAvatarFileChange}
+                ref={fileInputRef}
+                type="file"
+              />
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-bold text-body">Custom Cloudinary avatar</p>
+                  <p className="mt-1 text-xs leading-5 text-muted">
+                    Uploads are delivered with optimized Cloudinary URLs when server env is configured.
+                  </p>
+                </div>
+                <Button
+                  disabled={uploadState.status === 'loading'}
+                  onClick={() => fileInputRef.current?.click()}
+                  size="sm"
+                  variant="secondary"
+                >
+                  <Camera aria-hidden="true" size={15} />
+                  {uploadState.status === 'loading' ? 'Uploading...' : 'Upload'}
+                </Button>
+              </div>
+              {uploadState.message ? (
+                <p
+                  className={mergeClassNames(
+                    'mt-3 text-xs font-semibold',
+                    uploadState.status === 'error' && 'text-danger',
+                    uploadState.status === 'success' && 'text-success',
+                    uploadState.status === 'loading' && 'text-muted',
+                  )}
+                >
+                  {uploadState.message}
+                </p>
+              ) : null}
+            </div>
           </div>
           <div className="mt-4 rounded-card border border-border bg-surface p-4">
             <div className="flex items-start gap-3">
@@ -107,4 +190,14 @@ export default function SettingsPage() {
       </DashboardCard>
     </section>
   );
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.addEventListener('load', () => resolve(reader.result));
+    reader.addEventListener('error', () => reject(new Error('Could not read avatar file.')));
+    reader.readAsDataURL(file);
+  });
 }

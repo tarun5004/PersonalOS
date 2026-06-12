@@ -74,6 +74,20 @@ export class AuthController {
     });
   };
 
+  updateAvatar = async (request, response) => {
+    const user = await this.service.updateAvatarAsset(
+      request.user._id,
+      request.validated.body,
+    );
+
+    response.status(200).json({
+      success: true,
+      data: {
+        user,
+      },
+    });
+  };
+
   getRequestMeta(request) {
     return {
       userAgent: request.get('user-agent') || '',

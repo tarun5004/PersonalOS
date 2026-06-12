@@ -1,17 +1,14 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Activity,
   CheckSquare,
   Clock,
   Flame,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button.jsx';
 import { ErrorState } from '../../../components/ui/ErrorState.jsx';
 import { LoadingState } from '../../../components/ui/LoadingState.jsx';
 import { DashboardCard } from '../../../components/shared/DashboardCard.jsx';
 import { StatCard } from '../../../components/shared/StatCard.jsx';
-import { mergeClassNames } from '../../../lib/classNames.js';
 import { mapWeeklyAnalyticsToChartData } from '../../analytics/analyticsApi.js';
 import { useWeeklyAnalytics } from '../../analytics/useWeeklyAnalytics.js';
 import { useAuth } from '../../auth/useAuth.js';
@@ -24,6 +21,7 @@ import {
   UrgentAlert,
   WeekCalendar,
 } from '../components/DashboardMissionComponents.jsx';
+import { DashboardHero } from '../components/DashboardHero.jsx';
 import {
   NextActions,
   QuickActions,
@@ -36,8 +34,6 @@ import {
   buildWeekDays,
   formatScore,
   getAtRiskHabits,
-  getCommandCopy,
-  getFirstName,
   getMostUrgentTask,
   getOverdueTasks,
   getScoreTone,
@@ -50,7 +46,12 @@ import { useDashboardSummary } from '../useDashboardSummary.js';
 /** Renders the data-driven PersonalOS mission-control dashboard. */
 export default function DashboardPage() {
   const { user } = useAuth();
-  const { dailyCount, prepareFocus, settings } = usePomodoro();
+  const {
+    dailyCount,
+    prepareFocus,
+    settings,
+    status: pomodoroStatus,
+  } = usePomodoro();
   const summaryQuery = useDashboardSummary();
   const summary = summaryQuery.data;
   const weeklyQuery = useWeeklyAnalytics({ enabled: Boolean(summary) });
@@ -83,7 +84,6 @@ export default function DashboardPage() {
     return null;
   }
 
-  const commandCopy = getCommandCopy({ atRiskHabits, habits, hour, overdueTasks, summary, tasks });
   const alerts = buildAlerts({
     atRiskHabits,
     dailyCount,
@@ -106,20 +106,16 @@ export default function DashboardPage() {
 
   return (
     <section className="grid gap-4">
-      <div className="flex flex-col justify-between gap-3 xl:flex-row xl:items-end">
-        <div>
-          <h1 className="text-[clamp(1.65rem,3vw,2.35rem)] font-bold leading-tight text-body">
-            {commandCopy.headline}
-          </h1>
-          <p className={getCommandToneClass(commandCopy.tone)}>
-            Hi, {getFirstName(user?.name)}. {commandCopy.subtext}
-          </p>
-        </div>
-        <Button as={Link} to="/tasks" variant="secondary">
-          <CheckSquare aria-hidden="true" size={17} />
-          Open task list
-        </Button>
-      </div>
+      <DashboardHero
+        dailyFocusCount={dailyCount}
+        focusSettings={settings}
+        habits={habits}
+        onStartFocus={prepareFocus}
+        pomodoroStatus={pomodoroStatus}
+        summary={summary}
+        tasks={tasks}
+        user={user}
+      />
 
       {alerts.length > 0 ? (
         <div className="grid gap-3">
@@ -185,15 +181,5 @@ export default function DashboardPage() {
         </DashboardCard>
       </div>
     </section>
-  );
-}
-
-function getCommandToneClass(tone) {
-  return mergeClassNames(
-    'mt-2 max-w-2xl text-sm font-semibold leading-6',
-    tone === 'danger' && 'text-danger',
-    tone === 'warning' && 'text-warning',
-    tone === 'success' && 'text-success',
-    tone === 'primary' && 'text-muted',
   );
 }

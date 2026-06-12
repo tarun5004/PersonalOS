@@ -23,6 +23,35 @@ const userSchema = new mongoose.Schema(
       default: 'avatar_01',
       trim: true,
     },
+    avatarUrl: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    avatarPublicId: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    dashboardBackgroundUrl: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    dashboardBackgroundPublicId: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    xp: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    achievementIds: {
+      type: [String],
+      default: [],
+    },
   },
   {
     collection: 'users',

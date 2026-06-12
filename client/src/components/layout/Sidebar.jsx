@@ -107,7 +107,7 @@ export function Sidebar({ routes }) {
 
       <div className="hidden gap-3 lg:grid">
         <div className="flex items-center gap-3 border-t border-[var(--sidebar-border)] pt-4">
-          <AvatarDisplay avatarId={user?.avatarId} label={`${userLabel} avatar`} size="sm" />
+          <AvatarDisplay avatarId={user?.avatarId} avatarUrl={user?.avatarUrl} label={`${userLabel} avatar`} size="sm" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-sidebar-text">{userLabel}</p>
             <p className="mt-0.5 truncate text-xs text-sidebar-muted">{userMeta}</p>

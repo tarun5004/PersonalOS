@@ -31,6 +31,10 @@ const envSchema = z.object({
   REFRESH_TOKEN_MAX_AGE_MS: z.coerce.number().int().positive(),
   COOKIE_SECURE: booleanFromString,
   COOKIE_SAME_SITE: z.enum(['lax', 'strict', 'none']),
+  CLOUDINARY_CLOUD_NAME: z.string().trim().optional(),
+  CLOUDINARY_API_KEY: z.string().trim().optional(),
+  CLOUDINARY_API_SECRET: z.string().trim().optional(),
+  CLOUDINARY_ASSET_FOLDER: z.string().trim().default('personal-os'),
 }).transform((value) => ({
   ...value,
   CORS_ORIGIN: value.CORS_ORIGIN || value.CLIENT_URL,

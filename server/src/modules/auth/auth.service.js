@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { env } from '../../config/env.js';
+import { uploadCloudinaryImage } from '../../config/cloudinary.js';
 import logger from '../../config/logger.js';
 import { AuthError, ConflictError } from '../../errors/AppError.js';
 import { User } from './auth.model.js';
@@ -15,6 +16,11 @@ function toSafeUser(user) {
     name: source.name,
     email: source.email,
     avatarId: source.avatarId || 'avatar_01',
+    avatarUrl: source.avatarUrl || '',
+    avatarPublicId: source.avatarPublicId || '',
+    dashboardBackgroundUrl: source.dashboardBackgroundUrl || '',
+    xp: source.xp || 0,
+    achievementIds: source.achievementIds || [],
     createdAt: source.createdAt,
   };
 }
@@ -42,12 +48,14 @@ export class AuthService {
     bcryptAdapter = bcrypt,
     jwtAdapter = jwt,
     cryptoAdapter = crypto,
+    imageUploader = uploadCloudinaryImage,
   } = {}) {
     this.UserModel = UserModel;
     this.RefreshTokenModel = RefreshTokenModel;
     this.bcrypt = bcryptAdapter;
     this.jwt = jwtAdapter;
     this.crypto = cryptoAdapter;
+    this.imageUploader = imageUploader;
   }
 
   async registerUser({ name, email, password, avatarId = 'avatar_01' }, requestMeta = {}) {
@@ -186,6 +194,33 @@ export class AuthService {
       await this.revokeRefreshTokenDocument(storedToken);
       logger.info({ userId: getUserId(storedToken.userId) }, 'User logged out');
     }
+  }
+
+  async updateAvatarAsset(userId, { dataUrl }) {
+    const upload = await this.imageUploader({
+      dataUrl,
+      folder: 'avatars',
+      publicIdPrefix: `avatar-${userId}`,
+      tags: ['personal-os', 'avatar'],
+    });
+    const user = await this.UserModel.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          avatarUrl: upload.url,
+          avatarPublicId: upload.publicId,
+        },
+      },
+      { new: true },
+    );
+
+    if (!user) {
+      throw new AuthError('Authentication required');
+    }
+
+    logger.info({ userId }, 'User avatar uploaded');
+
+    return toSafeUser(user);
   }
 
   async buildAuthResult(user, requestMeta = {}) {

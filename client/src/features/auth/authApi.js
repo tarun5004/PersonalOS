@@ -56,3 +56,12 @@ export async function getCurrentUser() {
 
   return getUserFromPayload(payload);
 }
+
+export async function uploadAvatarImage(dataUrl) {
+  const payload = await apiRequest('/auth/me/avatar', {
+    method: 'PATCH',
+    body: { dataUrl },
+  });
+
+  return getUserFromPayload(payload);
+}

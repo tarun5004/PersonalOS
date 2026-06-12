@@ -4,7 +4,7 @@ import { authRateLimiter } from '../../middleware/rateLimit.middleware.js';
 import { validate } from '../../middleware/validate.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authController } from './auth.controller.js';
-import { loginSchema, registerSchema } from './auth.validation.js';
+import { avatarUploadSchema, loginSchema, registerSchema } from './auth.validation.js';
 
 export function createAuthRoutes({
   controller = authController,
@@ -24,6 +24,13 @@ export function createAuthRoutes({
   router.post('/logout', asyncHandler(controller.logout));
 
   router.get('/me', requireAuthMiddleware, asyncHandler(controller.me));
+
+  router.patch(
+    '/me/avatar',
+    requireAuthMiddleware,
+    validate(avatarUploadSchema),
+    asyncHandler(controller.updateAvatar),
+  );
 
   return router;
 }
