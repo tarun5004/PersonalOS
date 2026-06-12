@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals';
-import { DashboardService, calculateProductivityScore } from './dashboard.service.js';
+import { calculateProductivityScore } from '../../domain/analytics/scoring.js';
+import { DashboardService } from './dashboard.service.js';
 
 const userId = '507f1f77bcf86cd799439011';
 const otherUserId = '507f1f77bcf86cd799439099';

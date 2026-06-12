@@ -3,45 +3,13 @@ import {
   startOfUtcDay,
   toUtcDateKey,
 } from '../../domain/habits/habitStats.js';
+import {
+  calculateCompletionRate,
+  calculateProductivityScore,
+} from '../../domain/analytics/scoring.js';
 import { HabitCheckIn } from '../habits/habitCheckIn.model.js';
 import { Habit } from '../habits/habit.model.js';
 import { Task } from '../tasks/task.model.js';
-
-function roundPercentage(value) {
-  return Number(value.toFixed(2));
-}
-
-function calculateCompletionRate(completed, total) {
-  if (total === 0) {
-    return 0;
-  }
-
-  return roundPercentage((completed / total) * 100);
-}
-
-export function calculateProductivityScore({
-  taskCompletionRate,
-  taskTotal,
-  habitCompletionRate,
-  habitTotal,
-}) {
-  const hasTasks = taskTotal > 0;
-  const hasHabits = habitTotal > 0;
-
-  if (!hasTasks && !hasHabits) {
-    return null;
-  }
-
-  if (hasTasks && !hasHabits) {
-    return taskCompletionRate;
-  }
-
-  if (!hasTasks && hasHabits) {
-    return habitCompletionRate;
-  }
-
-  return roundPercentage(taskCompletionRate * 0.5 + habitCompletionRate * 0.5);
-}
 
 function getUniqueHabitIdSet(checkIns) {
   return new Set(checkIns.map((checkIn) => checkIn.habitId.toString()));

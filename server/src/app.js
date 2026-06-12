@@ -4,6 +4,7 @@ import express from 'express';
 import helmet from 'helmet';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
+import { analyticsRoutes } from './modules/analytics/analytics.routes.js';
 import { authRoutes } from './modules/auth/auth.routes.js';
 import { dashboardRoutes } from './modules/dashboard/dashboard.routes.js';
 import { habitRoutes } from './modules/habits/habit.routes.js';
@@ -37,6 +38,7 @@ export function createApp() {
   app.use('/api/tasks', taskRoutes);
   app.use('/api/habits', habitRoutes);
   app.use('/api/dashboard', dashboardRoutes);
+  app.use('/api/analytics', analyticsRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
