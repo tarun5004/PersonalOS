@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Award, Flame, Play, Sparkles, Zap } from 'lucide-react';
 import { AnimatedNumber } from '../../../components/shared/AnimatedNumber.jsx';
 import { AvatarDisplay } from '../../../components/shared/AvatarDisplay.jsx';
+import { ConfettiReward } from '../../../components/shared/ConfettiReward.jsx';
 import { MotionCard } from '../../../components/shared/MotionCard.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import { mergeClassNames } from '../../../lib/classNames.js';
@@ -22,6 +25,7 @@ export function DashboardHero({
   habits,
   user,
 }) {
+  const [rewardKey, setRewardKey] = useState('');
   const todayXp = calculateTodayXp({ dailyFocusCount, summary });
   const level = getLevelProgress((user?.xp || 0) + todayXp);
   const focusScore = calculateFocusScore({
@@ -32,8 +36,29 @@ export function DashboardHero({
   const unlockedCount = achievements.filter((achievement) => achievement.unlocked).length;
   const isFocusActive = pomodoroStatus && pomodoroStatus !== 'idle';
 
+  useEffect(() => {
+    const unlockedIds = achievements
+      .filter((achievement) => achievement.unlocked)
+      .map((achievement) => achievement.id);
+
+    if (unlockedIds.length === 0 || typeof window === 'undefined') {
+      return;
+    }
+
+    const storageKey = 'pos-dashboard-achievement-unlocks';
+    const storedIds = JSON.parse(window.localStorage.getItem(storageKey) || '[]');
+    const newUnlockId = unlockedIds.find((id) => !storedIds.includes(id));
+
+    window.localStorage.setItem(storageKey, JSON.stringify([...new Set([...storedIds, ...unlockedIds])]));
+
+    if (storedIds.length > 0 && newUnlockId) {
+      setRewardKey(`${newUnlockId}-${Date.now()}`);
+    }
+  }, [achievements]);
+
   return (
     <section className="relative overflow-hidden rounded-panel border border-border bg-surface shadow-floating">
+      <ConfettiReward fireKey={rewardKey} intensity="subtle" />
       <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(circle_at_60%_30%,color-mix(in_srgb,var(--accent)_18%,transparent),transparent_34%),linear-gradient(135deg,color-mix(in_srgb,var(--accent)_12%,transparent),transparent)] xl:block" />
       <div className="relative grid gap-5 p-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:p-6">
         <div className="flex flex-col gap-5">
@@ -108,20 +133,26 @@ export function DashboardHero({
               <span className="text-xs font-bold text-accent">{unlockedCount}/{achievements.length}</span>
             </div>
             <div className="mt-3 grid gap-2">
-              {achievements.slice(0, 3).map((achievement) => (
-                <div
-                  className={mergeClassNames(
-                    'flex items-center gap-2 rounded-card border px-3 py-2 text-xs font-bold',
-                    achievement.unlocked
-                      ? 'border-accent bg-accent-soft text-accent-strong'
-                      : 'border-border bg-surface-elevated text-muted',
-                  )}
-                  key={achievement.id}
-                >
-                  <Award aria-hidden="true" size={14} />
-                  {achievement.title}
-                </div>
-              ))}
+              <AnimatePresence initial={false}>
+                {achievements.slice(0, 3).map((achievement, index) => (
+                  <motion.div
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className={mergeClassNames(
+                      'flex items-center gap-2 rounded-card border px-3 py-2 text-xs font-bold',
+                      achievement.unlocked
+                        ? 'border-accent bg-accent-soft text-accent-strong'
+                        : 'border-border bg-surface-elevated text-muted',
+                    )}
+                    exit={{ opacity: 0, scale: 0.98, y: 4 }}
+                    initial={{ opacity: 0, scale: 0.98, y: 4 }}
+                    key={achievement.id}
+                    transition={{ delay: index * 0.03, duration: 0.18, ease: 'easeOut' }}
+                  >
+                    <Award aria-hidden="true" size={14} />
+                    {achievement.title}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity,
   CheckSquare,
@@ -105,7 +106,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <section className="grid gap-4">
+    <motion.section
+      animate={{ opacity: 1, y: 0 }}
+      className="grid gap-4"
+      initial={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.24, ease: 'easeOut' }}
+    >
       <DashboardHero
         dailyFocusCount={dailyCount}
         focusSettings={settings}
@@ -117,40 +123,49 @@ export default function DashboardPage() {
         user={user}
       />
 
-      {alerts.length > 0 ? (
-        <div className="grid gap-3">
-          {alerts.map((alert) => (
-            <UrgentAlert alert={alert} key={alert.id} onDismiss={dismissAlert} />
-          ))}
-        </div>
-      ) : null}
+      <AnimatePresence initial={false}>
+        {alerts.length > 0 ? (
+          <motion.div className="grid gap-3" layout>
+            {alerts.map((alert) => (
+              <UrgentAlert alert={alert} key={alert.id} onDismiss={dismissAlert} />
+            ))}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
+          animatedValue={summary.tasks.total}
           helper={`${summary.tasks.completed} completed - ${summary.tasks.incomplete} remaining`}
           icon={CheckSquare}
           label="Tasks today"
           value={summary.tasks.total}
         />
         <StatCard
+          animatedValue={summary.currentStreak}
           helper={summary.currentStreak === 0 ? 'Start your streak' : 'Current active run'}
           icon={Flame}
           label="Habit streak"
           tone={summary.currentStreak >= 7 ? 'success' : summary.currentStreak === 0 ? 'danger' : 'warning'}
           value={`${summary.currentStreak}d`}
+          valueSuffix="d"
         />
         <StatCard
+          animatedValue={summary.productivityScore === null ? undefined : Math.round(summary.productivityScore)}
           helper={summary.productivityScore === null ? 'No activity tracked today' : 'Today productivity'}
           icon={Activity}
           label="Score"
           tone={getScoreTone(summary.productivityScore)}
           value={formatScore(summary.productivityScore)}
+          valueSuffix={summary.productivityScore === null ? '' : '%'}
         />
         <StatCard
+          animatedValue={dailyCount}
           helper={`~${dailyCount * settings.focusDuration} min deep work`}
           icon={Clock}
           label="Focus today"
           value={`${dailyCount} sessions`}
+          valueSuffix={dailyCount === 1 ? ' session' : ' sessions'}
         />
       </div>
 
@@ -180,6 +195,6 @@ export default function DashboardPage() {
           </div>
         </DashboardCard>
       </div>
-    </section>
+    </motion.section>
   );
 }

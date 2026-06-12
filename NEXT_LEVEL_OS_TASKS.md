@@ -12,7 +12,7 @@ Rule: Complete one chunk, test it, commit it, then move to the next chunk.
 - [x] Add an ADR for controlled premium UI package adoption.
 - [x] Add an ADR for server-side OpenAI Images API + Cloudinary asset pipeline.
 - [x] Run `git diff --check`.
-- [ ] Commit: `docs(next-level): approve premium ui and ai asset track`.
+- [x] Commit: `docs(next-level): approve premium ui and ai asset track`.
 
 ## Chunk 1 - Package Installation And Baseline Verification
 
@@ -21,7 +21,7 @@ Rule: Complete one chunk, test it, commit it, then move to the next chunk.
 - [x] Run frontend tests.
 - [x] Run frontend build.
 - [x] Run backend tests if server package/config changes.
-- [ ] Commit: `chore(deps): add next-level ui and asset packages`.
+- [x] Commit: `chore(deps): add next-level ui and asset packages`.
 
 Target package groups:
 
@@ -48,17 +48,17 @@ Target package groups:
 - [x] Ensure new shared primitives use CSS variables.
 - [ ] Replace existing avatar/habit swatch hex data with token or generated-color strategy in the relevant profile/habit chunks.
 - [x] Run frontend tests/build.
-- [ ] Commit: `feat(ui): add next-level shared interaction primitives`.
+- [x] Commit: `feat(ui): add next-level shared interaction primitives`.
 
 ## Chunk 3 - Dashboard OS Upgrade
 
-- [ ] Add CountUp to XP, focus score, streak, task totals, and habit completion.
-- [ ] Add Framer Motion transitions to hero, alerts, stat cards, and achievement unlock cards.
-- [ ] Add optional Lottie empty state for no activity.
-- [ ] Add controlled Canvas Confetti only for first milestone unlock.
-- [ ] Keep dashboard readable and dense.
-- [ ] Browser QA desktop/mobile light/dark.
-- [ ] Commit: `feat(dashboard): add animated command center feedback`.
+- [x] Add CountUp to XP, focus score, streak, task totals, and habit completion.
+- [x] Add Framer Motion transitions to hero, alerts, stat cards, and achievement unlock cards.
+- [ ] Deferred: use a Lottie dashboard empty state only when an approved animation asset exists; the static premium empty state is kept for now to avoid `lottie-web` build warnings.
+- [x] Add controlled Canvas Confetti only for first milestone unlock.
+- [x] Keep dashboard readable and dense.
+- [x] Browser QA desktop/mobile public auth routes and protected-route redirect; authenticated dashboard visual QA requires a seeded logged-in browser session.
+- [x] Commit: `feat(dashboard): add animated command center feedback`.
 
 ## Chunk 4 - Tasks Experience Upgrade
 

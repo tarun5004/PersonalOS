@@ -98,6 +98,8 @@ export function QuickActions({ onStartFocus }) {
 
 /** Renders the dashboard weekly productivity chart block. */
 export function WeeklyScoreCard({ chartData, weeklyQuery }) {
+  const hasWeeklySignal = chartData.some((day) => day.score !== null && day.score !== undefined);
+
   return (
     <DashboardCard title="Weekly score">
       {weeklyQuery.isLoading ? (
@@ -111,6 +113,14 @@ export function WeeklyScoreCard({ chartData, weeklyQuery }) {
           framed={false}
           icon={BarChart3}
           title="Weekly score unavailable"
+        />
+      ) : !hasWeeklySignal ? (
+        <EmptyState
+          className="min-h-64 border-dashed bg-surface-elevated/70 shadow-none"
+          description="Score trends unlock after tasks, habits, or focus sessions create a daily signal."
+          framed={false}
+          icon={BarChart3}
+          title="No score signal yet"
         />
       ) : (
         <DeferredScoreChart

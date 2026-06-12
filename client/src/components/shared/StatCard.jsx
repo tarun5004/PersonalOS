@@ -1,7 +1,19 @@
 import { DashboardCard } from './DashboardCard.jsx';
+import { AnimatedNumber } from './AnimatedNumber.jsx';
 import { mergeClassNames } from '../../lib/classNames.js';
 
-export function StatCard({ className, icon: Icon, label, tone = 'primary', value, helper }) {
+export function StatCard({
+  animatedValue,
+  className,
+  decimals = 0,
+  helper,
+  icon: Icon,
+  label,
+  tone = 'primary',
+  value,
+  valuePrefix = '',
+  valueSuffix = '',
+}) {
   const toneClassName =
     tone === 'success'
       ? 'bg-success/10 text-success'
@@ -24,7 +36,18 @@ export function StatCard({ className, icon: Icon, label, tone = 'primary', value
         </div>
         <div className="min-w-0">
           <p className="m-0 text-xs font-semibold uppercase text-muted">{label}</p>
-          <p className="mt-1 text-xl font-bold text-body">{value}</p>
+          <p className="mt-1 text-xl font-bold text-body">
+            {Number.isFinite(animatedValue) ? (
+              <AnimatedNumber
+                decimals={decimals}
+                end={animatedValue}
+                prefix={valuePrefix}
+                suffix={valueSuffix}
+              />
+            ) : (
+              value
+            )}
+          </p>
           {helper ? <p className="mt-1 text-xs text-muted">{helper}</p> : null}
         </div>
       </div>

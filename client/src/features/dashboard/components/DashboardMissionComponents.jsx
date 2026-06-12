@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowRight, X } from 'lucide-react';
 import { Button } from '../../../components/ui/Button.jsx';
 import { mergeClassNames } from '../../../lib/classNames.js';
@@ -8,13 +9,18 @@ export function UrgentAlert({ alert, onDismiss }) {
   const Icon = alert.icon;
 
   return (
-    <div
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
       className={mergeClassNames(
         'grid gap-3 rounded-card border bg-surface px-4 py-3 shadow-card sm:grid-cols-[auto_minmax(0,1fr)_auto_auto] sm:items-center',
         alert.variant === 'danger' && 'border-danger/40 bg-[var(--danger-subtle)]',
         alert.variant === 'warning' && 'border-warning/40 bg-[var(--warning-subtle)]',
         alert.variant === 'primary' && 'border-accent/40 bg-accent-soft',
       )}
+      exit={{ opacity: 0, y: -8 }}
+      initial={{ opacity: 0, y: -8 }}
+      layout
+      transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       <span
         className={mergeClassNames(
@@ -39,29 +45,34 @@ export function UrgentAlert({ alert, onDismiss }) {
       >
         <X aria-hidden="true" size={16} />
       </button>
-    </div>
+    </motion.div>
   );
 }
 
 /** Renders a linked next-action row on the dashboard. */
 export function ActionRow({ action, detail, icon: Icon, title, to }) {
   return (
-    <Link
-      className="group grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:-translate-y-px hover:border-accent hover:bg-accent-soft sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
-      to={to}
+    <motion.div
+      whileHover={{ y: -1 }}
+      transition={{ duration: 0.16, ease: 'easeOut' }}
     >
-      <span className="grid size-10 place-items-center rounded-card bg-accent-soft text-accent-strong">
-        <Icon aria-hidden="true" size={18} />
-      </span>
-      <span className="min-w-0">
-        <span className="block truncate text-sm font-bold text-body">{title}</span>
-        <span className="mt-0.5 block text-xs leading-5 text-muted">{detail}</span>
-      </span>
-      <span className="inline-flex items-center gap-2 text-xs font-semibold text-accent-strong">
-        {action}
-        <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-0.5" size={15} />
-      </span>
-    </Link>
+      <Link
+        className="group grid gap-3 rounded-card border border-border bg-surface px-4 py-3 transition hover:border-accent hover:bg-accent-soft sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
+        to={to}
+      >
+        <span className="grid size-10 place-items-center rounded-card bg-accent-soft text-accent-strong">
+          <Icon aria-hidden="true" size={18} />
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-bold text-body">{title}</span>
+          <span className="mt-0.5 block text-xs leading-5 text-muted">{detail}</span>
+        </span>
+        <span className="inline-flex items-center gap-2 text-xs font-semibold text-accent-strong">
+          {action}
+          <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-0.5" size={15} />
+        </span>
+      </Link>
+    </motion.div>
   );
 }
 
