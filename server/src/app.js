@@ -4,6 +4,7 @@ import express from 'express';
 import helmet from 'helmet';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
+import { httpLogger } from './middleware/httpLogger.js';
 import { readLimiter, writeLimiter } from './middleware/rateLimit.middleware.js';
 import { requestId } from './middleware/requestId.middleware.js';
 import { sanitizeBody } from './middleware/sanitize.middleware.js';
@@ -38,6 +39,7 @@ export function createApp() {
 
   app.disable('x-powered-by');
   app.use(requestId);
+  app.use(httpLogger);
   app.use(helmet());
   app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true }));
   app.use(cors(corsOptions));

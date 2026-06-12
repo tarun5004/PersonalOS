@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { env } from '../../config/env.js';
+import logger from '../../config/logger.js';
 import { AuthError, ConflictError } from '../../errors/AppError.js';
 import { User } from './auth.model.js';
 import { RefreshToken } from './refreshToken.model.js';
@@ -74,7 +75,11 @@ export class AuthService {
       throw error;
     }
 
-    return this.buildAuthResult(user, requestMeta);
+    const result = await this.buildAuthResult(user, requestMeta);
+
+    logger.info({ userId: result.user._id, email: result.user.email }, 'User registered');
+
+    return result;
   }
 
   async loginUser({ email, password }, requestMeta = {}) {
@@ -85,16 +90,22 @@ export class AuthService {
         : await userQuery;
 
     if (!user) {
+      logger.warn({ email }, 'Failed login attempt');
       throw new AuthError('Invalid credentials');
     }
 
     const passwordMatches = await this.bcrypt.compare(password, user.passwordHash);
 
     if (!passwordMatches) {
+      logger.warn({ userId: getUserId(user._id), email }, 'Failed login attempt');
       throw new AuthError('Invalid credentials');
     }
 
-    return this.buildAuthResult(user, requestMeta);
+    const result = await this.buildAuthResult(user, requestMeta);
+
+    logger.info({ userId: result.user._id }, 'User logged in');
+
+    return result;
   }
 
   async getUserFromAccessToken(token) {
@@ -173,6 +184,7 @@ export class AuthService {
 
     if (storedToken) {
       await this.revokeRefreshTokenDocument(storedToken);
+      logger.info({ userId: getUserId(storedToken.userId) }, 'User logged out');
     }
   }
 

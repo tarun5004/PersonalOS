@@ -1,5 +1,6 @@
 import { AppError, NotFoundError } from '../errors/AppError.js';
 import { env } from '../config/env.js';
+import logger from '../config/logger.js';
 
 export function notFoundHandler(request, response, next) {
   next(new NotFoundError(`Route not found: ${request.method} ${request.originalUrl}`));
@@ -32,6 +33,10 @@ export function errorHandler(error, request, response, next) {
 
   if (env.NODE_ENV !== 'production') {
     body.stack = error.stack;
+  }
+
+  if (!isKnownError || statusCode >= 500) {
+    logger.error({ err: error, reqId: request.id, path: request.path }, 'Unhandled route error');
   }
 
   response.status(statusCode).json(body);

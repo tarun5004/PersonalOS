@@ -7,8 +7,17 @@ const booleanFromString = z
   .enum(['true', 'false'])
   .transform((value) => value === 'true');
 
+function writeConfigError(message, details) {
+  process.stderr.write(`${message}\n`);
+
+  if (details) {
+    process.stderr.write(`${JSON.stringify(details)}\n`);
+  }
+}
+
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   PORT: z.coerce.number().int().positive().default(5000),
   MONGODB_URI: z.string().min(1),
   ACCESS_TOKEN_SECRET: z.string().min(32),
@@ -30,18 +39,17 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error('Invalid server environment configuration.');
-  console.error(parsedEnv.error.flatten().fieldErrors);
+  writeConfigError('Invalid server environment configuration.', parsedEnv.error.flatten().fieldErrors);
   process.exit(1);
 }
 
 if (parsedEnv.data.NODE_ENV === 'production' && !parsedEnv.data.COOKIE_SECURE) {
-  console.error('COOKIE_SECURE must be true when NODE_ENV is production.');
+  writeConfigError('COOKIE_SECURE must be true when NODE_ENV is production.');
   process.exit(1);
 }
 
 if (parsedEnv.data.COOKIE_SAME_SITE === 'none' && !parsedEnv.data.COOKIE_SECURE) {
-  console.error('COOKIE_SECURE must be true when COOKIE_SAME_SITE is none.');
+  writeConfigError('COOKIE_SECURE must be true when COOKIE_SAME_SITE is none.');
   process.exit(1);
 }
 

@@ -26,7 +26,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 0 | Create current-command tracker | Complete | `new.md` created and committed | `d9ca268` |
 | 0.1 | Save attached prompt requirements into tracker | Complete | Prompt outline and task details copied into `new.md` | This commit |
 | 1 | Backend validation, sanitization, rate limits, request IDs, security headers | Complete | Agent 1 self-gate passed | `630a6a9` |
-| 2 | Morgan HTTP logger and Pino structured logger | Pending | Agent 2 self-gate | Pending |
+| 2 | Morgan HTTP logger and Pino structured logger | Complete | Agent 2 self-gate passed | This commit |
 | 3 | Design system theme and typography overhaul | Pending | Agent 3 self-gate | Pending |
 | 4 | Sidebar professional redesign | Pending | Agent 4 self-gate | Pending |
 | 5 | Topbar, navigation, and app shell polish | Pending | Agent 5 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 2 - Morgan HTTP logger and Pino structured logger.
+Active task: Agent 3 - Design system theme and typography overhaul.
 
 ## Saved Attached Prompt Snapshot
 
@@ -333,6 +333,7 @@ Final report target:
 - Task 0: Created this tracker and committed it as `d9ca268`.
 - Task 0.1: Saved the new attached prompt requirements into this tracker.
 - Task 1: Added request IDs, XSS sanitization, validation metadata, read/write/auth limiters, explicit security headers, preflight handling, and schema support for the prompt's new auth/task/habit fields.
+- Task 2: Added Pino structured logging, Morgan HTTP request logging, `LOG_LEVEL`, lifecycle logs, auth event logs, DB logs, and removed raw server console usage.
 
 ## Verification Log
 
@@ -346,3 +347,12 @@ Final report target:
 - Self-gate rate-limit check: `GET /api/tasks` returned `RateLimit` header and `X-Request-Id`.
 - Self-gate security header check: `GET /health` returned `X-Frame-Options`, `X-Content-Type-Options`, `Strict-Transport-Security`, and `X-Request-Id`.
 - Self-gate fingerprint check: `GET /health` did not return `X-Powered-By`.
+
+### Agent 2
+
+- Backend tests: `npm.cmd test -- --passWithNoTests` passed.
+- Backend build script: `npm.cmd run build` passed.
+- App import: passed.
+- Raw console source check: `rg -n "console\\." server/src` returned no matches.
+- Logger source check: `pino` and `morgan` found in server source.
+- Self-gate HTTP logging check: `GET /health` emitted a Pino-pretty HTTP log line with request ID, method, path, status, and response time.

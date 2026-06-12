@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { env } from './env.js';
+import logger from './logger.js';
 
 const DEFAULT_CONNECT_ATTEMPTS = 3;
 const DEFAULT_RETRY_DELAY_MS = 2000;
@@ -21,12 +22,15 @@ export async function connectDatabase({
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
       await mongoose.connect(env.MONGODB_URI);
+      logger.info('MongoDB connected');
       return mongoose.connection;
     } catch (error) {
       if (attempt === attempts) {
+        logger.error({ err: error, attempt }, 'MongoDB connection failed after retries');
         throw error;
       }
 
+      logger.error({ err: error, attempt }, 'MongoDB connection failed, retrying');
       await wait(retryDelayMs);
     }
   }
@@ -40,4 +44,5 @@ export async function disconnectDatabase() {
   }
 
   await mongoose.disconnect();
+  logger.info('MongoDB disconnected');
 }
