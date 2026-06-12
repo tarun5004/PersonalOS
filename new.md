@@ -32,7 +32,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 | 5 | Topbar, navigation, and app shell polish | Complete | Frontend tests, frontend build, lint no-op, `git diff --check`, desktop logout duplication removed | `93f4147` |
 | 6 | Dashboard mission-control UI | Complete | Existing implementation audited: fake cards absent, dynamic headline/alerts, four stats, focus quick action, frontend tests/build/lint/diff passed | This commit |
 | 7 | Tasks urgency layer and view redesign | Complete | List default, board toggle, Notion-style task modal, overdue text, status-cycle control, frontend tests/build/lint/diff passed | `a31141e` |
-| 8 | Habits behavior layer and square grid polish | Pending | Agent 8 self-gate | Pending |
+| 8 | Habits behavior layer and square grid polish | Complete | Square habit cells, missed/done/today states, color picker, insight bar, risk banner, frontend tests/build/lint/diff passed | `3a09b61` |
 | 9 | Analytics insight engine polish | Pending | Agent 9 self-gate | Pending |
 | 10 | PWA installability and offline support | Pending | Agent 10 self-gate | Pending |
 | 11 | Avatar system and profile/register integration | Pending | Agent 11 self-gate | Pending |
@@ -40,7 +40,7 @@ Workflow: complete one task, verify it, mark it checked here, commit, then move 
 
 ## Current Agent Notes
 
-Active task: Agent 8 - Habits behavior layer and square grid polish.
+Active task: Agent 9 - Analytics insight engine polish.
 
 ## Saved Attached Prompt Snapshot
 
