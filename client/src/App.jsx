@@ -6,40 +6,46 @@ import { protectedRoutes, publicRoutes } from './app/routes/routeConfig.js';
 import { RouteLoading } from './app/routes/RouteLoading.jsx';
 import { AppLayout } from './components/layout/AppLayout.jsx';
 import { NotFoundPage } from './features/system/pages/NotFoundPage.jsx';
+import { InstallPrompt } from './features/pwa/components/InstallPrompt.jsx';
+import { OfflineIndicator } from './features/pwa/components/OfflineIndicator.jsx';
 
 function App() {
   return (
-    <Suspense fallback={<RouteLoading />}>
-      <Routes>
-        <Route element={<Navigate replace to="/dashboard" />} path="/" />
+    <>
+      <Suspense fallback={<RouteLoading />}>
+        <Routes>
+          <Route element={<Navigate replace to="/dashboard" />} path="/" />
 
-        {publicRoutes.map((route) => (
+          {publicRoutes.map((route) => (
+            <Route
+              element={
+                <PublicRoute>
+                  <route.Component />
+                </PublicRoute>
+              }
+              key={route.path}
+              path={route.path}
+            />
+          ))}
+
           <Route
             element={
-              <PublicRoute>
-                <route.Component />
-              </PublicRoute>
+              <ProtectedRoute>
+                <AppLayout routes={protectedRoutes} />
+              </ProtectedRoute>
             }
-            key={route.path}
-            path={route.path}
-          />
-        ))}
+          >
+            {protectedRoutes.map((route) => (
+              <Route element={<route.Component />} key={route.path} path={route.path} />
+            ))}
+          </Route>
 
-        <Route
-          element={
-            <ProtectedRoute>
-              <AppLayout routes={protectedRoutes} />
-            </ProtectedRoute>
-          }
-        >
-          {protectedRoutes.map((route) => (
-            <Route element={<route.Component />} key={route.path} path={route.path} />
-          ))}
-        </Route>
-
-        <Route element={<NotFoundPage />} path="*" />
-      </Routes>
-    </Suspense>
+          <Route element={<NotFoundPage />} path="*" />
+        </Routes>
+      </Suspense>
+      <OfflineIndicator />
+      <InstallPrompt />
+    </>
   );
 }
 

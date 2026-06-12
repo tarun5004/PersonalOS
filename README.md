@@ -125,6 +125,10 @@ npm run start
 npm run health
 ```
 
+## Offline and installable app
+
+The client includes a web app manifest and production service worker. Run `npm run build` in `client/` or from the root build script to verify `client/dist/sw.js` is generated. Offline support is intentionally app-shell focused: cached screens can reopen, while fresh API data still requires the backend connection.
+
 ## Contributing
 
 See `CONTRIBUTING.md`.
