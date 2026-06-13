@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '../../features/auth/AuthProvider.jsx';
 import { PomodoroProvider } from '../../features/pomodoro/PomodoroProvider.jsx';
 import { ThemeProvider } from '../../features/theme/ThemeProvider.jsx';
+import { AppToaster } from '../../components/ui/AppToaster.jsx';
 import { createQueryClient } from './queryClient.js';
 
 const queryClient = createQueryClient();
@@ -16,6 +17,7 @@ export function AppProviders({ children }) {
             <PomodoroProvider>{children}</PomodoroProvider>
           </AuthProvider>
         </BrowserRouter>
+        <AppToaster />
       </QueryClientProvider>
     </ThemeProvider>
   );

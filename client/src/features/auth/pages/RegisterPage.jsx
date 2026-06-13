@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Alert } from '../../../components/ui/Alert.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import {
@@ -71,6 +73,7 @@ export default function RegisterPage() {
 
     if (Object.keys(nextErrors).length > 0) {
       setFieldErrors(nextErrors);
+      toast.warning('Please fix the highlighted fields.');
       return;
     }
 
@@ -80,14 +83,16 @@ export default function RegisterPage() {
 
     try {
       await register(nextValues);
+      toast.success('Account created. Welcome to Personal OS.');
     } catch (error) {
       const serverFieldErrors = mapServerValidationErrors(error.errors);
       setFieldErrors(serverFieldErrors);
-      setFormError(
+      const nextFormError =
         Object.keys(serverFieldErrors).length > 0
           ? ''
-          : error.message || 'Could not create account',
-      );
+          : error.message || 'Could not create account';
+      setFormError(nextFormError);
+      toast.error(nextFormError || 'Please check the highlighted fields.');
     } finally {
       setIsSubmitting(false);
     }
@@ -99,7 +104,13 @@ export default function RegisterPage() {
       summary="Create your workspace for tasks, habits, and weekly progress without adding noise to your day."
       title="Make a personal dashboard that feels easy to return to."
     >
-      <Card className="bg-surface p-6 sm:p-7">
+      <Card
+        animate={{ opacity: 1, y: 0 }}
+        as={motion.div}
+        className="auth-form-card bg-surface p-5 sm:p-7"
+        initial={{ opacity: 0, y: 16 }}
+        transition={{ delay: 0.28, duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+      >
         <CardHeader>
           <CardDescription>New workspace</CardDescription>
           <CardTitle>Create account</CardTitle>
@@ -158,7 +169,7 @@ export default function RegisterPage() {
               <p className="m-0 text-sm text-danger">{fieldErrors.avatarId}</p>
             ) : null}
 
-            <Button className="mt-1 w-full" disabled={isBusy} size="lg" type="submit">
+            <Button className="mt-1 w-full auth-submit-button" disabled={isBusy} size="lg" type="submit">
               {isSubmitting ? 'Creating account...' : 'Create account'}
             </Button>
           </form>

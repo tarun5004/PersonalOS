@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Alert } from '../../../components/ui/Alert.jsx';
 import { Button } from '../../../components/ui/Button.jsx';
 import {
@@ -55,6 +57,7 @@ export default function LoginPage() {
 
     if (Object.keys(nextErrors).length > 0) {
       setFieldErrors(nextErrors);
+      toast.warning('Please fix the highlighted fields.');
       return;
     }
 
@@ -64,14 +67,16 @@ export default function LoginPage() {
 
     try {
       await login(nextValues);
+      toast.success('Welcome back. Your workspace is ready.');
     } catch (error) {
       const serverFieldErrors = mapServerValidationErrors(error.errors);
       setFieldErrors(serverFieldErrors);
-      setFormError(
+      const nextFormError =
         Object.keys(serverFieldErrors).length > 0
           ? ''
-          : error.message || 'Could not sign in',
-      );
+          : error.message || 'Could not sign in';
+      setFormError(nextFormError);
+      toast.error(nextFormError || 'Please check the highlighted fields.');
     } finally {
       setIsSubmitting(false);
     }
@@ -83,7 +88,13 @@ export default function LoginPage() {
       summary="Continue to your workspace and keep today's tasks, habits, and weekly rhythm in one place."
       title="Pick up your day where you left it."
     >
-      <Card className="bg-surface p-6 sm:p-7">
+      <Card
+        animate={{ opacity: 1, y: 0 }}
+        as={motion.div}
+        className="auth-form-card bg-surface p-5 sm:p-7"
+        initial={{ opacity: 0, y: 16 }}
+        transition={{ delay: 0.28, duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+      >
         <CardHeader>
           <CardDescription>Account</CardDescription>
           <CardTitle>Log in</CardTitle>
@@ -125,7 +136,7 @@ export default function LoginPage() {
               {isPasswordVisible ? 'Hide password' : 'Show password'}
             </button>
 
-            <Button className="mt-1 w-full" disabled={isBusy} size="lg" type="submit">
+            <Button className="mt-1 w-full auth-submit-button" disabled={isBusy} size="lg" type="submit">
               {isSubmitting ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
