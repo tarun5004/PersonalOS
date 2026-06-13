@@ -8,6 +8,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { AvatarDisplay } from '../shared/AvatarDisplay.jsx';
+import { BrandMark } from '../brand/BrandMark.jsx';
 import { useAuth } from '../../features/auth/useAuth.js';
 import { mergeClassNames } from '../../lib/classNames.js';
 
@@ -65,12 +66,9 @@ export function Sidebar({ routes }) {
       aria-label="Primary navigation"
     >
       <div className="flex min-w-0 items-center gap-3">
-        <span
-          className="grid size-10 place-items-center rounded-card border border-[var(--sidebar-border)] bg-surface text-sm font-semibold text-[var(--sidebar-active-text)]"
-          aria-hidden="true"
-        >
-          OS
-        </span>
+        <BrandMark
+          iconClassName="border-[var(--sidebar-border)] bg-sidebar-text text-[var(--sidebar-bg)]"
+        />
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-sidebar-text">Personal OS</p>
           <p className="mt-0.5 truncate text-xs text-sidebar-muted">Command center</p>

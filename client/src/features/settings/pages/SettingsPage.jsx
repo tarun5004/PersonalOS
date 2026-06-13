@@ -47,6 +47,14 @@ const themeCards = [
   },
 ];
 
+function getAvatarUploadErrorMessage(error) {
+  if (error?.code === 'CLOUDINARY_NOT_CONFIGURED') {
+    return 'Cloudinary is not configured on the server. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to the local server env, then restart the API.';
+  }
+
+  return error?.message || 'Could not upload avatar.';
+}
+
 export default function SettingsPage() {
   const { logout, updateAvatarId, uploadAvatar, user } = useAuth();
   const { setTheme, theme } = useTheme();
@@ -86,7 +94,7 @@ export default function SettingsPage() {
     } catch (error) {
       setUploadState({
         status: 'error',
-        message: error.message || 'Could not upload avatar.',
+        message: getAvatarUploadErrorMessage(error),
       });
     } finally {
       event.target.value = '';
@@ -215,7 +223,7 @@ export default function SettingsPage() {
                 <div>
                   <p className="text-sm font-bold text-body">Custom Cloudinary avatar</p>
                   <p className="mt-1 text-xs leading-5 text-muted">
-                    Uploads are delivered with optimized Cloudinary URLs when server env is configured.
+                    Uploads stay server-side and require Cloudinary env variables before files can be sent.
                   </p>
                 </div>
                 <Button

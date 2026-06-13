@@ -33,6 +33,7 @@ export default function RegisterPage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const isBusy = isSubmitting || isRestoring;
 
   function handleChange(event) {
@@ -115,6 +116,7 @@ export default function RegisterPage() {
               label="Name"
               name="name"
               onChange={handleChange}
+              placeholder="Tarun Raj Gaur"
               type="text"
               value={values.name}
             />
@@ -126,20 +128,30 @@ export default function RegisterPage() {
               label="Email"
               name="email"
               onChange={handleChange}
+              placeholder="you@example.com"
               type="email"
               value={values.email}
             />
 
             <Input
               autoComplete="new-password"
+              description="Use at least 8 characters so your workspace stays protected."
               error={fieldErrors.password}
               id="register-password"
               label="Password"
               name="password"
               onChange={handleChange}
-              type="password"
+              placeholder="Create a strong password"
+              type={isPasswordVisible ? 'text' : 'password'}
               value={values.password}
             />
+            <button
+              className="-mt-2 justify-self-start text-sm font-semibold text-accent-strong underline-offset-4 hover:underline focus-visible:outline-none focus-visible:shadow-focus"
+              onClick={() => setIsPasswordVisible((current) => !current)}
+              type="button"
+            >
+              {isPasswordVisible ? 'Hide password' : 'Show password'}
+            </button>
 
             <AvatarPicker onChange={handleAvatarChange} value={values.avatarId} />
             {fieldErrors.avatarId ? (

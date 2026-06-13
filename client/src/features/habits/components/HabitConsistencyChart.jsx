@@ -75,35 +75,41 @@ export function HabitConsistencyChart({ habits, month }) {
 
   return (
     <DashboardCard title="Daily habit consistency">
-      <div className="h-72 min-w-[320px] w-full">
-        <ResponsiveContainer height={288} minWidth={320} width="100%">
-          <AreaChart data={chartData} margin={{ bottom: 0, left: -16, right: 8, top: 8 }}>
-            <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" vertical={false} />
-            <XAxis
-              dataKey="day"
-              minTickGap={8}
-              stroke="var(--text-tertiary)"
-              tickLine={false}
-            />
-            <YAxis
-              domain={[0, 100]}
-              ticks={[0, 25, 50, 75, 100]}
-              stroke="var(--text-tertiary)"
-              tickLine={false}
-            />
-            <Tooltip content={<HabitChartTooltip />} />
-            <Area
-              connectNulls={false}
-              dataKey="score"
-              dot={renderTodayDot}
-              fill="var(--accent-subtle)"
-              fillOpacity={0.35}
-              stroke="var(--accent)"
-              strokeWidth={2}
-              type="monotone"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div
+        aria-label="Daily habit consistency chart"
+        className="overflow-x-auto pb-1"
+        role="region"
+      >
+        <div className="h-72 min-w-[300px] w-full">
+          <ResponsiveContainer height={288} minWidth={300} width="100%">
+            <AreaChart data={chartData} margin={{ bottom: 0, left: -20, right: 8, top: 8 }}>
+              <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" vertical={false} />
+              <XAxis
+                dataKey="day"
+                minTickGap={8}
+                stroke="var(--text-tertiary)"
+                tickLine={false}
+              />
+              <YAxis
+                domain={[0, 100]}
+                ticks={[0, 25, 50, 75, 100]}
+                stroke="var(--text-tertiary)"
+                tickLine={false}
+              />
+              <Tooltip content={<HabitChartTooltip />} />
+              <Area
+                connectNulls={false}
+                dataKey="score"
+                dot={renderTodayDot}
+                fill="var(--accent-subtle)"
+                fillOpacity={0.35}
+                stroke="var(--accent)"
+                strokeWidth={2}
+                type="monotone"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </DashboardCard>
   );

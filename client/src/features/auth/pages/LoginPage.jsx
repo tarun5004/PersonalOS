@@ -29,6 +29,7 @@ export default function LoginPage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const isBusy = isSubmitting || isRestoring;
 
   function handleChange(event) {
@@ -99,20 +100,30 @@ export default function LoginPage() {
               label="Email"
               name="email"
               onChange={handleChange}
+              placeholder="you@example.com"
               type="email"
               value={values.email}
             />
 
             <Input
               autoComplete="current-password"
+              description="Use the password for your Personal OS account."
               error={fieldErrors.password}
               id="login-password"
               label="Password"
               name="password"
               onChange={handleChange}
-              type="password"
+              placeholder="Enter your password"
+              type={isPasswordVisible ? 'text' : 'password'}
               value={values.password}
             />
+            <button
+              className="-mt-2 justify-self-start text-sm font-semibold text-accent-strong underline-offset-4 hover:underline focus-visible:outline-none focus-visible:shadow-focus"
+              onClick={() => setIsPasswordVisible((current) => !current)}
+              type="button"
+            >
+              {isPasswordVisible ? 'Hide password' : 'Show password'}
+            </button>
 
             <Button className="mt-1 w-full" disabled={isBusy} size="lg" type="submit">
               {isSubmitting ? 'Signing in...' : 'Sign in'}

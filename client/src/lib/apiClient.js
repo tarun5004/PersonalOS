@@ -1,9 +1,11 @@
 export class ApiError extends Error {
-  constructor({ status, message, errors = [] }) {
+  constructor({ code = 'API_ERROR', errors = [], fields = {}, message, status }) {
     super(message);
     this.name = 'ApiError';
+    this.code = code;
     this.status = status;
     this.errors = errors;
+    this.fields = fields;
   }
 }
 
@@ -76,9 +78,11 @@ export async function apiRequest(path, { body, headers = {}, ...options } = {}) 
 
   if (!response.ok) {
     const requestError = new ApiError({
+      code: payload?.code,
       status: response.status,
       message: payload?.message || 'Request failed',
       errors: payload?.errors || [],
+      fields: payload?.fields || {},
     });
 
     if (

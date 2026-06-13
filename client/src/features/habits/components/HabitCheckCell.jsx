@@ -6,6 +6,7 @@ export function HabitCheckCell({
   dateKey,
   day,
   disabled,
+  habitName,
   isCompleted,
   isFuture,
   isToday,
@@ -14,13 +15,14 @@ export function HabitCheckCell({
   const isMissed = !isCompleted && !isFuture && !isToday;
   const canCheckIn = Boolean(isToday && !isCompleted && onCheckIn);
   const Icon = isCompleted ? Check : isMissed ? X : Minus;
+  const habitLabel = habitName ? `${habitName} on ` : '';
   const label = isCompleted
-    ? `${dateKey} completed`
+    ? `${habitLabel}${dateKey} completed`
     : isFuture
-      ? `${dateKey} future day`
+      ? `${habitLabel}${dateKey} future day`
       : isToday
-        ? `${dateKey} check in today`
-        : `${dateKey} missed`;
+        ? `Check in ${habitName || 'habit'} for ${dateKey}`
+        : `${habitLabel}${dateKey} missed`;
   const Component = canCheckIn ? motion.button : motion.span;
   const componentProps = canCheckIn
     ? {
