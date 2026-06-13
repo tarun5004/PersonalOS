@@ -25,7 +25,7 @@ Act like a senior product engineer and prompt engineer:
 
 ## Tasks
 
-- [x] Apply requested punch red / honeydew / frosted blue / cerulean / oxford navy palette globally.
+- [x] Apply requested tea green / beige / cornsilk / papaya whip / light bronze / charcoal palette globally.
 - [x] Define a matching dark theme with the same palette family.
 - [x] Explain and improve the Cloudinary-not-configured error state.
 - [x] Verify habit create, edit, delete, and check-in flows.

@@ -5,7 +5,7 @@ Source: `PERSONAL_OS_CODEX_UI_REPAIR_MASTER_PROMPT.md`
 
 ## Summary
 
-This pass repairs the PersonalOS visual system around a single calm SaaS palette, a reusable brand mark, responsive auth/layout behavior, clearer Cloudinary configuration feedback, and safer habit edit/delete discovery.
+This pass repairs the PersonalOS visual system around a single calm botanical productivity palette, a reusable brand mark, responsive auth/layout behavior, clearer Cloudinary configuration feedback, and safer habit edit/delete discovery.
 
 ## Brand
 
@@ -19,15 +19,16 @@ The root-level `logo` file was zero bytes and not a usable brand asset. It was r
 
 The global Tailwind v4 entry remains `client/src/styles/tokens.css`.
 
-Theme tokens now map the requested palette into semantic roles:
+Theme tokens now map the mandatory palette into semantic roles:
 
-- Punch red: destructive, missed habits, Pomodoro focus
-- Honeydew: light app background and soft success surfaces
-- Frosted blue: borders, dark-mode accent, subtle elevated surfaces
-- Cerulean: primary action and light-mode accent
-- Oxford navy: text, app chrome, sidebar, dark surfaces
+- Tea green `#CCD5AE`: success, habit completion, calm highlights, and dark-mode accent surfaces
+- Beige `#E9EDC9`: secondary surfaces and soft success backgrounds
+- Cornsilk `#FEFAE0`: light app background and inverse text
+- Papaya whip `#FAEDCD`: warning, focus, and warm attention surfaces
+- Light bronze `#D4A373`: focus ring, warning, and high-attention accents
+- Charcoal `#1C1B19`: primary text, brand chrome, sidebar, and dark-mode foundation
 
-Dark mode uses the same palette family with deep navy surfaces, frosted-blue accents, honeydew text, and punch-red destructive states.
+Dark mode uses the same palette family with charcoal surfaces, cornsilk text, tea-green accents, and light-bronze attention states.
 
 ## Auth UI
 
